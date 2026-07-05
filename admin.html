@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – AL SHIFA HERB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#f5f5f5;color:#1a1a2e;line-height:1.6}
+    :root{--green-800:#0f4124;--green-700:#155f33;--gold:#c9a84c;--gold-dark:#a8882e;--text-light:#6b7280;--border:#eee;--radius:12px;--shadow:0 2px 16px rgba(0,0,0,.06)}
+    .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+    .login-box{background:#fff;border-radius:var(--radius);padding:36px;width:100%;max-width:380px;box-shadow:var(--shadow);text-align:center}
+    .login-box h1{font-size:1.2rem;color:var(--green-800);margin-bottom:4px}
+    .login-box p{color:var(--text-light);font-size:.8rem;margin-bottom:20px}
+    .login-box input{width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--border);font-size:.9rem;margin-bottom:12px}
+    .login-box input:focus{outline:none;border-color:var(--gold)}
+    .login-box button{width:100%;padding:12px;border:none;border-radius:50px;background:var(--green-700);color:#fff;font-weight:600;cursor:pointer;transition:.3s}
+    .login-box button:hover{background:var(--green-800)}
+    .login-box .err{color:#dc2626;font-size:.8rem;display:none;margin-bottom:8px}
+    .admin-wrap{display:none;max-width:1200px;margin:0 auto;padding:24px}
+    .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+    .admin-header h1{font-size:1.3rem;color:var(--green-800);display:flex;align-items:center;gap:8px}
+    .admin-header h1 i{color:var(--gold)}
+    .admin-header .meta{font-size:.8rem;color:var(--text-light)}
+    .admin-header .btn-logout{padding:8px 18px;border-radius:50px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:.8rem;color:var(--text-light);transition:.3s}
+    .admin-header .btn-logout:hover{background:#f5f5f5}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+    .stat-card{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);text-align:center}
+    .stat-card .num{font-size:1.6rem;font-weight:700;color:var(--green-800)}
+    .stat-card .label{font-size:.72rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px}
+    .table-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:.82rem}
+    th{text-align:left;padding:12px 14px;background:#fafafa;color:var(--text-light);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border)}
+    td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+    tr:hover td{background:#fafafa}
+    .status-select{padding:5px 10px;border-radius:50px;border:1px solid var(--border);font-size:.75rem;font-weight:600;cursor:pointer;background:#fff}
+    .status-pending{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+    .status-confirmed{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
+    .status-shipped{background:#e0f2fe;color:#075985;border-color:#7dd3fc}
+    .status-delivered{background:#dcfce7;color:#166534;border-color:#86efac}
+    .status-cancelled{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+    .badge-count{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#dc2626;color:#fff;font-size:.65rem;font-weight:700;margin-left:4px}
+    .no-orders{text-align:center;padding:40px;color:var(--text-light)}
+    .no-orders i{font-size:2rem;margin-bottom:8px;opacity:.3}
+    .loading{text-align:center;padding:60px;color:var(--text-light)}
+    .loading i{font-size:1.5rem;color:var(--green-700)}
+    @media(max-width:700px){.admin-wrap{padding:16px}table{font-size:.75rem}th,td{padding:8px 10px}.admin-header h1{font-size:1.1rem}}
+  </style>
+</head>
+<body>
+
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div style="font-size:2rem;margin-bottom:8px">🔐</div>
+    <h1>Admin Login</h1>
+    <p>Enter password to view orders</p>
+    <div class="err" id="loginErr">Wrong password</div>
+    <input type="password" id="passInput" placeholder="Password" onkeydown="if(event.key==='Enter')login()">
+    <button onclick="login()">Login</button>
+  </div>
+</div>
+
+<div class="admin-wrap" id="adminWrap">
+  <div class="admin-header">
+    <div>
+      <h1><i class="fas fa-leaf"></i> AL SHIFA HERB — Orders</h1>
+      <div class="meta" id="metaInfo">Loading...</div>
+    </div>
+    <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </div>
+
+  <div class="stats" id="statsRow"></div>
+
+  <div class="table-wrap">
+    <div class="loading" id="tableLoading"><i class="fas fa-spinner fa-pulse"></i> Loading orders...</div>
+    <table id="ordersTable" style="display:none">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Customer</th>
+          <th>Phone</th>
+          <th>Product</th>
+          <th>Qty</th>
+          <th>City</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="ordersBody"></tbody>
+    </table>
+    <div class="no-orders" id="noOrders" style="display:none">
+      <i class="fas fa-inbox"></i><br>No orders yet
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const ADMIN_PASS = 'alshifa123';
+  const { createClient } = supabase;
+  const supabaseClient = createClient('https://nbbkbsdikayrdocvpmea.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iYmtic2Rpa2F5cmRvY3ZwbWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNDMwMjEsImV4cCI6MjA5ODgxOTAyMX0.t5EV8_mahMxP2VDYoFmv1sgW3RYjxeUlQkqbN9EHd2U');
+
+  if (localStorage.getItem('adminLoggedIn') === 'true') {
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('adminWrap').style.display = 'block';
+    loadOrders();
+  }
+
+  function login() {
+    const pass = document.getElementById('passInput').value;
+    if (pass === ADMIN_PASS) {
+      localStorage.setItem('adminLoggedIn', 'true');
+      document.getElementById('loginWrap').style.display = 'none';
+      document.getElementById('adminWrap').style.display = 'block';
+      loadOrders();
+    } else {
+      document.getElementById('loginErr').style.display = 'block';
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('adminLoggedIn');
+    location.reload();
+  }
+
+  async function loadOrders() {
+    const { data, error } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
+    if (error) {
+      document.getElementById('tableLoading').innerHTML = '<i class="fas fa-exclamation-circle"></i> Error loading orders';
+      return;
+    }
+    document.getElementById('tableLoading').style.display = 'none';
+
+    if (!data || data.length === 0) {
+      document.getElementById('noOrders').style.display = 'block';
+      document.getElementById('metaInfo').textContent = '0 orders';
+      return;
+    }
+
+    document.getElementById('ordersTable').style.display = 'table';
+    document.getElementById('metaInfo').textContent = `${data.length} order${data.length > 1 ? 's' : ''}`;
+
+    const pending = data.filter(o => o.status === 'pending').length;
+    const delivered = data.filter(o => o.status === 'delivered').length;
+    document.getElementById('statsRow').innerHTML = `
+      <div class="stat-card"><div class="num">${data.length}</div><div class="label">Total Orders</div></div>
+      <div class="stat-card"><div class="num">${pending}</div><div class="label">Pending</div></div>
+      <div class="stat-card"><div class="num">${delivered}</div><div class="label">Delivered</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--gold)">₹${data.reduce((s,o)=>s + parseInt(o.product_name?.match(/[\d,]+/)?.[0]?.replace(/,/g,'') || '0'), 0)}</div><div class="label">Revenue</div></div>
+    `;
+
+    const tbody = document.getElementById('ordersBody');
+    tbody.innerHTML = data.map((o, i) => {
+      const statusClass = o.status || 'pending';
+      const date = o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'2-digit'}) : '-';
+      return `<tr>
+        <td>${i + 1}</td>
+        <td style="white-space:nowrap">${date}</td>
+        <td><strong>${o.customer_name || '-'}</strong><br><span style="font-size:.7rem;color:var(--text-light)">${o.address || ''}</span></td>
+        <td><a href="tel:${o.phone}" style="color:var(--green-700);text-decoration:none">${o.phone || '-'}</a></td>
+        <td style="max-width:160px">${o.product_name || '-'}</td>
+        <td style="text-align:center">${o.quantity || 1}</td>
+        <td>${o.city || ''}${o.pincode ? ' - '+o.pincode : ''}</td>
+        <td><select class="status-select status-${statusClass}" onchange="updateStatus(${o.id},this)" style="background:${statusClass==='pending'?'#fef3c7':statusClass==='confirmed'?'#dbeafe':statusClass==='shipped'?'#e0f2fe':statusClass==='delivered'?'#dcfce7':'#fee2e2'};color:${statusClass==='pending'?'#92400e':statusClass==='confirmed'?'#1e40af':statusClass==='shipped'?'#075985':statusClass==='delivered'?'#166534':'#991b1b'}">
+          <option value="pending" ${statusClass==='pending'?'selected':''}>Pending</option>
+          <option value="confirmed" ${statusClass==='confirmed'?'selected':''}>Confirmed</option>
+          <option value="shipped" ${statusClass==='shipped'?'selected':''}>Shipped</option>
+          <option value="delivered" ${statusClass==='delivered'?'selected':''}>Delivered</option>
+          <option value="cancelled" ${statusClass==='cancelled'?'selected':''}>Cancelled</option>
+        </select></td>
+      </tr>`;
+    }).join('');
+  }
+
+  async function updateStatus(id, el) {
+    const val = el.value;
+    el.className = `status-select status-${val}`;
+    el.style.background = {pending:'#fef3c7', confirmed:'#dbeafe', shipped:'#e0f2fe', delivered:'#dcfce7', cancelled:'#fee2e2'}[val];
+    el.style.color = {pending:'#92400e', confirmed:'#1e40af', shipped:'#075985', delivered:'#166534', cancelled:'#991b1b'}[val];
+    await supabaseClient.from('orders').update({ status: val }).eq('id', id);
+  }
+</script>
+</body>
+</html>

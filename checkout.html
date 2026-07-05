@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Now – AL SHIFA HERB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:#fff;color:#1a1a2e;line-height:1.6;overflow-x:hidden}
+    h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:700}
+    :root{--green-900:#0a2e1a;--green-800:#0f4124;--green-700:#155f33;--green-600:#1e8045;--gold:#c9a84c;--gold-dark:#a8882e;--cream:#faf7f0;--white:#fff;--text:#1a1a2e;--text-light:#6b7280;--border:#eee;--shadow:0 2px 16px rgba(0,0,0,.06);--shadow-lg:0 12px 48px rgba(0,0,0,.1);--radius:14px;--radius-sm:8px;--transition:.4s cubic-bezier(.22,1,.36,1)}
+    .top-bar{background:var(--green-900);color:rgba(255,255,255,.7);font-size:.72rem;padding:6px 0;text-align:center;letter-spacing:.5px}
+    .top-bar span{color:var(--gold);font-weight:600}
+    header{position:fixed;top:0;left:0;width:100%;z-index:1000;transition:var(--transition);background:rgba(255,255,255,.95);backdrop-filter:blur(20px);box-shadow:0 2px 40px rgba(0,0,0,.06)}
+    .header-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800;color:var(--green-800);text-decoration:none;display:flex;align-items:center;gap:8px}
+    .logo span{color:var(--gold)}
+    .logo-icon{width:34px;height:34px;background:var(--green-700);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:1rem}
+    .checkout-wrap{max-width:680px;margin:0 auto;padding:100px 24px 40px}
+    .checkout-wrap h1{font-size:1.6rem;color:var(--green-900);margin-bottom:4px}
+    .checkout-wrap .sub{color:var(--text-light);font-size:.88rem;margin-bottom:24px}
+    .order-summary{background:#fafafa;border-radius:var(--radius);padding:16px;margin-bottom:20px;display:flex;gap:14px;align-items:center}
+    .order-summary img{width:70px;height:70px;border-radius:var(--radius-sm);object-fit:cover;border:1px solid var(--border)}
+    .order-summary .info{flex:1}
+    .order-summary .info h3{font-size:.95rem;font-weight:600;font-family:'Inter',sans-serif;margin-bottom:2px}
+    .order-summary .info .p{font-weight:700;color:var(--green-800);font-size:1rem}
+    .order-summary .info .q{font-size:.82rem;color:var(--text-light)}
+    .form-group{margin-bottom:14px}
+    .form-group label{display:block;font-weight:600;font-size:.82rem;margin-bottom:4px;color:var(--text)}
+    .form-group input,.form-group textarea{width:100%;padding:11px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);font-family:'Inter',sans-serif;font-size:.88rem;transition:var(--transition)}
+    .form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1)}
+    .form-group textarea{min-height:80px;resize:vertical}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .btn-submit{width:100%;padding:14px;border:none;border-radius:50px;background:var(--gold);color:#2c1a0e;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:var(--transition)}
+    .btn-submit:hover{background:var(--gold-dark);transform:translateY(-2px)}
+    .btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .success-msg{display:none;text-align:center;padding:40px 20px}
+    .success-msg .ic{width:64px;height:64px;border-radius:50%;background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:1.5rem}
+    .success-msg h2{color:var(--green-900);margin-bottom:6px}
+    .success-msg p{color:var(--text-light);font-size:.9rem;margin-bottom:18px}
+    footer{background:var(--green-900);color:rgba(255,255,255,.5);padding:36px 24px 18px;margin-top:40px}
+    .footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:28px}
+    footer h4{font-family:'Inter',sans-serif;font-weight:600;font-size:.82rem;color:var(--white);margin-bottom:10px}
+    footer a{color:rgba(255,255,255,.5);text-decoration:none;display:block;margin-bottom:5px;font-size:.78rem}
+    footer a:hover{color:var(--gold)}
+    .footer-social{display:flex;gap:6px;margin-top:10px}
+    .footer-social a{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:.8rem}
+    .footer-social a:hover{background:var(--gold);border-color:var(--gold);color:#2c1a0e}
+    .footer-bottom{max-width:1280px;margin:20px auto 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:.75rem}
+    @media(max-width:600px){.form-row{grid-template-columns:1fr}.checkout-wrap{padding:90px 16px 30px}.order-summary{flex-direction:column;text-align:center}}
+  </style>
+</head>
+<body>
+
+<div class="top-bar">🔥 <span>FREE SHIPPING</span> on orders above ₹499 · <span>COD</span> Available · <span>100% HERBAL</span></div>
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon"><i class="fas fa-leaf"></i></span> AL SHIFA <span>HERB</span></a>
+    <a href="javascript:history.back()" style="font-size:.82rem;color:var(--text);text-decoration:none;font-weight:500"><i class="fas fa-arrow-left"></i> Back</a>
+  </div>
+</header>
+
+<div class="checkout-wrap" id="checkoutWrap">
+  <h1 data-aos="fade-up">Place Your Order</h1>
+  <p class="sub" data-aos="fade-up">Cash on Delivery — Pay when you receive</p>
+
+  <div class="order-summary" id="orderSummary" data-aos="fade-up"></div>
+
+  <form id="orderForm" data-aos="fade-up">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" id="name" required placeholder="Your full name">
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" id="phone" required placeholder="10-digit mobile number">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Full Address *</label>
+      <textarea id="address" required placeholder="House / Flat / Street / Landmark"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>City *</label>
+        <input type="text" id="city" required placeholder="City">
+      </div>
+      <div class="form-group">
+        <label>Pincode *</label>
+        <input type="text" id="pincode" required placeholder="6-digit pincode">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Quantity</label>
+        <input type="number" id="qty" value="1" min="1" max="99">
+      </div>
+      <div class="form-group">
+        <label>Payment Method</label>
+        <input type="text" value="Cash on Delivery" disabled style="background:#f5f5f5;color:var(--green-700);font-weight:600">
+      </div>
+    </div>
+    <button type="submit" class="btn-submit" id="submitBtn"><i class="fas fa-check-circle"></i> Confirm Order</button>
+  </form>
+</div>
+
+<div class="success-msg" id="successMsg" style="max-width:680px;margin:0 auto;padding:100px 24px 40px">
+  <div class="ic"><i class="fas fa-check"></i></div>
+  <h2>Order Placed Successfully!</h2>
+  <p>Thank you! Your order has been received. We will contact you soon on your phone number to confirm the delivery.</p>
+  <a href="index.html" class="btn-submit" style="display:inline-flex;width:auto;padding:12px 32px;text-decoration:none"><i class="fas fa-home"></i> Back to Home</a>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="logo" style="justify-content:flex-start;margin-bottom:8px"><span class="logo-icon"><i class="fas fa-leaf"></i></span> AL SHIFA <span>HERB</span></div>
+      <p style="font-size:.78rem;max-width:260px">Your trusted source for premium herbal wellness.</p>
+      <div class="footer-social">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="https://wa.me/919557687044"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+    <div><h4>Quick Links</h4><a href="index.html">Home</a><a href="index.html#products">Products</a><a href="index.html#combo">Combos</a></div>
+    <div><h4>Categories</h4><a href="index.html#products">Men's Vitality</a><a href="index.html#products">Men's Care Oil</a><a href="index.html#products">Digestive Health</a></div>
+    <div><h4>Contact</h4><a href="tel:+919557687044">+91 9557687044</a><a href="mailto:alshifaherb000@gmail.com">alshifaherb000@gmail.com</a><a href="#">Uttar Pradesh, India</a></div>
+  </div>
+  <div class="footer-bottom">© 2026 AL SHIFA HERB. All rights reserved. | 100% Herbal | Made in India</div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  AOS.init({once:true});
+  const { createClient } = supabase;
+  const supabaseClient = createClient('https://nbbkbsdikayrdocvpmea.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iYmtic2Rpa2F5cmRvY3ZwbWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNDMwMjEsImV4cCI6MjA5ODgxOTAyMX0.t5EV8_mahMxP2VDYoFmv1sgW3RYjxeUlQkqbN9EHd2U');
+
+  const hardcoded = [
+    {id:1,name:"AS 81 Drops (Pack of 2)",price:"₹1,350",img:"/images/as81-1.png"},
+    {id:2,name:"He Max Powder 300gm",price:"₹1,200",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-26at2.24.50PM.jpg"},
+    {id:3,name:"King Kong Capsules",price:"₹2,400",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.52.59PM.jpg"},
+    {id:4,name:"Majoon Extra Time",price:"₹1,200",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at3.09.10PM.jpg"},
+    {id:5,name:"Peni Long Capsule",price:"₹1,200",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at3.25.10PM.jpg"},
+    {id:6,name:"Pet Saafizym Syrup",price:"₹550",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.39PM_1.jpg"},
+    {id:7,name:"Pet Saafizym Tablet",price:"₹350",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.39PM_2.jpg"},
+    {id:8,name:"Peni Long Oil",price:"₹850",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at3.36.57PM.jpg"},
+    {id:9,name:"Testo King Tablet",price:"₹999",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.40PM.jpg"}
+  ];
+
+  let product = null;
+
+  (async function(){
+    const id = parseInt(new URLSearchParams(window.location.search).get('id')) || 0;
+    const { data } = await supabaseClient.from('products').select('*').eq('id',id).single();
+    if (data) {
+      product = {id:data.id, name:data.name, price:data.price, img:data.image};
+    } else {
+      product = hardcoded.find(p => p.id === id) || null;
+    }
+    if (!product) {
+      document.getElementById('checkoutWrap').innerHTML = '<h2 style="text-align:center;padding:40px 0">Product not found. <a href="index.html" style="color:var(--green-700)">Back to store</a></h2>';
+      return;
+    }
+    document.getElementById('orderSummary').innerHTML = `
+      <img src="${product.img}" alt="${product.name}">
+      <div class="info">
+        <h3>${product.name}</h3>
+        <div class="p">${product.price}</div>
+        <div class="q">Cash on Delivery</div>
+      </div>
+    `;
+  })();
+
+  document.getElementById('orderForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!product) return;
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Placing Order...';
+    const { error } = await supabaseClient.from('orders').insert({
+      product_name: product.name,
+      quantity: parseInt(document.getElementById('qty').value) || 1,
+      customer_name: document.getElementById('name').value,
+      phone: document.getElementById('phone').value,
+      address: document.getElementById('address').value,
+      city: document.getElementById('city').value,
+      pincode: document.getElementById('pincode').value
+    });
+    if (error) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error! Try Again';
+      console.error(error);
+      return;
+    }
+    document.getElementById('checkoutWrap').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+  });
+</script>
+</body>
+</html>

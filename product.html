@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product – AL SHIFA HERB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:#fff;color:#1a1a2e;line-height:1.6;overflow-x:hidden}
+    h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:700}
+    :root{--green-900:#0a2e1a;--green-800:#0f4124;--green-700:#155f33;--green-600:#1e8045;--gold:#c9a84c;--gold-dark:#a8882e;--cream:#faf6ef;--white:#fff;--text:#1a1a2e;--text-light:#6b7280;--border:#eee;--shadow:0 2px 16px rgba(0,0,0,.06);--shadow-lg:0 12px 48px rgba(0,0,0,.1);--radius:14px;--radius-sm:8px;--transition:.4s cubic-bezier(.22,1,.36,1)}
+
+    .top-bar{background:var(--green-900);color:rgba(255,255,255,.7);font-size:.72rem;padding:6px 0;text-align:center;letter-spacing:.5px}
+    .top-bar span{color:var(--gold);font-weight:600}
+
+    header{position:fixed;top:0;left:0;width:100%;z-index:1000;transition:var(--transition)}
+    header.scrolled{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);box-shadow:0 2px 40px rgba(0,0,0,.06)}
+    .header-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800;color:var(--green-800);text-decoration:none;display:flex;align-items:center;gap:8px}
+    .logo-icon{width:34px;height:34px;background:var(--green-700);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:1rem}
+    .logo span{color:var(--gold)}
+    .nav-menu{display:flex;align-items:center;gap:2px;list-style:none}
+    .nav-menu>li>a{padding:8px 16px;text-decoration:none;color:var(--text);font-size:.82rem;font-weight:500;border-radius:6px;transition:var(--transition)}
+    .nav-menu>li>a:hover,.nav-menu>li>a.active{background:#f5f0e8;color:var(--green-700)}
+    .nav-right{display:flex;align-items:center;gap:10px}
+    .phone-header{display:flex;align-items:center;gap:6px;background:#f5f0e8;padding:5px 14px 5px 10px;border-radius:50px;font-size:.8rem;font-weight:600;color:var(--green-800);text-decoration:none}
+    .hamburger{display:none;font-size:1.3rem;cursor:pointer;color:var(--green-800)}
+
+    .pd-wrap{padding:90px 24px 0;max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
+    .pd-gallery{position:sticky;top:90px}
+    .pd-gallery .main-img{width:100%;border-radius:var(--radius);overflow:hidden;background:#fafafa;border:1px solid var(--border)}
+    .pd-gallery .main-img img{width:100%;display:block}
+    .pd-gallery .thumb-row{display:flex;gap:8px;margin-top:10px;overflow-x:auto}
+    .pd-gallery .thumb-row img{width:64px;height:64px;border-radius:var(--radius-sm);object-fit:cover;cursor:pointer;border:2px solid transparent;transition:var(--transition);flex-shrink:0}
+    .pd-gallery .thumb-row img.active,.pd-gallery .thumb-row img:hover{border-color:var(--gold)}
+
+    .pd-info{padding-top:4px}
+    .breadcrumb{font-size:.75rem;color:var(--text-light);margin-bottom:8px}
+    .breadcrumb a{color:var(--green-700);text-decoration:none}
+    .pd-badge{display:inline-block;padding:3px 12px;border-radius:50px;font-size:.68rem;font-weight:700;color:var(--white);margin-bottom:10px}
+    .pd-badge.bestseller{background:var(--gold-dark)}
+    .pd-badge.sale{background:#dc2626}
+    .pd-badge.hot{background:#ea580c}
+    .pd-badge.new{background:#2563eb}
+    .pd-badge.popular{background:var(--green-700)}
+    .pd-info h1{font-size:1.6rem;color:var(--green-900);margin-bottom:4px;line-height:1.2}
+    .pd-tagline{font-size:.85rem;color:var(--text-light);margin-bottom:10px}
+    .pd-rating{font-size:.82rem;color:#f59e0b;margin-bottom:10px}
+    .pd-rating span{color:var(--text-light);margin-left:4px;font-size:.78rem}
+    .pd-price{font-size:1.8rem;font-weight:700;color:var(--green-800);margin-bottom:4px;font-family:'Inter',sans-serif}
+    .pd-price .old{font-size:.9rem;font-weight:400;color:var(--text-light);text-decoration:line-through;margin-left:8px}
+    .pd-price .save{font-size:.7rem;font-weight:700;color:#dc2626;background:#fce4e4;padding:2px 10px;border-radius:50px;margin-left:10px;vertical-align:middle}
+    .pd-tax{font-size:.72rem;color:var(--text-light);margin-bottom:14px}
+    .pd-actions{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+    .qty-row{display:flex;align-items:center;gap:10px}
+    .qty-row label{font-weight:600;font-size:.82rem}
+    .qty-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+    .qty-btn:hover{background:#f5f0e8}
+    .qty-row input{width:44px;text-align:center;border:1px solid var(--border);border-radius:6px;padding:5px;font-size:.9rem;font-weight:600}
+    .btn-add-cart{width:100%;padding:14px;border:none;border-radius:50px;background:var(--gold);color:#2c1a0e;font-size:.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:var(--transition)}
+    .btn-add-cart:hover{background:var(--gold-dark);transform:translateY(-2px)}
+    .btn-order-wa{width:100%;padding:12px;border:none;border-radius:50px;background:var(--green-700);color:var(--white);font-size:.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:var(--transition);text-decoration:none}
+    .btn-order-wa:hover{background:var(--green-600);transform:translateY(-2px)}
+    .pd-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:12px 14px;border-radius:var(--radius-sm);background:#fafafa;font-size:.78rem;color:var(--text)}
+    .pd-meta i{width:16px;color:var(--green-600);font-size:.78rem}
+
+    /*** DETAIL SECTIONS ***/
+    .pd-detail-wrap{max-width:1280px;margin:0 auto;padding:40px 24px 50px}
+    .pd-detail-section{margin-bottom:36px}
+    .pd-detail-section h2{font-size:1.3rem;color:var(--green-900);margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--gold)}
+    .pd-detail-section h3{font-size:.95rem;color:var(--green-800);margin:16px 0 6px;font-weight:600;font-family:'Inter',sans-serif}
+    .pd-detail-section p,.pd-detail-section li{font-size:.88rem;color:var(--text-light);line-height:1.8}
+    .pd-detail-section ul{padding-left:18px;margin:6px 0 12px}
+    .pd-detail-section ul li{margin-bottom:4px}
+    .pd-detail-section .benefit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+    .pd-detail-section .benefit-grid .bc{padding:16px;border-radius:var(--radius-sm);background:#fafafa;border-left:3px solid var(--gold)}
+    .pd-detail-section .benefit-grid .bc h4{font-size:.85rem;color:var(--green-800);margin-bottom:4px;font-family:'Inter',sans-serif;font-weight:600}
+    .pd-detail-section .benefit-grid .bc p{font-size:.8rem}
+
+    /*** FAQ ***/
+    .pd-faq-list{max-width:100%}
+    .pd-faq-item{border-bottom:1px solid var(--border);padding:12px 0}
+    .pd-faq-q{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;font-size:.85rem;font-family:'Inter',sans-serif;color:var(--text)}
+    .pd-faq-q i{transition:var(--transition);font-size:.72rem;color:var(--green-600)}
+    .pd-faq-item.open .pd-faq-q i{transform:rotate(180deg)}
+    .pd-faq-a{max-height:0;overflow:hidden;transition:var(--transition);color:var(--text-light);font-size:.82rem}
+    .pd-faq-item.open .pd-faq-a{max-height:600px;padding-top:8px}
+
+    /*** RELATED ***/
+    .related{padding:0 24px 50px;max-width:1280px;margin:0 auto}
+    .related h2{font-size:1.3rem;color:var(--green-900);margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+    .related-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:var(--transition);text-decoration:none;color:inherit}
+    .related-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px);border-color:transparent}
+    .related-card img{width:100%;height:160px;object-fit:cover;display:block}
+    .related-card .ri{padding:10px 12px}
+    .related-card .ri h4{font-size:.82rem;margin-bottom:3px;font-weight:600}
+    .related-card .ri .rp{font-weight:700;color:var(--green-800);font-size:.82rem}
+    .related-card .ri .rp .ro{font-size:.68rem;font-weight:400;color:var(--text-light);text-decoration:line-through}
+
+    .loading{text-align:center;padding:120px 24px;font-size:1rem;color:var(--text-light)}
+    .loading i{font-size:1.8rem;color:var(--green-600);display:block;margin-bottom:12px}
+
+    footer{background:var(--green-900);color:rgba(255,255,255,.5);padding:36px 24px 18px}
+    .footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:28px}
+    footer h4{font-family:'Inter',sans-serif;font-weight:600;font-size:.82rem;color:var(--white);margin-bottom:10px}
+    footer a{color:rgba(255,255,255,.5);text-decoration:none;display:block;margin-bottom:5px;font-size:.78rem}
+    footer a:hover{color:var(--gold)}
+    .footer-social{display:flex;gap:6px;margin-top:10px}
+    .footer-social a{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:.8rem}
+    .footer-social a:hover{background:var(--gold);border-color:var(--gold);color:#2c1a0e}
+    .footer-bottom{max-width:1280px;margin:20px auto 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:.75rem}
+    .whatsapp-float{position:fixed;bottom:24px;right:24px;z-index:999;width:50px;height:50px;border-radius:50%;background:#25d366;color:var(--white);border:none;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 20px rgba(37,211,102,.4);display:flex;align-items:center;justify-content:center;animation:pulse 2s infinite}
+    @keyframes pulse{0%{box-shadow:0 4px 20px rgba(37,211,102,.4)}50%{box-shadow:0 4px 36px rgba(37,211,102,.6)}100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}}
+    .toast{position:fixed;bottom:90px;right:24px;z-index:9999;background:var(--green-800);color:var(--white);padding:10px 18px;border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);font-size:.8rem;display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:var(--transition)}
+    .toast.show{transform:translateY(0);opacity:1}
+
+    @media(max-width:900px){.pd-wrap{grid-template-columns:1fr;gap:24px}.pd-gallery{position:static}.pd-info h1{font-size:1.3rem}.pd-price{font-size:1.4rem}}
+    @media(max-width:768px){
+      .pd-wrap{padding:80px 16px 0}.pd-detail-wrap{padding:24px 16px}.related-grid{grid-template-columns:1fr 1fr}.pd-meta{grid-template-columns:1fr}
+      .nav-menu{display:none}.hamburger{display:block}
+      .nav-menu.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;width:100%;background:var(--white);padding:14px 20px;border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
+    }
+    @media(max-width:480px){.related-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<div class="top-bar">🔥 <span>FREE SHIPPING</span> on orders above ₹499 · <span>COD</span> Available · <span>100% HERBAL</span></div>
+
+<header id="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo"><span class="logo-icon"><i class="fas fa-leaf"></i></span> AL SHIFA <span>HERB</span></a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#products">Products</a></li>
+      <li><a href="index.html#combo">Combos</a></li>
+      <li><a href="index.html#testimonials">Reviews</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="tel:+919557687044" class="phone-header"><i class="fas fa-phone-alt"></i> +91 9557687044</a>
+      <div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
+    </div>
+  </div>
+</header>
+
+<div class="loading" id="loading"><i class="fas fa-spinner fa-pulse"></i> Loading product...</div>
+<div class="pd-wrap" id="pdWrap" style="display:none"></div>
+<div class="pd-detail-wrap" id="pdDetails" style="display:none"></div>
+<section class="related" id="relatedSection" style="display:none">
+  <h2>Related Products</h2>
+  <div class="related-grid" id="relatedGrid"></div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="logo" style="justify-content:flex-start;margin-bottom:8px"><span class="logo-icon"><i class="fas fa-leaf"></i></span> AL SHIFA <span>HERB</span></div>
+      <p style="font-size:.78rem;max-width:260px">Your trusted source for premium herbal wellness. Nature's healing, in your hands.</p>
+      <div class="footer-social">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="https://wa.me/919557687044"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+    <div><h4>Quick Links</h4><a href="index.html">Home</a><a href="index.html#products">All Products</a><a href="index.html#combo">Combos</a><a href="index.html#testimonials">Reviews</a><a href="index.html#faq">FAQ</a><a href="index.html#contact">Contact</a></div>
+    <div><h4>Categories</h4><a href="index.html#products">Men's Vitality</a><a href="index.html#products">Men's Care Oil</a><a href="index.html#products">Digestive Health</a><a href="index.html#products">Best Sellers</a></div>
+    <div><h4>Contact</h4><a href="tel:+919557687044">+91 9557687044</a><a href="mailto:alshifaherb000@gmail.com">alshifaherb000@gmail.com</a><a href="#">Uttar Pradesh, India</a><a href="https://wa.me/919557687044">WhatsApp</a></div>
+  </div>
+  <div class="footer-bottom">© 2026 AL SHIFA HERB. All rights reserved. | 100% Herbal | Made in India</div>
+</footer>
+
+<button class="whatsapp-float" onclick="window.open('https://wa.me/919557687044','_blank')"><i class="fab fa-whatsapp"></i></button>
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Added!</span></div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const { createClient } = supabase;
+  const supabaseClient = createClient('https://nbbkbsdikayrdocvpmea.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iYmtic2Rpa2F5cmRvY3ZwbWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNDMwMjEsImV4cCI6MjA5ODgxOTAyMX0.t5EV8_mahMxP2VDYoFmv1sgW3RYjxeUlQkqbN9EHd2U');
+  AOS.init({once:true});
+
+  const products = [
+    {
+      id:1, name:"AS 81 Drops (Pack of 2)", cat:"Men's Vitality",
+      tagline:"Reclaim Your Confidence with AS 81: Safe and Effective for Men's Health | Herbal Drop for ED, Male Enhancement & Sexual Weakness",
+      price:"₹1,350", old:"₹1,800", badge:"Bestseller", bclass:"bestseller",
+      img:"/images/as81-1.png",
+      imgs:[
+        "/images/as81-1.png",
+        "/images/as81-2.png",
+        "/images/as81-3.png"
+      ],
+      rating:4.8, rev:234, discount:25,
+      desc:"AS 81 Drops is a specially formulated herbal preparation designed to provide a natural, gentle, and holistic solution for men dealing with erectile dysfunction, short penis size concerns, low libido, and overall sexual weakness. Made with a precision-blended combination of proven Ayurvedic herbs, AS 81 supports male vitality, reproductive health, and intimate confidence without the use of synthetic chemicals or pharmaceutical drugs. What sets AS 81 apart is its carefully calibrated herbal formula that is safe for diabetic patients — making it one of the few male enhancement drops suitable for men managing diabetes alongside sexual health concerns. Whether you are experiencing weak erections, poor stamina, reduced libido, or size-related concerns, AS 81 offers a trusted natural path forward.",
+      problems:[
+        "Erectile Dysfunction (ED) – Supports improved blood flow and nerve function to encourage harder, more consistent erections.",
+        "Short Penis Size and Girth Concerns – May support natural tissue health and circulation to encourage better size and fullness over time.",
+        "Premature Ejaculation and Poor Timing – Helps strengthen ejaculatory control and improve timing through hormonal and nervous system support.",
+        "Low Libido and Reduced Sexual Desire – Stimulates natural arousal, drive, and responsiveness through targeted herbal action.",
+        "Low Testosterone and Hormonal Imbalance – Supports the body's natural hormonal regulation for improved male vitality and drive.",
+        "General Sexual Weakness and Low Vitality – Addresses deep-seated physical and nervous exhaustion that contributes to poor sexual performance.",
+        "Performance Anxiety and Lack of Confidence – Supports the nervous system to reduce anxiety and help men approach intimacy with calm and confidence.",
+        "Poor Sperm Health and Reproductive Weakness – The herbs in this formula have a traditional role in supporting reproductive health and sperm vitality.",
+        "Sexual Weakness in Diabetic Men – Formulated to be gentle and safe for diabetic patients who commonly experience sexual dysfunction as a complication of their condition.",
+        "Physical and Mental Exhaustion Affecting Performance – Addresses the effects of overwork, stress, and nervous depletion on male sexual health."
+      ],
+      suitable:[
+        "<strong>Diabetic Patients</strong> — Erectile dysfunction and sexual weakness are among the most common complications of diabetes in men. AS 81 has been specifically noted as safe for diabetic patients. The herbal formula contains no added sugar, no synthetic hormones, and no chemical stimulants that could interfere with blood sugar regulation. Diabetic men suffering from weak erections, low libido, or poor stamina due to their condition may use AS 81 as a natural and gentle supportive treatment.",
+        "<strong>Men with High Blood Pressure</strong> — Hypertension is another leading cause of erectile dysfunction and reduced sexual performance. The gentle herbal ingredients in AS 81 support improved blood circulation without causing sudden spikes or drops in blood pressure.",
+        "<strong>Men Experiencing Age-Related Sexual Decline</strong> — Men above 40 often experience a gradual decline in testosterone, erection quality, and stamina. AS 81 addresses the hormonal, circulatory, and nervous system factors that contribute to this decline.",
+        "<strong>Men with Stress, Anxiety, or Nervous Exhaustion</strong> — Several key herbs in AS 81 are classically indicated for sexual weakness caused by mental overwork, stress, nervous depletion, and anxiety.",
+        "<strong>Men with General Weakness or Low Energy</strong> — The herbs in this formula support general debility, physical exhaustion, and low vitality.",
+        "<strong>Men with Hormonal Imbalance</strong> — AS 81 supports natural testosterone production and hormonal balance in men.",
+        "<em>Important Note:</em> While AS 81 is a gentle herbal formulation suitable for most men, individuals with serious chronic conditions such as heart disease, kidney disorders, liver disease, or those currently taking multiple prescription medications should always consult a qualified healthcare professional before beginning use."
+      ],
+      keyBenefits:[
+        "Supports Stronger and Harder Erections – Improves blood flow and tissue response for better erection quality and consistency.",
+        "May Aid Natural Size and Girth Improvement – Supports tissue health and circulation for a fuller and more confident appearance over time.",
+        "Safe for Diabetic Patients – Carefully formulated without sugar or chemical stimulants that could affect blood sugar levels.",
+        "Boosts Libido and Sexual Desire – Enhances natural arousal and responsiveness through targeted herbal action.",
+        "Improves Stamina and Sexual Endurance – Addresses the root causes of fatigue and weakness that impact performance.",
+        "Supports Natural Testosterone Production – Key herbs help regulate male hormonal health naturally.",
+        "Reduces Performance Anxiety – Nervous system support helps men approach intimacy with confidence and calm.",
+        "Addresses Sexual Weakness from Stress and Overwork – Particularly beneficial for men whose sexual difficulties are linked to mental exhaustion.",
+        "Gentle Herbal Formula — No Harsh Side Effects – Prepared with carefully calibrated herbs for safe, gradual, and lasting improvement.",
+        "Supports Overall Male Vitality and Energy – Improves general wellbeing, physical strength, and confidence alongside sexual health."
+      ],
+      whatMakesDiff:[
+        "Genuine Herbal Formulation with 22+ potent Ayurvedic herbs in precise combination",
+        "Specifically safe for diabetic men — one of the few herbal drops formulated with diabetic safety in mind",
+        "Addresses both physical and psychological causes of sexual dysfunction",
+        "No synthetic hormones or chemical stimulants — 100% natural and herbal",
+        "Three-times-daily dosing for consistent, steady results throughout the day",
+        "Addresses size concerns naturally alongside erectile function",
+        "Suitable for long-term use without dependency or side effects"
+      ],
+      ingredients:"Darchini, Asgand, Bisbasa, Ajwain, Qaranfal, Satavar, Tukme-Khatmi, Aqarqarha, Mal Kangani, Kunjah Siyah, Badam Shireen + 11 more potent herbs. Each herb is carefully selected for its specific role in male reproductive and sexual health — including improved blood circulation, hormonal balance, nervous system strength, and overall vitality.",
+      dosage:"Morning Dose – Take 15 drops of AS 81 in half a cup of water, approximately 30 minutes before or after breakfast. Afternoon Dose – Take 15 drops in half a cup of water, 30 minutes before or after lunch. Evening Dose – Take 15 drops in half a cup of water, 30 minutes before or after dinner. Consistency is Essential – Take AS 81 every day without missing doses. Daily use is required to maintain steady improvement in sexual health and overall vitality.",
+      results:"Homeopathic and herbal medicines work gradually and gently by supporting the body's own natural healing processes. Most men begin to notice early improvements in energy levels, mood, and libido within the first 2 to 3 weeks of consistent three-times-daily use. Improvements in erection quality, stamina, and sexual confidence typically become more noticeable between weeks 3 and 6. For comprehensive and lasting results — including hormonal balance, improved size, and sustained reproductive health — a minimum course of 8 to 12 weeks of regular use is recommended. Results may vary depending on the severity of the condition, individual body response, age, consistency of use, and overall lifestyle and health habits."
+    },
+    {id:2,name:"He Max Powder 300gm",cat:"Men's Vitality",price:"₹1,200",old:"₹1,500",badge:"Popular",bclass:"popular",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-26at2.24.50PM.jpg",rating:4.7,rev:189,discount:20,desc:"A 100% herbal formulation of 22 natural herbs specially designed to enhance male vitality and stamina.",benefits:["Builds physical strength","Promotes muscle gain","Improves general health","Boosts Testosterone naturally","No side effects"],ingredients:"Salab Misri, Salam Panja, Gond Katira, Choti ilachi, Musli Safeed, Utangan, Shatawar, Ashwaghanda, Kaunch Beej, Gokhru + 12 more herbs",dosage:"5g powder twice a day with milk"},
+    {id:3,name:"King Kong Capsules",cat:"Men's Vitality",price:"₹2,400",old:"₹3,150",badge:"Hot",bclass:"hot",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.52.59PM.jpg",rating:4.9,rev:312,discount:24,desc:"Premium formulation with 4 clinically respected Ayurvedic extracts — Maca Root, Shatavari, Shilajit, and Safed Musli.",benefits:["Elevates energy and stamina","Boosts testosterone and libido","Strengthens erection quality","Delays fatigue","Sugar-free, safe for diabetics"],ingredients:"Maca Root, Shatavari, Shilajit, Safed Musli",dosage:"As directed on the package"},
+    {id:4,name:"Majoon Extra Time",cat:"Men's Vitality",price:"₹1,200",old:"₹1,800",badge:"Sale",bclass:"sale",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at3.09.10PM.jpg",rating:4.6,rev:156,discount:33,desc:"A potent blend of special natural herbs to cure premature ejaculation and maintain libido naturally.",benefits:["Cures Premature Ejaculation","Enhances libido","Maintains proper erection","100% Herbal","Strengthens penile muscles"],ingredients:"Bisbasa, Sarson, Darchini, Asgand, Tejpat, Musli Safaid, Satawar, Qaranfal, Salab Misri, Zafran + 13 more herbs",dosage:"10gm with warm water or milk daily"},
+    {id:5,name:"Peni Long Capsule",cat:"Men's Vitality",price:"₹1,200",old:"₹1,800",badge:null,bclass:"",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at3.25.10PM.jpg",rating:4.5,rev:203,discount:33,desc:"Helps open blocked blood vessels for proper blood circulation, harder erections, and natural enlargement.",benefits:["Opens blocked blood vessels","Cures Erectile Dysfunction","Maintains erection level","Helps gain length & girth","Aphrodisiac in nature"],ingredients:"Asgand, Musli Safaid, Gokhru, Konch Beej, Aaqarqarha, Satawar, Shudh Shilajeet + 5 more",dosage:"One capsule daily with milk after food"},
+    {id:6,name:"Pet Saafizym Syrup",cat:"Digestive Health",price:"₹550",old:"₹850",badge:"New",bclass:"new",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.39PM_1.jpg",rating:4.6,rev:145,discount:35,desc:"Digestive health syrup addressing mis-digestion — a common root cause of many health issues including premature ejaculation.",benefits:["Aids in Digestion","Reduces hyper acidity","Cures constipation","Relieves gas","Stimulates appetite"],ingredients:"Adrak, Halela Zar, Aamla, Tejpat, Fil fil Siyah, Filfil Daraz, Rewand Chini, Hing, Zeera Safaid + 7 more",dosage:"2 teaspoons twice a day after meal"},
+    {id:7,name:"Pet Saafizym Tablet",cat:"Digestive Health",price:"₹350",old:"₹550",badge:null,bclass:"",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.39PM_2.jpg",rating:4.5,rev:167,discount:36,desc:"Tablet form of Pet Saafizym for digestive health. Helps restore gut health naturally.",benefits:["Aids in Digestion","Reduces hyper acidity","Cures constipation","Relieves gas","Stimulates appetite"],ingredients:"Adrak, Halela Zar, Aamla, Tejpat, Fil fil Siyah, Filfil Daraz, Rewand Chini, Hing, Zeera Safaid + 7 more",dosage:"2 tablets twice a day after meal"},
+    {id:8,name:"Peni Long Oil",cat:"Men's Care Oil",price:"₹850",old:"₹1,299",badge:"Popular",bclass:"popular",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at3.36.57PM.jpg",rating:4.7,rev:178,discount:35,
+      tagline:"Premium Herbal Oil for Erection Firmness, Natural Girth Support, Blood Flow & Intimate Confidence",
+      desc:"Peni Long Oil is a premium Unani external herbal oil — one of the most comprehensively formulated topical male wellness oils, containing 21 powerful natural ingredients — 7 rare animal-based extracts drawn from the classical Unani tradition of male potency formulation, and 14 potent herbal extracts — working together to support local blood circulation, erection firmness, penile girth and fullness, tissue elasticity, and intimate sensitivity through consistent external massage application. Peni Long Oil is designed for men who want a natural, non-invasive, external approach to improving erection quality, girth, firmness, and intimate confidence — without pills, without pharmaceutical interventions, and without systemic side effects. As a strictly topical product, it has no impact on blood glucose or blood pressure, making it one of the safest male wellness products for men of all health backgrounds including those managing diabetes or hypertension.",
+      problems:[
+        "Weak or Soft Erections: Insufficient local blood flow to erectile tissue causing erections that are not firm or full enough for satisfying intimate performance.",
+        "Poor Erection Girth & Fullness: Erections that lack the thickness, fullness, and complete engorgement required for confident intimate performance.",
+        "Reduced Penile Sensitivity: Diminished local nerve sensation reducing arousal response, pleasure, and intimacy engagement.",
+        "Uneven Thickness or Mild Irregularities: Uneven blood engorgement along the shaft or mild girth irregularities linked to localised circulation differences.",
+        "Poor Erection Firmness & Duration: Erections that weaken or soften too quickly during intimacy — linked to poor sustained local blood flow.",
+        "Weak Tissue Elasticity: Reduced erectile tissue tone and elasticity affecting the quality and firmness of erection response.",
+        "Performance Anxiety from Physical Concerns: Psychological pressure from erection quality, girth, or size concerns creating a self-reinforcing cycle of intimate avoidance and low confidence.",
+        "Men Seeking Non-Invasive Natural Support: Men who want natural external erection and girth support without pills, pharmaceutical stimulants, or invasive procedures.",
+        "Post-Illness or Post-Stress Tissue Weakness: Loss of erection quality and tissue tone following illness, prolonged stress, or physical depletion.",
+        "General Male Intimate Confidence Decline: Overall loss of intimate self-assurance linked to declining erection quality, sensitivity, or girth concerns."
+      ],
+      suitable:[
+        "<strong>Diabetic & Hypertensive Men</strong> — Peni Long Oil is fully safe for diabetic and hypertensive men. This is a strictly external-use product. It does not enter the bloodstream in any clinically significant quantity and has absolutely no impact on blood glucose levels or blood pressure. Men managing diabetes, hypertension, or heart conditions can use Peni Long Oil without any medical restrictions or physician consultation requirements for the oil itself. Men with skin conditions or known allergies to herbal or animal-based ingredients should perform a patch test before full application.",
+        "<strong>What Is Peni Long Oil?</strong> — Peni Long Oil is a classical Unani external massage oil — a topical preparation applied through regular massage to the penile area. Its 21-ingredient formula combines rare animal-based Unani extracts, warming herbal botanicals, circulatory support herbs, nerve-stimulating compounds, and premium carrier oils into a single, deeply penetrating preparation that works at the level of local blood vessels, nerve endings, and erectile tissue with consistent use. The oil's dual approach — 7 rare animal-based extracts providing classical Unani potency and vascular benefits, combined with 14 herbal extracts providing warming, circulatory, and tissue-nourishing effects — makes it significantly more comprehensive than basic single-herb or single-oil topical preparations."
+      ],
+      keyBenefits:[
+        "Supports stronger, firmer erections through improved local blood circulation to erectile tissue.",
+        "Helps improve erection girth and fullness through better blood engorgement capacity.",
+        "Enhances penile sensitivity and arousal responsiveness for a more satisfying intimate experience.",
+        "Supports tissue elasticity and erectile tissue health over consistent use.",
+        "Addresses uneven thickness and mild girth irregularities through improved local circulation.",
+        "Completely safe for diabetic and hypertensive men — external only, no systemic effects.",
+        "Non-invasive natural approach — no pills, no pharmaceutical stimulants, no surgery.",
+        "21-ingredient formula — significantly more comprehensive than basic single-herb or single-oil topical preparations.",
+        "Can be used standalone or combined with any internal supplement for enhanced combined results.",
+        "Builds intimate confidence through visible and felt improvement in firmness, fullness, and sensitivity over time."
+      ],
+      whatMakesDiff:[
+        "21 active ingredients — the most ingredient-rich topical male wellness oil in the range.",
+        "7 rare animal-based Unani extracts — classical Unani potency compounds found in no ordinary herbal oil.",
+        "Addresses erection firmness, girth, sensitivity, tissue health, and confidence simultaneously through a single daily massage routine.",
+        "Completely safe for diabetic and hypertensive men — no blood glucose or blood pressure concerns.",
+        "No systemic effects, no dependency, no pharmaceutical stimulants — entirely natural and non-invasive.",
+        "Versatile — effective as a standalone product or as a powerful complement to any internal supplement for enhanced combined results.",
+        "Discreet packaging — complete privacy on every order."
+      ],
+      ingredients:"<strong>7 Rare Animal-Based Unani Extracts:</strong> Jonk Extract (Leech) – promotes sustained blood flow to erectile tissue; Earthworm Extract – supports vascular expansion and blood circulation; Regmahi (Sand Lizard Extract) – supports physical stamina and erectile tissue strength; Beer Bahuti (Red Velvet Mite) – heightens local arousal sensitivity; plus 3 more classical Unani animal-derived components.<br><br><strong>14 Potent Herbal Extracts:</strong> Jund Bedastar – stimulates local blood vessel dilation; Kalonji (Black Seed) – antioxidant and anti-inflammatory; Long (Clove) – vasodilatory and nerve-stimulating; Jaiphal (Nutmeg) – natural nerve stimulant and aphrodisiac; Akarkarha – stimulates local nerve activity; Malkangni – nerve and vascular tonic; Daar Chini (Cinnamon) – circulatory stimulant; Dhatura Siyah – tissue-relaxing and vasodilatory; Bee Wax – natural emulsifier and penetration enhancer; Til Oil (Sesame Oil) – primary carrier oil rich in Vitamin E; plus 4 more botanical extracts.",
+      dosage:"<strong>Patch Test First:</strong> Before full application, apply a small amount to the inner forearm and wait 30 minutes to check for any skin sensitivity.<br><br><strong>Daily Application — Nightly Routine:</strong> Take a small amount of oil on your fingertips and apply gently to the penile area. Massage softly in circular motions for 5 to 10 minutes before bedtime. Leave overnight for maximum absorption and tissue stimulation.<br><br><strong>Pre-Intimacy Application:</strong> Apply 30 to 45 minutes before intimacy for enhanced local blood flow, sensitivity, and firmness during the encounter.<br><br><strong>Consistency Is Key:</strong> For measurable improvements in girth, firmness, and erection quality, use consistently every day for a minimum of 2 to 3 months.",
+      results:"<strong>Weeks 1–2:</strong> Improved local warmth, better blood flow sensation, and increased penile sensitivity during and after massage. Early improvements in erection firmness and arousal responsiveness.<br><br><strong>Weeks 3–4:</strong> Noticeably firmer and fuller erections. Improved girth and erection thickness from better engorgement. Enhanced sensitivity and arousal response during intimacy. Growing intimate confidence.<br><br><strong>Months 2–3:</strong> Measurable improvements in erection girth, firmness, and duration. Improved tissue tone and elasticity. Sustained sensitivity enhancement and comprehensive restoration of intimate confidence through consistent regular use."
+    },
+    {id:9,name:"Testo King Tablet",cat:"Men's Vitality",price:"₹999",old:"₹1,499",badge:"Bestseller",bclass:"bestseller",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.40PM.jpg",rating:4.8,rev:256,discount:33,desc:"Ayurvedic formulation that boosts vigor & vitality. Strengthens the male reproductive system naturally.",benefits:["Boosts vigor & vitality","Enhances libido","Prolongs performance","Aphrodisiac in nature","Strengthens reproductive organs"],ingredients:"Macca Root, Satawar, Gokhru, Salam Panja, Musli Safaid, Kali Musli, Saffron, Shilajit + 5 more",dosage:"Two tablets daily at night with warm water or milk"},
+  ];
+
+  const id = parseInt(new URLSearchParams(window.location.search).get('id')) || 1;
+  const p = products.find(x => x.id === id);
+
+  if (!p) {
+    document.getElementById('loading').innerHTML = '<i class="fas fa-exclamation-circle"></i> Product not found. <a href="index.html" style="color:var(--green-700)">Back to store</a>';
+  } else {
+    document.getElementById('loading').style.display = 'none';
+    document.title = `${p.name} – AL SHIFA HERB`;
+
+    const stars = '<i class="fas fa-star"></i>'.repeat(Math.floor(p.rating)) + (p.rating%1>=.5?'<i class="fas fa-star-half-alt"></i>':'');
+    const badge = p.badge ? `<span class="pd-badge ${p.bclass}">${p.badge}</span>` : '';
+    const oldP = p.old ? `<span class="old">${p.old}</span>` : '';
+    const save = p.old ? Math.round((1 - parseInt(p.price.replace(/[₹,]/g,''))/parseInt(p.old.replace(/[₹,]/g,'')))*100) : 0;
+    const saveH = save > 0 ? `<span class="save">Save ${save}%</span>` : '';
+
+    // Gallery thumbs
+    const imgs = p.imgs || [p.img];
+    let thumbs = imgs.map((x,i) => `<img src="${x}" onclick="changeImg(this,'${x}')" class="${i===0?'active':''}" alt="">`).join('');
+
+    document.getElementById('pdWrap').innerHTML = `
+      <div class="pd-gallery" data-aos="fade-right">
+        <div class="main-img"><img src="${p.img}" alt="${p.name}" id="mainImg"></div>
+        ${imgs.length > 1 ? `<div class="thumb-row">${thumbs}</div>` : ''}
+      </div>
+      <div class="pd-info" data-aos="fade-left">
+        <div class="breadcrumb"><a href="index.html">Home</a> / ${p.name}</div>
+        ${badge}
+        <h1>${p.name}</h1>
+        ${p.tagline ? `<p class="pd-tagline">${p.tagline}</p>` : ''}
+        <div class="pd-rating">${stars} <span>(${p.rev} reviews)</span></div>
+        <div class="pd-price">${p.price} ${oldP} ${saveH}</div>
+        <p class="pd-tax">Tax included. Shipping calculated at checkout.</p>
+        <p style="font-size:.85rem;color:var(--text-light);margin-bottom:14px;line-height:1.7">${p.desc}</p>
+        <div class="pd-actions">
+          <div class="qty-row">
+            <label>Qty:</label>
+            <button class="qty-btn" onclick="chQty(-1)">−</button>
+            <input type="number" id="qty" value="1" min="1" max="99">
+            <button class="qty-btn" onclick="chQty(1)">+</button>
+          </div>
+          <button class="btn-add-cart" onclick="addCart()"><i class="fas fa-shopping-cart"></i> Add to Cart — ${p.price}</button>
+          <a href="checkout.html?id=${p.id}" class="btn-order-wa"><i class="fas fa-truck"></i> Order Now — COD</a>
+        </div>
+        <div class="pd-meta">
+          <span><i class="fas fa-truck"></i> Free shipping above ₹499</span>
+          <span><i class="fas fa-shield-alt"></i> 30-day money-back</span>
+          <span><i class="fas fa-leaf"></i> 100% Natural & Herbal</span>
+          <span><i class="fas fa-lock"></i> Discreet packaging</span>
+        </div>
+      </div>
+    `;
+    document.getElementById('pdWrap').style.display = 'grid';
+
+    // DETAIL SECTIONS (only for AS 81 Drops / full products)
+    const detailEl = document.getElementById('pdDetails');
+    if (p.problems || p.keyBenefits) {
+      let problemsHtml = '';
+      if (p.problems) {
+        problemsHtml = `<div class="pd-detail-section"><h2>Which Problems Does ${p.name} Help With?</h2><ul>${p.problems.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+      }
+
+      let suitableHtml = '';
+      if (p.suitable) {
+        suitableHtml = `<div class="pd-detail-section"><h2>Suitable for Various Patients Including Those with Existing Health Conditions</h2>${Array.isArray(p.suitable) ? p.suitable.map(x=>`<p>${x}</p>`).join('') : `<p>${p.suitable}</p>`}</div>`;
+      }
+
+      let keyBenefitsHtml = '';
+      if (p.keyBenefits) {
+        keyBenefitsHtml = `<div class="pd-detail-section"><h2>Key Benefits of ${p.name}</h2><div class="benefit-grid">${p.keyBenefits.map(x=>`<div class="bc"><h4>✓ ${x}</h4></div>`).join('')}</div></div>`;
+      }
+
+      let diffHtml = '';
+      if (p.whatMakesDiff) {
+        diffHtml = `<div class="pd-detail-section"><h2>What Makes ${p.name} Different?</h2><ul>${p.whatMakesDiff.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+      }
+
+      detailEl.innerHTML = `
+        ${problemsHtml}
+        ${suitableHtml}
+        ${keyBenefitsHtml}
+        ${diffHtml}
+        <div class="pd-detail-section"><h2>Ingredients / Composition</h2><p>${p.ingredients}</p></div>
+        <div class="pd-detail-section"><h2>How to Use</h2><p>${p.dosage}</p></div>
+        <div class="pd-detail-section"><h2>Results Timeline</h2><p>${p.results || 'Results vary by individual. Consistent use for 4-8 weeks is recommended for best results.'}</p></div>
+        <div class="pd-detail-section"><h2>FAQ</h2><div class="pd-faq-list">
+          <div class="pd-faq-item open"><div class="pd-faq-q">What is ${p.name}? <i class="fas fa-chevron-down"></i></div><div class="pd-faq-a">${p.name} is a natural herbal formulation designed to help with erectile dysfunction, male enhancement, and overall male vitality. Made with pure Ayurvedic herbs, it supports men's health naturally and safely.</div></div>
+          <div class="pd-faq-item"><div class="pd-faq-q">How does ${p.name} work? <i class="fas fa-chevron-down"></i></div><div class="pd-faq-a">${p.name} works by improving blood circulation, boosting libido, supporting natural testosterone production, and addressing the root causes of male sexual dysfunction.</div></div>
+          <div class="pd-faq-item"><div class="pd-faq-q">Who can use ${p.name}? <i class="fas fa-chevron-down"></i></div><div class="pd-faq-a">Suitable for adult men dealing with ED, low libido, premature ejaculation, or general sexual weakness. Also safe for diabetic patients. Consult your doctor before use.</div></div>
+          <div class="pd-faq-item"><div class="pd-faq-q">How should I take ${p.name}? <i class="fas fa-chevron-down"></i></div><div class="pd-faq-a">${p.dosage}</div></div>
+          <div class="pd-faq-item"><div class="pd-faq-q">Are there any side effects? <i class="fas fa-chevron-down"></i></div><div class="pd-faq-a">${p.name} is made from natural herbal ingredients and is generally well-tolerated. If you notice any unusual effects, stop use and consult your doctor.</div></div>
+          <div class="pd-faq-item"><div class="pd-faq-q">How long does it take to see results? <i class="fas fa-chevron-down"></i></div><div class="pd-faq-a">${p.results || 'Most users notice improvement with regular and consistent use over 4-8 weeks. Results vary by individual.'}</div></div>
+        </div></div>
+      `;
+      detailEl.style.display = 'block';
+
+      // FAQ toggle
+      document.querySelectorAll('.pd-faq-q').forEach(q=>{q.addEventListener('click',()=>q.parentElement.classList.toggle('open'))});
+    }
+
+    // RELATED
+    const related = products.filter(x => x.id !== id && x.cat === p.cat).slice(0, 4);
+    if (related.length) {
+      document.getElementById('relatedSection').style.display = 'block';
+      const g = document.getElementById('relatedGrid');
+      related.forEach(r => {
+        const ro = r.old ? `<span class="ro">${r.old}</span>` : '';
+        g.innerHTML += `<a href="product.html?id=${r.id}" class="related-card" data-aos="fade-up"><img src="${r.img}" alt="${r.name}" loading="lazy"><div class="ri"><h4>${r.name}</h4><div class="rp">${r.price} ${ro}</div></div></a>`;
+      });
+      AOS.refresh();
+    }
+  }
+
+  function changeImg(el,src){document.getElementById('mainImg').src=src;document.querySelectorAll('.thumb-row img').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
+  function chQty(d){const i=document.getElementById('qty');let v=parseInt(i.value)+d;i.value=v<1?1:v>99?99:v}
+  function addCart(){showToast(`${p.name} × ${document.getElementById('qty').value} added!`)}
+  function showToast(m){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+  document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('navMenu').classList.toggle('open'));
+  window.addEventListener('scroll',()=>document.getElementById('header').classList.toggle('scrolled',window.scrollY>60));
+</script>
+</body>
+</html>
