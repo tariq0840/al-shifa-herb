@@ -52,7 +52,15 @@
     .footer-social a{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:.8rem}
     .footer-social a:hover{background:var(--gold);border-color:var(--gold);color:#2c1a0e}
     .footer-bottom{max-width:1280px;margin:20px auto 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:.75rem}
-    @media(max-width:600px){.form-row{grid-template-columns:1fr}.checkout-wrap{padding:90px 16px 30px}.order-summary{flex-direction:column;text-align:center}}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .footer-logo .logo-icon{width:30px;height:30px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--green-900);font-size:.85rem}
+    .footer-logo span{color:var(--white)}
+    @media(max-width:600px){
+      .form-row{grid-template-columns:1fr}.checkout-wrap{padding:90px 16px 30px}.order-summary{flex-direction:column;text-align:center}
+      .footer-inner{grid-template-columns:1fr!important;text-align:center;gap:16px}
+      .footer-social{justify-content:center}
+      .footer-logo{justify-content:center!important}
+    }
   </style>
 </head>
 <body>
@@ -120,7 +128,7 @@
 <footer>
   <div class="footer-inner">
     <div>
-      <div class="logo" style="justify-content:flex-start;margin-bottom:8px"><span class="logo-icon"><i class="fas fa-leaf"></i></span> AL SHIFA <span>HERB</span></div>
+      <div class="footer-logo"><span class="logo-icon"><i class="fas fa-leaf"></i></span> AL SHIFA <span>HERB</span></div>
       <p style="font-size:.78rem;max-width:260px">Your trusted source for premium herbal wellness.</p>
       <div class="footer-social">
         <a href="#"><i class="fab fa-instagram"></i></a>

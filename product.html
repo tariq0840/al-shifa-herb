@@ -120,13 +120,28 @@
     .toast{position:fixed;bottom:90px;right:24px;z-index:9999;background:var(--green-800);color:var(--white);padding:10px 18px;border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);font-size:.8rem;display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:var(--transition)}
     .toast.show{transform:translateY(0);opacity:1}
 
-    @media(max-width:900px){.pd-wrap{grid-template-columns:1fr;gap:24px}.pd-gallery{position:static}.pd-info h1{font-size:1.3rem}.pd-price{font-size:1.4rem}}
+    @media(max-width:900px){.pd-wrap{grid-template-columns:1fr;gap:24px;padding:80px 16px 0}.pd-gallery{position:static}.pd-info h1{font-size:1.3rem}.pd-price{font-size:1.4rem}.footer-inner{grid-template-columns:1fr 1fr;gap:20px}}
     @media(max-width:768px){
-      .pd-wrap{padding:80px 16px 0}.pd-detail-wrap{padding:24px 16px}.related-grid{grid-template-columns:1fr 1fr}.pd-meta{grid-template-columns:1fr}
+      .pd-wrap{padding:70px 12px 0}.pd-detail-wrap{padding:20px 12px 30px}.related-grid{grid-template-columns:1fr 1fr}.pd-meta{grid-template-columns:1fr;font-size:.72rem}
       .nav-menu{display:none}.hamburger{display:block}
       .nav-menu.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;width:100%;background:var(--white);padding:14px 20px;border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
+      .pd-info h1{font-size:1.15rem}.pd-price{font-size:1.3rem}
+      .pd-gallery .thumb-row img{width:52px;height:52px}
+      .pd-detail-section h2{font-size:1.1rem}.pd-detail-section .benefit-grid{grid-template-columns:1fr}
+      .footer-inner{grid-template-columns:1fr;gap:16px;text-align:center}
+      .footer-social{justify-content:center}
+      .footer-logo{justify-content:center!important}
+      .pd-actions .btn-order-wa,.pd-actions .btn-add-cart{font-size:.85rem;padding:12px}
     }
-    @media(max-width:480px){.related-grid{grid-template-columns:1fr}}
+    @media(max-width:480px){
+      .related-grid{grid-template-columns:1fr}
+      .pd-gallery .thumb-row img{width:46px;height:46px}
+      .pd-gallery .thumb-row{gap:6px}
+      .footer-inner{text-align:center}
+    }
+    .footer-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .footer-logo .logo-icon{width:30px;height:30px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--green-900);font-size:.85rem}
+    .footer-logo span{color:var(--white)}
   </style>
 </head>
 <body>
@@ -161,7 +176,7 @@
 <footer>
   <div class="footer-inner">
     <div>
-      <div class="logo" style="justify-content:flex-start;margin-bottom:8px"><span class="logo-icon"><i class="fas fa-leaf"></i></span> AL SHIFA <span>HERB</span></div>
+      <div class="footer-logo"><span class="logo-icon"><i class="fas fa-leaf"></i></span> AL SHIFA <span>HERB</span></div>
       <p style="font-size:.78rem;max-width:260px">Your trusted source for premium herbal wellness. Nature's healing, in your hands.</p>
       <div class="footer-social">
         <a href="#"><i class="fab fa-instagram"></i></a>
@@ -411,12 +426,27 @@
     }
   }
 
-  function changeImg(el,src){document.getElementById('mainImg').src=src;document.querySelectorAll('.thumb-row img').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
+  var _curIdx = 0;
+  function changeImg(el,src){_curIdx=p.imgs?p.imgs.indexOf(src):0;document.getElementById('mainImg').src=src;document.querySelectorAll('.thumb-row img').forEach(x=>x.classList.remove('active'));if(el)el.classList.add('active')}
   function chQty(d){const i=document.getElementById('qty');let v=parseInt(i.value)+d;i.value=v<1?1:v>99?99:v}
   function addCart(){showToast(`${p.name} × ${document.getElementById('qty').value} added!`)}
   function showToast(m){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
   document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('navMenu').classList.toggle('open'));
   window.addEventListener('scroll',()=>document.getElementById('header').classList.toggle('scrolled',window.scrollY>60));
+  (function(){
+    var main = document.getElementById('mainImg'), startX;
+    if(!main)return;
+    main.addEventListener('touchstart',function(e){startX=e.touches[0].clientX},{passive:true});
+    main.addEventListener('touchend',function(e){
+      if(!startX||!p.imgs||p.imgs.length<2)return;
+      var endX=e.changedTouches[0].clientX, diff=startX-endX;
+      if(Math.abs(diff)<40)return;
+      _curIdx=diff>0?(_curIdx+1)%p.imgs.length:(_curIdx-1+p.imgs.length)%p.imgs.length;
+      var thumbs=document.querySelectorAll('.thumb-row img');
+      changeImg(thumbs[_curIdx],p.imgs[_curIdx]);
+      startX=null;
+    },{passive:true});
+  })();
 </script>
 </body>
 </html>
