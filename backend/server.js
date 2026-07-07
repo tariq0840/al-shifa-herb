@@ -153,6 +153,13 @@ app.post('/api/orders', async (req, res) => {
   }
 });
 
+const OPENWA_SESSION = process.env.OPENWA_SESSION || 'al-shifaherb';
+
+function waChatId(phone) {
+  const p = phone.replace(/[^0-9]/g, '');
+  return '91' + p.replace(/^91/, '') + '@c.us';
+}
+
 async function sendCustomerWhatsApp(order) {
   if (!OPENWA_URL || !OPENWA_TOKEN) return;
 
@@ -173,14 +180,14 @@ Need help?
 WhatsApp: +91 9557687044`;
 
   try {
-    await fetch(`${OPENWA_URL}/api/sendText`, {
+    await fetch(`${OPENWA_URL}/api/sessions/${OPENWA_SESSION}/messages/send-text`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENWA_TOKEN}`
+        'X-API-Key': OPENWA_TOKEN
       },
       body: JSON.stringify({
-        to: order.phone,
+        chatId: waChatId(order.phone),
         text: message
       })
     });
@@ -192,7 +199,7 @@ WhatsApp: +91 9557687044`;
 async function sendAdminWhatsApp(order) {
   if (!OPENWA_URL || !OPENWA_TOKEN) return;
 
-  const message = `🔔 *NEW ORDER - AL SHIFA HERB*
+  const message = `🔔 NEW ORDER - AL SHIFA HERB
 
 Customer: ${order.customer_name}
 Phone: ${order.phone}
@@ -204,14 +211,14 @@ Payment: ${order.payment_method || 'COD'}
 Date: ${new Date().toLocaleString('en-IN')}`;
 
   try {
-    await fetch(`${OPENWA_URL}/api/sendText`, {
+    await fetch(`${OPENWA_URL}/api/sessions/${OPENWA_SESSION}/messages/send-text`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENWA_TOKEN}`
+        'X-API-Key': OPENWA_TOKEN
       },
       body: JSON.stringify({
-        to: ADMIN_PHONE,
+        chatId: waChatId(ADMIN_PHONE),
         text: message
       })
     });

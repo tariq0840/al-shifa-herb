@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: alshifa-herb-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: SUPABASE_URL
+        value: https://nbbkbsdikayrdocvpmea.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iYmtic2Rpa2F5cmRvY3ZwbWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNDMwMjEsImV4cCI6MjA5ODgxOTAyMX0.t5EV8_mahMxP2VDYoFmv1sgW3RYjxeUlQkqbN9EHd2U
+      - key: OPENWA_URL
+        value: https://wa.prime-store.in
+      - key: OPENWA_TOKEN
+        value: owa_k1_1f9fc33877c037ca05d671dfa6159b7cba01eb7e00114694adc94dc675bacdb5
+      - key: OPENWA_SESSION
+        value: al-shifaherb
+      - key: ADMIN_PHONE
+        value: 919557687044
+      - key: FAST2SMS_API_KEY
+        value: ""
+      - key: PORT
+        value: 4000
