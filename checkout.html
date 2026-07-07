@@ -76,6 +76,9 @@
       .logo-icon{width:24px;height:24px;font-size:.75rem;flex-shrink:0}
       .checkout-wrap{padding-top:62px}
     }
+    .whatsapp-float{position:fixed;bottom:24px;right:24px;z-index:999;width:50px;height:50px;border-radius:50%;background:#25d366;color:var(--white);border:none;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 20px rgba(37,211,102,.4);display:flex;align-items:center;justify-content:center;animation:pulse 2s infinite;text-decoration:none}
+    .whatsapp-float:hover{color:var(--white)}
+    @keyframes pulse{0%{box-shadow:0 4px 20px rgba(37,211,102,.4)}50%{box-shadow:0 4px 36px rgba(37,211,102,.6)}100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}}
   </style>
 </head>
 <body>
@@ -141,6 +144,7 @@
   </form>
 </div>
 
+<a href="https://wa.me/919557687044?text=Hi%20AL%20SHIFA%20HERB!%20I%20want%20to%20order%20products." class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 <footer>
   <div class="footer-inner">
     <div>
@@ -177,7 +181,8 @@
     {id:6,name:"Pet Saafizym Syrup",price:"₹550",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.39PM_1.jpg"},
     {id:7,name:"Pet Saafizym Tablet",price:"₹350",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.39PM_2.jpg"},
     {id:8,name:"Peni Long Oil",price:"₹850",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at3.36.57PM.jpg"},
-    {id:9,name:"Testo King Tablet",price:"₹999",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.40PM.jpg"}
+    {id:9,name:"Testo King Tablet",price:"₹999",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.40PM.jpg"},
+    {id:10,name:"Al-Shifa Shilajit Gold",price:"₹999",img:"images/shilajit.jpeg"}
   ];
 
   let product = null;

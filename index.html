@@ -15,8 +15,7 @@
     h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:700}
     :root{--green-900:#0a2e1a;--green-800:#0f4124;--green-700:#155f33;--green-600:#1e8045;--gold:#c9a84c;--gold-light:#f0dfa8;--gold-dark:#a8882e;--rose:#d4a0a0;--rose-light:#f0e0e0;--cream:#faf7f0;--white:#fff;--text:#1a1a2e;--text-light:#6b7280;--border:#eee;--shadow:0 2px 16px rgba(0,0,0,.06);--shadow-lg:0 12px 48px rgba(0,0,0,.1);--radius:14px;--radius-sm:8px;--transition:.4s cubic-bezier(.22,1,.36,1)}
 
-    header{position:fixed;top:0;left:0;width:100%;z-index:1000;transition:var(--transition)}
-    header.scrolled{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);box-shadow:0 2px 40px rgba(0,0,0,.06)}
+    header{position:fixed;top:0;left:0;width:100%;z-index:1000;transition:var(--transition);background:rgba(255,255,255,.95);backdrop-filter:blur(20px);box-shadow:0 2px 40px rgba(0,0,0,.06)}
     .header-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between}
     .logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800;color:var(--green-800);text-decoration:none;display:flex;align-items:center;gap:8px}
     .logo-icon{width:34px;height:34px;background:var(--green-700);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:1rem}
@@ -420,7 +419,7 @@
       </div>
       <form class="contact-form" id="contactForm" data-aos="fade-left">
         <input type="text" placeholder="Your Name" required>
-        <input type="email" placeholder="Your Email" required>
+        <input type="tel" placeholder="Your Phone Number" required maxlength="10" pattern="[0-9]{10}">
         <input type="text" placeholder="Subject">
         <textarea placeholder="Your Message..." required></textarea>
         <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;cursor:pointer"><i class="fas fa-paper-plane"></i> Send Message</button>
@@ -448,7 +447,7 @@
   <div class="footer-bottom">© 2026 AL SHIFA HERB. All rights reserved. | 100% Herbal | Made in India</div>
 </footer>
 
-<a href="https://wa.me/919557687044" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<a href="https://wa.me/919557687044?text=Hi%20AL%20SHIFA%20HERB!%20I%20want%20to%20order%20products." class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 <div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Done!</span></div>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -468,24 +467,14 @@
     {id:6,name:"Pet Saafizym Syrup",cat:"Digestive Health",price:"₹550",old:"₹850",badge:"New",bclass:"new",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.39PM_1.jpg",rating:4.6,rev:145,discount:35},
     {id:7,name:"Pet Saafizym Tablet",cat:"Digestive Health",price:"₹350",old:"₹550",badge:null,bclass:"",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.39PM_2.jpg",rating:4.5,rev:167,discount:36},
     {id:8,name:"Peni Long Oil",cat:"Men's Care Oil",price:"₹850",old:"₹1,299",badge:"Popular",bclass:"popular",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at3.36.57PM.jpg",rating:4.7,rev:178,discount:35},
-    {id:9,name:"Testo King Tablet",cat:"Men's Vitality",price:"₹999",old:"₹1,499",badge:"Bestseller",bclass:"bestseller",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.40PM.jpg",rating:4.8,rev:256,discount:33}
+    {id:9,name:"Testo King Tablet",cat:"Men's Vitality",price:"₹999",old:"₹1,499",badge:"Bestseller",bclass:"bestseller",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.40PM.jpg",rating:4.8,rev:256,discount:33},
+    {id:10,name:"Al-Shifa Shilajit Gold",cat:"Men's Vitality",price:"₹999",old:"₹1,650",badge:"Bestseller",bclass:"bestseller",img:"images/shilajit.jpeg",rating:4.8,rev:189,discount:40}
   ];
 
   async function init() {
-    let products;
-    let data, error;
-    try { const r = await supabaseClient.from('products').select('*').order('id'); data = r.data; error = r.error; } catch(e) { error = e; }
-    if (error || !data || data.length === 0) {
-      products = hardcoded;
-    } else {
-      products = data.map(p => ({
-        id:p.id, name:p.name, cat:p.category, price:p.price, old:p.old_price,
-        badge:p.badge, bclass:p.badge_class||'', img:(p.image||'').replace(/^\//,''),
-        rating:p.rating||4.5, rev:p.reviews||0, discount:p.discount||0
-      }));
-    }
+    let products = [...hardcoded];
 
-    const featured = [products[0], products[8], products[2]];
+    const featured = [products[0], products[9], products[8]];
     const heroEl = document.getElementById('heroProducts');
     featured.forEach((p,i)=>{
       const stars = '<i class="fas fa-star"></i>'.repeat(Math.floor(p.rating));
@@ -520,14 +509,6 @@
     });
   }
   init();
-
-  document.querySelectorAll('.cat-tab').forEach(t=>{
-    t.addEventListener('click',()=>{
-      document.querySelectorAll('.cat-tab').forEach(x=>x.classList.remove('active'));
-      t.classList.add('active');
-      render(t.dataset.cat);
-    });
-  });
 
   document.querySelectorAll('.faq-question').forEach(q=>{q.addEventListener('click',()=>q.parentElement.classList.toggle('open'))});
   document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('navMenu').classList.toggle('open'));
