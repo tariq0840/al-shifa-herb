@@ -128,11 +128,11 @@ app.post('/api/orders', async (req, res) => {
       city,
       pincode,
       status: 'pending'
-    }).select();
+    }).select('id,product_name');
 
     if (error) {
       console.error('Order insert error:', error);
-      return res.json({ success: false, message: 'Order placement failed' });
+      return res.json({ success: false, message: 'Order placement failed', error: error.message });
     }
 
     const order = data[0];
