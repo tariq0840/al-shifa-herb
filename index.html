@@ -460,7 +460,7 @@
     } else {
       products = data.map(p => ({
         id:p.id, name:p.name, cat:p.category, price:p.price, old:p.old_price,
-        badge:p.badge, bclass:p.badge_class||'', img:p.image,
+        badge:p.badge, bclass:p.badge_class||'', img:(p.image||'').replace(/^\//,''),
         rating:p.rating||4.5, rev:p.reviews||0, discount:p.discount||0
       }));
     }

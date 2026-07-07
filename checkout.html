@@ -161,7 +161,7 @@
     const id = parseInt(new URLSearchParams(window.location.search).get('id')) || 0;
     const { data } = await supabaseClient.from('products').select('*').eq('id',id).single();
     if (data) {
-      product = {id:data.id, name:data.name, price:data.price, img:data.image};
+      product = {id:data.id, name:data.name, price:data.price, img:(data.image||'').replace(/^\//,'')};
     } else {
       product = hardcoded.find(p => p.id === id) || null;
     }
