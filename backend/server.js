@@ -99,8 +99,8 @@ app.post('/api/send-otp', async (req, res) => {
             'X-API-Key': OPENWA_TOKEN
           },
           body: JSON.stringify({
-            chatId: waChatId(ADMIN_PHONE),
-            text: `🔐 AL SHIFA HERB - OTP for ${phone}\n\nOTP: ${otp}\n\nValid for 5 minutes.`
+            chatId: waChatId(phone),
+            text: `🔐 AL SHIFA HERB - OTP Verification\n\nYour OTP: ${otp}\n\nValid for 5 minutes.\n\nIf you did not request this, please ignore.`
           })
         });
         if (waRes.ok) delivered = true;
