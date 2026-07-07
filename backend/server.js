@@ -153,7 +153,7 @@ app.post('/api/orders', async (req, res) => {
   }
 });
 
-const OPENWA_SESSION = process.env.OPENWA_SESSION || 'al-shifaherb';
+const OPENWA_SESSION = process.env.OPENWA_SESSION || 'alshifaherb';
 
 function waChatId(phone) {
   const p = phone.replace(/[^0-9]/g, '');
