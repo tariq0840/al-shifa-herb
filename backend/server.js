@@ -69,7 +69,7 @@ app.post('/api/send-otp', async (req, res) => {
 
     if (!delivered && OPENWA_URL && OPENWA_TOKEN) {
       try {
-        await fetch(`${OPENWA_URL}/api/sessions/${OPENWA_SESSION}/messages/send-text`, {
+        const waRes = await fetch(`${OPENWA_URL}/api/sessions/${OPENWA_SESSION}/messages/send-text`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -80,7 +80,11 @@ app.post('/api/send-otp', async (req, res) => {
             text: `🔐 AL SHIFA HERB - OTP Verification\n\nYour OTP: ${otp}\n\nValid for 5 minutes.\n\nIf you did not request this, please ignore.`
           })
         });
-        delivered = true;
+        if (waRes.ok) delivered = true;
+        else {
+          const waErr = await waRes.text();
+          console.log('WhatsApp OTP response:', waRes.status, waErr);
+        }
       } catch (e) {
         console.log('WhatsApp OTP error:', e.message);
       }
