@@ -19,5 +19,4 @@ services:
         value: 1807ae98-6886-42bb-8584-690cbb79b2e0
       - key: ADMIN_PHONE
         value: 919557687044
-      - key: FAST2SMS_API_KEY
-        value: ""
+      # FAST2SMS_API_KEY removed - OTP now shown on screen

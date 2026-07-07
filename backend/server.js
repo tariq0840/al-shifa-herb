@@ -16,36 +16,12 @@ const supabase = createClient(
 const OPENWA_URL = process.env.OPENWA_URL || '';
 const OPENWA_TOKEN = process.env.OPENWA_TOKEN || '';
 const ADMIN_PHONE = process.env.ADMIN_PHONE || '919557687044';
-const FAST2SMS_API_KEY = process.env.FAST2SMS_API_KEY || '';
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
 const otpStore = {};
-
-app.get('/api/check-wa', async (req, res) => {
-  const results = {};
-  try {
-    const healthUrl = `${OPENWA_URL}/api/health`;
-    const healthRes = await fetch(healthUrl, { method: 'GET', headers: { 'X-API-Key': OPENWA_TOKEN } });
-    const healthData = healthRes.ok ? await healthRes.json() : { error: healthRes.status };
-    results.health = { url: healthUrl, status: healthRes.status, data: healthData };
-  } catch (e) { results.health = { error: e.message }; }
-
-  try {
-    const sendUrl = `${OPENWA_URL}/api/sessions/${OPENWA_SESSION}/messages/send-text`;
-    const sendRes = await fetch(sendUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-API-Key': OPENWA_TOKEN },
-      body: JSON.stringify({ chatId: '919557687044@c.us', text: 'test' })
-    });
-    const sendData = sendRes.ok ? await sendRes.json() : await sendRes.text();
-    results.send = { url: sendUrl, status: sendRes.status, data: sendData };
-  } catch (e) { results.send = { error: e.message }; }
-
-  res.json({ env: { openwa_url: OPENWA_URL, openwa_session: OPENWA_SESSION, openwa_token_set: !!OPENWA_TOKEN }, ...results });
-});
 
 app.post('/api/send-otp', async (req, res) => {
   try {
@@ -143,7 +119,6 @@ app.post('/api/orders', async (req, res) => {
 
     const order = data[0];
 
-    sendCustomerWhatsApp(order);
     sendAdminWhatsApp(order);
 
     return res.json({
@@ -166,42 +141,6 @@ function waChatId(phone) {
   else if (p.length === 11 && p.startsWith('91')) p = '91' + p.slice(2);
   else p = '91' + p.slice(-10);
   return p + '@c.us';
-}
-
-async function sendCustomerWhatsApp(order) {
-  if (!OPENWA_URL || !OPENWA_TOKEN) return;
-
-  const message = `Hello ${order.customer_name},
-
-Thank you for your order ❤️
-
-Order Number: #${order.id}
-
-Product: ${order.product_name}
-Quantity: ${order.quantity}
-Total: ${order.price || 'COD'}
-Estimated Delivery: 3-7 Working Days
-
-Our team will contact you shortly for confirmation.
-
-Need help?
-WhatsApp: +91 9557687044`;
-
-  try {
-    await fetch(`${OPENWA_URL}/api/sessions/${OPENWA_SESSION}/messages/send-text`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-Key': OPENWA_TOKEN
-      },
-      body: JSON.stringify({
-        chatId: waChatId(order.phone),
-        text: message
-      })
-    });
-  } catch (err) {
-    console.error('Customer WhatsApp error:', err);
-  }
 }
 
 async function sendAdminWhatsApp(order) {
