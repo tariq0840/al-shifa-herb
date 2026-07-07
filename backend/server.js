@@ -25,21 +25,26 @@ function generateOTP() {
 const otpStore = {};
 
 app.get('/api/check-wa', async (req, res) => {
+  const results = {};
   try {
-    const url = `${OPENWA_URL}/api/health`;
-    const waRes = await fetch(url, { method: 'GET', headers: { 'X-API-Key': OPENWA_TOKEN } });
-    const waStatus = waRes.ok ? await waRes.json() : { error: waRes.status };
-    res.json({
-      openwa_url: OPENWA_URL,
-      openwa_session: OPENWA_SESSION,
-      openwa_token_set: !!OPENWA_TOKEN,
-      full_url: url,
-      wa_health: waStatus,
-      wa_status_code: waRes.status
+    const healthUrl = `${OPENWA_URL}/api/health`;
+    const healthRes = await fetch(healthUrl, { method: 'GET', headers: { 'X-API-Key': OPENWA_TOKEN } });
+    const healthData = healthRes.ok ? await healthRes.json() : { error: healthRes.status };
+    results.health = { url: healthUrl, status: healthRes.status, data: healthData };
+  } catch (e) { results.health = { error: e.message }; }
+
+  try {
+    const sendUrl = `${OPENWA_URL}/api/sessions/${OPENWA_SESSION}/messages/send-text`;
+    const sendRes = await fetch(sendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': OPENWA_TOKEN },
+      body: JSON.stringify({ chatId: '919557687044@c.us', text: 'test' })
     });
-  } catch (e) {
-    res.json({ error: e.message, openwa_url: OPENWA_URL, openwa_session: OPENWA_SESSION, openwa_token_set: !!OPENWA_TOKEN });
-  }
+    const sendData = sendRes.ok ? await sendRes.json() : await sendRes.text();
+    results.send = { url: sendUrl, status: sendRes.status, data: sendData };
+  } catch (e) { results.send = { error: e.message }; }
+
+  res.json({ env: { openwa_url: OPENWA_URL, openwa_session: OPENWA_SESSION, openwa_token_set: !!OPENWA_TOKEN }, ...results });
 });
 
 app.post('/api/send-otp', async (req, res) => {
