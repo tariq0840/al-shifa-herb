@@ -240,10 +240,6 @@
 
       if (result.success) {
         setOtpStatus(result.message || 'OTP Sent Successfully', 'success');
-        if (result.dev_otp) {
-          document.getElementById('otpInput').value = result.dev_otp;
-          setOtpStatus('DEV MODE - OTP: ' + result.dev_otp, 'success');
-        }
         btn.innerHTML = '<i class="fas fa-check"></i> Sent';
         btn.classList.add('sent');
         document.getElementById('otpRow').style.display = 'flex';

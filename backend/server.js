@@ -44,7 +44,7 @@ app.post('/api/send-otp', async (req, res) => {
       console.log('Supabase OTP log skipped:', dbErr.message);
     }
 
-    let viaSms = false;
+    let delivered = false;
     if (FAST2SMS_API_KEY) {
       try {
         const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
@@ -60,17 +60,36 @@ app.post('/api/send-otp', async (req, res) => {
           })
         });
         const result = await response.json();
-        if (result.return) viaSms = true;
-        else console.log('Fast2SMS send error:', result);
+        if (result.return) delivered = true;
+        else console.log('Fast2SMS error:', result);
       } catch (e) {
         console.log('Fast2SMS error:', e.message);
+      }
+    }
+
+    if (!delivered && OPENWA_URL && OPENWA_TOKEN) {
+      try {
+        await fetch(`${OPENWA_URL}/api/sessions/${OPENWA_SESSION}/messages/send-text`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': OPENWA_TOKEN
+          },
+          body: JSON.stringify({
+            chatId: waChatId(phone),
+            text: `🔐 AL SHIFA HERB - OTP Verification\n\nYour OTP: ${otp}\n\nValid for 5 minutes.\n\nIf you did not request this, please ignore.`
+          })
+        });
+        delivered = true;
+      } catch (e) {
+        console.log('WhatsApp OTP error:', e.message);
       }
     }
 
     return res.json({
       success: true,
       message: 'OTP Sent Successfully',
-      dev_otp: viaSms ? undefined : otp
+      delivered
     });
   } catch (err) {
     console.error('send-otp error:', err);
