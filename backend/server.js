@@ -44,28 +44,34 @@ app.post('/api/send-otp', async (req, res) => {
       console.log('Supabase OTP log skipped:', dbErr.message);
     }
 
+    let viaSms = false;
     if (FAST2SMS_API_KEY) {
-      const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
-        method: 'POST',
-        headers: {
-          'authorization': FAST2SMS_API_KEY,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          route: 'otp',
-          numbers: phone,
-          variables_values: otp
-        })
-      });
-      const result = await response.json();
-      if (!result.return) {
-        console.log('Fast2SMS send error:', result);
+      try {
+        const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
+          method: 'POST',
+          headers: {
+            'authorization': FAST2SMS_API_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            route: 'otp',
+            numbers: phone,
+            variables_values: otp
+          })
+        });
+        const result = await response.json();
+        if (result.return) viaSms = true;
+        else console.log('Fast2SMS send error:', result);
+      } catch (e) {
+        console.log('Fast2SMS error:', e.message);
       }
-    } else {
-      console.log(`[DEV] OTP for ${phone}: ${otp}`);
     }
 
-    return res.json({ success: true, message: 'OTP Sent Successfully' });
+    return res.json({
+      success: true,
+      message: 'OTP Sent Successfully',
+      dev_otp: viaSms ? undefined : otp
+    });
   } catch (err) {
     console.error('send-otp error:', err);
     return res.status(500).json({ success: false, message: 'Server error' });
