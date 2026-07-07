@@ -117,7 +117,7 @@ app.post('/api/send-otp', async (req, res) => {
       success: true,
       message: 'OTP Sent Successfully',
       delivered,
-      ...(phone.replace(/\D/g,'') === ADMIN_PHONE.replace(/\D/g,'') ? { devOtp: otp } : {})
+      ...(phone.replace(/\D/g,'') === ADMIN_PHONE.replace(/\D/g,'').slice(-10) ? { devOtp: otp } : {})
     });
   } catch (err) {
     console.error('send-otp error:', err);
