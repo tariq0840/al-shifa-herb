@@ -207,8 +207,12 @@ app.post('/api/orders', async (req, res) => {
 const OPENWA_SESSION = process.env.OPENWA_SESSION || '1807ae98-6886-42bb-8584-690cbb79b2e0';
 
 function waChatId(phone) {
-  const p = phone.replace(/[^0-9]/g, '');
-  return '91' + p.replace(/^91/, '') + '@c.us';
+  let p = phone.replace(/[^0-9]/g, '');
+  if (p.length === 10) p = '91' + p;
+  else if (p.length === 12 && p.startsWith('91')) p = p;
+  else if (p.length === 11 && p.startsWith('91')) p = '91' + p.slice(2);
+  else p = '91' + p.slice(-10);
+  return p + '@c.us';
 }
 
 async function sendCustomerWhatsApp(order) {
