@@ -435,8 +435,8 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const { createClient } = supabase;
-  const supabaseClient = createClient('https://nbbkbsdikayrdocvpmea.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iYmtic2Rpa2F5cmRvY3ZwbWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNDMwMjEsImV4cCI6MjA5ODgxOTAyMX0.t5EV8_mahMxP2VDYoFmv1sgW3RYjxeUlQkqbN9EHd2U');
+  let supabaseClient;
+  try { const { createClient } = supabase; supabaseClient = createClient('https://nbbkbsdikayrdocvpmea.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iYmtic2Rpa2F5cmRvY3ZwbWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNDMwMjEsImV4cCI6MjA5ODgxOTAyMX0.t5EV8_mahMxP2VDYoFmv1sgW3RYjxeUlQkqbN9EHd2U'); } catch(e) {}
 
   AOS.init({once:true,offset:80});
 
@@ -454,7 +454,8 @@
 
   async function init() {
     let products;
-    const { data, error } = await supabaseClient.from('products').select('*').order('id');
+    let data, error;
+    try { const r = await supabaseClient.from('products').select('*').order('id'); data = r.data; error = r.error; } catch(e) { error = e; }
     if (error || !data || data.length === 0) {
       products = hardcoded;
     } else {
