@@ -15,9 +15,6 @@
     h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:700}
     :root{--green-900:#0a2e1a;--green-800:#0f4124;--green-700:#155f33;--green-600:#1e8045;--gold:#c9a84c;--gold-dark:#a8882e;--cream:#faf6ef;--white:#fff;--text:#1a1a2e;--text-light:#6b7280;--border:#eee;--shadow:0 2px 16px rgba(0,0,0,.06);--shadow-lg:0 12px 48px rgba(0,0,0,.1);--radius:14px;--radius-sm:8px;--transition:.4s cubic-bezier(.22,1,.36,1)}
 
-    .top-bar{background:var(--green-900);color:rgba(255,255,255,.7);font-size:.72rem;padding:6px 0;text-align:center;letter-spacing:.5px}
-    .top-bar span{color:var(--gold);font-weight:600}
-
     header{position:fixed;top:0;left:0;width:100%;z-index:1000;transition:var(--transition)}
     header.scrolled{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);box-shadow:0 2px 40px rgba(0,0,0,.06)}
     .header-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between}
@@ -144,7 +141,6 @@
       .footer-inner{text-align:center}
     }
     @media(max-width:430px){
-      .top-bar{font-size:.58rem;padding:4px 6px;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       .header-inner{padding:6px 10px;gap:4px}
       .logo{font-size:.95rem;gap:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
       .logo-icon{width:24px;height:24px;font-size:.75rem;flex-shrink:0}
@@ -160,8 +156,6 @@
   </style>
 </head>
 <body>
-
-<div class="top-bar">🔥 <span>FREE SHIPPING</span> on orders above ₹499 · <span>COD</span> Available · <span>100% HERBAL</span></div>
 
 <header id="header">
   <div class="header-inner">
@@ -373,10 +367,11 @@
           <a href="checkout.html?id=${p.id}" class="btn-order-wa"><i class="fas fa-truck"></i> Order Now — COD</a>
         </div>
         <div class="pd-meta">
-          <span><i class="fas fa-truck"></i> Free shipping above ₹499</span>
-          <span><i class="fas fa-shield-alt"></i> 30-day money-back</span>
-          <span><i class="fas fa-leaf"></i> 100% Natural & Herbal</span>
-          <span><i class="fas fa-lock"></i> Discreet packaging</span>
+          <span><i class="fas fa-leaf"></i> 100% Herbal</span>
+          <span><i class="fas fa-truck"></i> Fast Shipping</span>
+          <span><i class="fas fa-box"></i> Private Packaging</span>
+          <span><i class="fas fa-shield-alt"></i> Secure Payment</span>
+          <span><i class="fas fa-hand-holding-usd"></i> Cash on Delivery</span>
         </div>
       </div>
     `;

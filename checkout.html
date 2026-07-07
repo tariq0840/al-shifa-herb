@@ -14,8 +14,6 @@
     body{font-family:'Inter',sans-serif;background:#fff;color:#1a1a2e;line-height:1.6;overflow-x:hidden}
     h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:700}
     :root{--green-900:#0a2e1a;--green-800:#0f4124;--green-700:#155f33;--green-600:#1e8045;--gold:#c9a84c;--gold-dark:#a8882e;--cream:#faf7f0;--white:#fff;--text:#1a1a2e;--text-light:#6b7280;--border:#eee;--shadow:0 2px 16px rgba(0,0,0,.06);--shadow-lg:0 12px 48px rgba(0,0,0,.1);--radius:14px;--radius-sm:8px;--transition:.4s cubic-bezier(.22,1,.36,1)}
-    .top-bar{background:var(--green-900);color:rgba(255,255,255,.7);font-size:.72rem;padding:6px 0;text-align:center;letter-spacing:.5px}
-    .top-bar span{color:var(--gold);font-weight:600}
     header{position:fixed;top:0;left:0;width:100%;z-index:1000;transition:var(--transition);background:rgba(255,255,255,.95);backdrop-filter:blur(20px);box-shadow:0 2px 40px rgba(0,0,0,.06)}
     .header-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between}
     .logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800;color:var(--green-800);text-decoration:none;display:flex;align-items:center;gap:8px}
@@ -36,13 +34,21 @@
     .form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1)}
     .form-group textarea{min-height:80px;resize:vertical}
     .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .phone-row{display:flex;gap:8px}
+    .phone-row input{flex:1}
+    .btn-otp{white-space:nowrap;padding:11px 16px;border:none;border-radius:var(--radius-sm);background:var(--green-700);color:#fff;font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--transition);font-family:'Inter',sans-serif}
+    .btn-otp:hover{background:var(--green-600)}
+    .btn-otp:disabled{opacity:.5;cursor:not-allowed}
+    .btn-otp.sent{background:var(--gold);color:#2c1a0e}
+    .otp-row{display:none;gap:8px;margin-top:-6px}
+    .otp-row input{flex:1;text-align:center;letter-spacing:6px;font-size:1.1rem;font-weight:700}
+    .otp-status{font-size:.78rem;margin-top:4px;display:flex;align-items:center;gap:6px}
+    .otp-status.success{color:#16a34a}
+    .otp-status.error{color:#dc2626}
+    .otp-status.info{color:var(--text-light)}
     .btn-submit{width:100%;padding:14px;border:none;border-radius:50px;background:var(--gold);color:#2c1a0e;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:var(--transition)}
     .btn-submit:hover{background:var(--gold-dark);transform:translateY(-2px)}
     .btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
-    .success-msg{display:none;text-align:center;padding:40px 20px}
-    .success-msg .ic{width:64px;height:64px;border-radius:50%;background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:1.5rem}
-    .success-msg h2{color:var(--green-900);margin-bottom:6px}
-    .success-msg p{color:var(--text-light);font-size:.9rem;margin-bottom:18px}
     footer{background:var(--green-900);color:rgba(255,255,255,.5);padding:36px 24px 18px;margin-top:40px}
     .footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:28px}
     footer h4{font-family:'Inter',sans-serif;font-weight:600;font-size:.82rem;color:var(--white);margin-bottom:10px}
@@ -60,9 +66,11 @@
       .footer-inner{grid-template-columns:1fr!important;text-align:center;gap:16px}
       .footer-social{justify-content:center}
       .footer-logo{justify-content:center!important}
+      .phone-row{flex-direction:column}
+      .btn-otp{width:100%;padding:11px}
+      .otp-row{flex-direction:column}
     }
     @media(max-width:430px){
-      .top-bar{font-size:.58rem;padding:4px 6px;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       .header-inner{padding:6px 10px;gap:4px}
       .logo{font-size:.95rem;gap:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
       .logo-icon{width:24px;height:24px;font-size:.75rem;flex-shrink:0}
@@ -72,7 +80,6 @@
 </head>
 <body>
 
-<div class="top-bar">🔥 <span>FREE SHIPPING</span> on orders above ₹499 · <span>COD</span> Available · <span>100% HERBAL</span></div>
 <header>
   <div class="header-inner">
     <a href="index.html" class="logo"><span class="logo-icon"><i class="fas fa-leaf"></i></span> AL SHIFA <span>HERB</span></a>
@@ -94,7 +101,15 @@
       </div>
       <div class="form-group">
         <label>Phone Number *</label>
-        <input type="tel" id="phone" required placeholder="10-digit mobile number">
+        <div class="phone-row">
+          <input type="tel" id="phone" required placeholder="10-digit mobile number" maxlength="10" pattern="[0-9]{10}">
+          <button type="button" class="btn-otp" id="sendOtpBtn" onclick="sendOTP()"><i class="fas fa-paper-plane"></i> Send OTP</button>
+        </div>
+        <div class="otp-row" id="otpRow">
+          <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6" inputmode="numeric" pattern="[0-9]{6}">
+          <button type="button" class="btn-otp" id="verifyOtpBtn" onclick="verifyOTP()"><i class="fas fa-check"></i> Verify</button>
+        </div>
+        <div class="otp-status" id="otpStatus"></div>
       </div>
     </div>
     <div class="form-group">
@@ -108,7 +123,7 @@
       </div>
       <div class="form-group">
         <label>Pincode *</label>
-        <input type="text" id="pincode" required placeholder="6-digit pincode">
+        <input type="text" id="pincode" required placeholder="6-digit pincode" maxlength="6" pattern="[0-9]{6}">
       </div>
     </div>
     <div class="form-row">
@@ -121,15 +136,9 @@
         <input type="text" value="Cash on Delivery" disabled style="background:#f5f5f5;color:var(--green-700);font-weight:600">
       </div>
     </div>
-    <button type="submit" class="btn-submit" id="submitBtn"><i class="fas fa-check-circle"></i> Confirm Order</button>
+    <button type="submit" class="btn-submit" id="submitBtn" disabled><i class="fas fa-check-circle"></i> Confirm Order</button>
+    <p style="text-align:center;font-size:.75rem;color:var(--text-light);margin-top:6px" id="verifyHint">Please verify your mobile number to place the order.</p>
   </form>
-</div>
-
-<div class="success-msg" id="successMsg" style="max-width:680px;margin:0 auto;padding:100px 24px 40px">
-  <div class="ic"><i class="fas fa-check"></i></div>
-  <h2>Order Placed Successfully!</h2>
-  <p>Thank you! Your order has been received. We will contact you soon on your phone number to confirm the delivery.</p>
-  <a href="index.html" class="btn-submit" style="display:inline-flex;width:auto;padding:12px 32px;text-decoration:none"><i class="fas fa-home"></i> Back to Home</a>
 </div>
 
 <footer>
@@ -158,6 +167,7 @@
   let supabaseClient;
   try { const { createClient } = supabase; supabaseClient = createClient('https://nbbkbsdikayrdocvpmea.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iYmtic2Rpa2F5cmRvY3ZwbWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNDMwMjEsImV4cCI6MjA5ODgxOTAyMX0.t5EV8_mahMxP2VDYoFmv1sgW3RYjxeUlQkqbN9EHd2U'); } catch(e) {}
 
+  const API_URL = localStorage.getItem('alshifa_api_url') || '';
   const hardcoded = [
     {id:1,name:"AS 81 Drops (Pack of 2)",price:"₹1,350",img:"images/as81-1.png"},
     {id:2,name:"He Max Powder 300gm",price:"₹1,200",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-26at2.24.50PM.jpg"},
@@ -171,6 +181,7 @@
   ];
 
   let product = null;
+  let phoneVerified = false;
 
   (async function(){
     const id = parseInt(new URLSearchParams(window.location.search).get('id')) || 0;
@@ -195,29 +206,167 @@
     `;
   })();
 
+  function setOtpStatus(msg, type) {
+    const el = document.getElementById('otpStatus');
+    el.textContent = msg;
+    el.className = 'otp-status ' + type;
+  }
+
+  async function sendOTP() {
+    const phone = document.getElementById('phone').value.trim();
+    if (!phone || phone.length !== 10 || !/^[0-9]{10}$/.test(phone)) {
+      setOtpStatus('Please enter a valid 10-digit mobile number', 'error');
+      return;
+    }
+    const btn = document.getElementById('sendOtpBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Sending...';
+    setOtpStatus('Sending OTP...', 'info');
+
+    try {
+      let result;
+      if (API_URL) {
+        const res = await fetch(API_URL + '/api/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        result = await res.json();
+      } else {
+        await new Promise(r => setTimeout(r, 1000));
+        result = { success: true, message: 'OTP Sent Successfully' };
+        console.log('[DEV] OTP for', phone, 'is 123456');
+      }
+
+      if (result.success) {
+        setOtpStatus(result.message || 'OTP Sent Successfully', 'success');
+        btn.innerHTML = '<i class="fas fa-check"></i> Sent';
+        btn.classList.add('sent');
+        document.getElementById('otpRow').style.display = 'flex';
+      } else {
+        setOtpStatus(result.message || 'Failed to send OTP', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP';
+      }
+    } catch (err) {
+      setOtpStatus('Network error. Please try again.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP';
+    }
+  }
+
+  async function verifyOTP() {
+    const phone = document.getElementById('phone').value.trim();
+    const otp = document.getElementById('otpInput').value.trim();
+    if (!otp || otp.length !== 6) {
+      setOtpStatus('Please enter the 6-digit OTP', 'error');
+      return;
+    }
+    const btn = document.getElementById('verifyOtpBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Verifying...';
+    setOtpStatus('Verifying...', 'info');
+
+    try {
+      let result;
+      if (API_URL) {
+        const res = await fetch(API_URL + '/api/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, otp })
+        });
+        result = await res.json();
+      } else {
+        await new Promise(r => setTimeout(r, 800));
+        if (otp === '123456') {
+          result = { success: true, message: 'OTP Verified' };
+        } else {
+          result = { success: false, message: 'Invalid OTP' };
+        }
+      }
+
+      if (result.success) {
+        setOtpStatus('OTP Verified ✓', 'success');
+        phoneVerified = true;
+        document.getElementById('submitBtn').disabled = false;
+        document.getElementById('verifyHint').style.display = 'none';
+        document.getElementById('sendOtpBtn').disabled = true;
+        document.getElementById('verifyOtpBtn').disabled = true;
+        document.getElementById('verifyOtpBtn').innerHTML = '<i class="fas fa-check-circle"></i> Verified';
+        document.getElementById('otpInput').disabled = true;
+      } else {
+        setOtpStatus(result.message || 'Invalid OTP', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check"></i> Verify';
+      }
+    } catch (err) {
+      setOtpStatus('Network error. Please try again.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check"></i> Verify';
+    }
+  }
+
   document.getElementById('orderForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!product) return;
+    if (!phoneVerified) {
+      setOtpStatus('Please verify your mobile number first', 'error');
+      return;
+    }
+
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Placing Order...';
-    const { error } = await supabaseClient.from('orders').insert({
+
+    const payload = {
+      product_id: product.id,
       product_name: product.name,
       quantity: parseInt(document.getElementById('qty').value) || 1,
       customer_name: document.getElementById('name').value,
       phone: document.getElementById('phone').value,
       address: document.getElementById('address').value,
       city: document.getElementById('city').value,
-      pincode: document.getElementById('pincode').value
-    });
-    if (error) {
+      pincode: document.getElementById('pincode').value,
+      price: product.price
+    };
+
+    try {
+      let orderId;
+      if (API_URL) {
+        const res = await fetch(API_URL + '/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (!result.success) {
+          throw new Error(result.message || 'Order failed');
+        }
+        orderId = result.order_id;
+      } else {
+        const { data, error } = await supabaseClient.from('orders').insert({
+          product_name: payload.product_name,
+          quantity: payload.quantity,
+          customer_name: payload.customer_name,
+          phone: payload.phone,
+          address: payload.address,
+          city: payload.city,
+          pincode: payload.pincode,
+          price: payload.price,
+          payment_method: 'COD',
+          status: 'pending'
+        }).select();
+        if (error) throw error;
+        orderId = data[0].id;
+      }
+
+      window.location.href = 'thank-you.html?order_id=' + orderId;
+    } catch (err) {
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error! Try Again';
-      console.error(error);
-      return;
+      btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Try Again';
+      setOtpStatus('Error placing order: ' + (err.message || 'Please try again'), 'error');
+      console.error(err);
     }
-    document.getElementById('checkoutWrap').style.display = 'none';
-    document.getElementById('successMsg').style.display = 'block';
   });
 </script>
 </body>
