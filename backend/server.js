@@ -67,57 +67,10 @@ app.post('/api/send-otp', async (req, res) => {
       console.log('Supabase OTP log skipped:', dbErr.message);
     }
 
-    let delivered = false;
-    if (FAST2SMS_API_KEY) {
-      try {
-        const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
-          method: 'POST',
-          headers: {
-            'authorization': FAST2SMS_API_KEY,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            route: 'otp',
-            numbers: phone,
-            variables_values: otp
-          })
-        });
-        const result = await response.json();
-        if (result.return) delivered = true;
-        else console.log('Fast2SMS error:', result);
-      } catch (e) {
-        console.log('Fast2SMS error:', e.message);
-      }
-    }
-
-    if (!delivered && OPENWA_URL && OPENWA_TOKEN) {
-      try {
-        const waRes = await fetch(`${OPENWA_URL}/api/sessions/${OPENWA_SESSION}/messages/send-text`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-API-Key': OPENWA_TOKEN
-          },
-          body: JSON.stringify({
-            chatId: waChatId(phone),
-            text: `🔐 AL SHIFA HERB - OTP Verification\n\nYour OTP: ${otp}\n\nValid for 5 minutes.\n\nIf you did not request this, please ignore.`
-          })
-        });
-        if (waRes.ok) delivered = true;
-        else {
-          const waErr = await waRes.text();
-          console.log('WhatsApp OTP response:', waRes.status, waErr);
-        }
-      } catch (e) {
-        console.log('WhatsApp OTP error:', e.message);
-      }
-    }
-
     return res.json({
       success: true,
       message: 'OTP Sent Successfully',
-      delivered,
-      ...(phone.replace(/\D/g,'') === ADMIN_PHONE.replace(/\D/g,'').slice(-10) ? { devOtp: otp } : {})
+      otp
     });
   } catch (err) {
     console.error('send-otp error:', err);
@@ -285,6 +238,6 @@ Date: ${new Date().toLocaleString('en-IN')}`;
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`AL SHIFA HERB Backend running on port ${PORT}`);
-  console.log(`OTP: ${FAST2SMS_API_KEY ? 'Fast2SMS enabled' : 'DEV MODE (OTPs logged to console)'}`);
+  console.log('OTP: Screen-based (visible to user on checkout page)');
   console.log(`WhatsApp: ${OPENWA_URL ? 'Connected to ' + OPENWA_URL : 'DISABLED - set OPENWA_URL'}`);
 });
