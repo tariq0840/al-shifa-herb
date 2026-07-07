@@ -127,8 +127,6 @@ app.post('/api/orders', async (req, res) => {
       address,
       city,
       pincode,
-      price: price || '',
-      payment_method: 'COD',
       status: 'pending'
     }).select();
 
