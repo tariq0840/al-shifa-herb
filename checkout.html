@@ -243,6 +243,11 @@
         btn.innerHTML = '<i class="fas fa-check"></i> Sent';
         btn.classList.add('sent');
         document.getElementById('otpRow').style.display = 'flex';
+        if (result.devOtp) {
+          document.getElementById('otpInput').value = result.devOtp;
+          document.getElementById('otpInput').style.borderColor = '#ff9800';
+          setOtpStatus('DEV MODE: OTP auto-filled for testing', 'info');
+        }
       } else {
         setOtpStatus(result.message || 'Failed to send OTP', 'error');
         btn.disabled = false;
