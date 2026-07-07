@@ -24,6 +24,22 @@ function generateOTP() {
 
 const otpStore = {};
 
+app.get('/api/check-wa', async (req, res) => {
+  try {
+    const waRes = await fetch(`${OPENWA_URL}/api/health`, { method: 'GET', headers: { 'X-API-Key': OPENWA_TOKEN } });
+    const waStatus = waRes.ok ? await waRes.json() : { error: waRes.status };
+    res.json({
+      openwa_url: OPENWA_URL,
+      openwa_session: OPENWA_SESSION,
+      openwa_token_set: !!OPENWA_TOKEN,
+      wa_health: waStatus,
+      wa_status_code: waRes.status
+    });
+  } catch (e) {
+    res.json({ error: e.message });
+  }
+});
+
 app.post('/api/send-otp', async (req, res) => {
   try {
     const { phone } = req.body;
