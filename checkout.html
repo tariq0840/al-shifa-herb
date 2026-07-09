@@ -62,8 +62,9 @@
     .footer-logo .logo-icon{width:30px;height:30px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--green-900);font-size:.85rem}
     .footer-logo span{color:var(--white)}
     @media(max-width:600px){
-      .form-row{grid-template-columns:1fr}.checkout-wrap{padding:90px 16px 30px}.order-summary{flex-direction:column;text-align:center}
+      .form-row{grid-template-columns:1fr}.checkout-wrap{padding:90px 18px 30px}.order-summary{flex-direction:column;text-align:center}
       .footer-inner{grid-template-columns:1fr!important;text-align:center;gap:16px}
+      footer{padding:32px 18px 18px}
       .footer-social{justify-content:center}
       .footer-logo{justify-content:center!important}
       .phone-row{flex-direction:column}
@@ -71,10 +72,21 @@
       .otp-row{flex-direction:column}
     }
     @media(max-width:430px){
-      .header-inner{padding:6px 10px;gap:4px}
+      .header-inner{padding:6px 12px;gap:4px}
       .logo{font-size:.95rem;gap:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
       .logo-icon{width:24px;height:24px;font-size:.75rem;flex-shrink:0}
-      .checkout-wrap{padding-top:62px}
+      .checkout-wrap{padding:80px 14px 26px}
+      .checkout-wrap h1{font-size:1.3rem}
+      .checkout-wrap .sub{font-size:.82rem;margin-bottom:16px}
+      .order-summary{padding:12px;gap:10px;margin-bottom:14px}
+      .order-summary img{width:56px;height:56px}
+      .order-summary .info h3{font-size:.82rem}
+      .form-group{margin-bottom:10px}
+      .form-group label{font-size:.78rem}
+      .form-group input,.form-group textarea{padding:10px 12px;font-size:.84rem}
+      .btn-submit{padding:12px;font-size:.92rem}
+      footer{padding:26px 14px 14px}
+      .footer-logo{font-size:1rem}
     }
     .whatsapp-float{position:fixed;bottom:24px;right:24px;z-index:999;width:50px;height:50px;border-radius:50%;background:#25d366;color:var(--white);border:none;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 20px rgba(37,211,102,.4);display:flex;align-items:center;justify-content:center;animation:pulse 2s infinite;text-decoration:none}
     .whatsapp-float:hover{color:var(--white)}
