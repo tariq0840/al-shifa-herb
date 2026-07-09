@@ -337,49 +337,54 @@ You can track your order anytime to see real-time updates.`;
 // ── I Think Logistics ──
 
 async function createItlDraft(order) {
-  const productList = order.items.map(i => ({
-    product_name: i.product_name,
-    product_quantity: i.quantity,
-    product_price: parseFloat(i.price)
-  }));
+  try {
+    const productList = order.items.map(i => ({
+      product_name: i.product_name,
+      product_quantity: i.quantity,
+      product_price: parseFloat(i.price)
+    }));
 
-  const body = {
-    data: {
-      access_token: ITL_ACCESS_TOKEN,
-      secret_key: ITL_SECRET_KEY,
-      shipments: [{
-        pickup_address_id: ITL_PICKUP_ADDRESS_ID,
-        order: `AL${order.id}`,
-        order_date: new Date().toLocaleDateString('en-IN'),
-        total_amount: parseFloat(order.total_amount || 0),
-        name: order.customer_name,
-        add: order.address,
-        city: order.city,
-        pin: order.pincode,
-        phone: order.phone.replace(/[^0-9]/g, '').slice(-10),
-        payment_mode: 'COD',
-        products: productList,
-        shipment_length: 15,
-        shipment_width: 10,
-        shipment_height: 5,
-        weight: 0.5,
-        return_address_id: ITL_RETURN_ADDRESS_ID || ITL_PICKUP_ADDRESS_ID
-      }]
+    const body = {
+      data: {
+        access_token: ITL_ACCESS_TOKEN,
+        secret_key: ITL_SECRET_KEY,
+        shipments: [{
+          pickup_address_id: ITL_PICKUP_ADDRESS_ID,
+          order: `AL${order.id}`,
+          order_date: new Date().toLocaleDateString('en-IN'),
+          total_amount: parseFloat(order.total_amount || 0),
+          name: order.customer_name,
+          add: order.address,
+          city: order.city,
+          pin: order.pincode,
+          phone: order.phone.replace(/[^0-9]/g, '').slice(-10),
+          payment_mode: 'COD',
+          products: productList,
+          shipment_length: 15,
+          shipment_width: 10,
+          shipment_height: 5,
+          weight: 0.5,
+          return_address_id: ITL_RETURN_ADDRESS_ID || ITL_PICKUP_ADDRESS_ID
+        }]
+      }
+    };
+
+    const res = await fetch('https://pre-alpha.ithinklogistics.com/api_v3/order/add.json', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const result = await res.json();
+    if (result.status === 'success' && result.data) {
+      const shipment = Object.values(result.data)[0];
+      return shipment?.waybill || null;
     }
-  };
-
-  const res = await fetch('https://pre-alpha.ithinklogistics.com/api_v3/order/add.json', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
-  const result = await res.json();
-  if (result.status === 'success' && result.data) {
-    const shipment = Object.values(result.data)[0];
-    return shipment?.waybill || null;
+    console.error('ITL create error:', JSON.stringify(result));
+    return null;
+  } catch (e) {
+    console.error('ITL create exception:', e.message);
+    return null;
   }
-  console.error('ITL create error:', JSON.stringify(result));
-  return null;
 }
 
 const PORT = process.env.PORT || 4000;
