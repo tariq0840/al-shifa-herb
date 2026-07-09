@@ -18,5 +18,14 @@ services:
       - key: OPENWA_SESSION
         value: 1807ae98-6886-42bb-8584-690cbb79b2e0
       - key: ADMIN_PHONE
-        value: 919557687044
-      # FAST2SMS_API_KEY removed - OTP now shown on screen
+        value: 9119084044
+      - key: ITL_ACCESS_TOKEN
+        value: c1e9d8b5bb18c2888c9fa0a791881a37
+      - key: ITL_SECRET_KEY
+        value: 43333376b9f770b5f2007100cf4d4f3c
+      - key: ITL_PICKUP_ADDRESS_ID
+        value: 119045
+      - key: ITL_RETURN_ADDRESS_ID
+        value: 119045
+      - key: SITE_URL
+        value: https://tariq0840.github.io/al-shifa-herb
