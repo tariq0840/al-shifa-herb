@@ -332,12 +332,14 @@
       return true;
     });
 
-    sortOrders(sortField);
+    sortOrders(sortField, true);
   }
 
-  function sortOrders(field) {
-    if (field === sortField) sortAsc = !sortAsc;
-    else { sortField = field; sortAsc = false; }
+  function sortOrders(field, noToggle) {
+    if (!noToggle) {
+      if (field === sortField) sortAsc = !sortAsc;
+      else { sortField = field; sortAsc = false; }
+    }
     const dir = sortAsc ? 1 : -1;
     filteredOrders.sort((a, b) => {
       let va = a[field] || '', vb = b[field] || '';
