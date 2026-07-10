@@ -53,6 +53,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
@@ -92,6 +93,63 @@
     .btn-buy{display:inline-block;padding:8px 20px;background:var(--gold);color:#2c1a0e;border-radius:50px;font-size:.78rem;font-weight:700;text-decoration:none;transition:var(--transition)}
     .btn-buy:hover{background:var(--gold-dark);transform:translateY(-2px)}
 
+    /*** HERO SLIDER ***/
+    .hero-slider-wrap{position:relative;width:100%}
+    .hero-slider-wrap .swiper{width:100%;height:92vh;min-height:560px;max-height:860px}
+    .hero-slider-wrap .swiper-slide{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .hero-slider-wrap .slide-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 8s ease;will-change:transform}
+    .swiper-slide-active .slide-bg{transform:scale(1.08)}
+    .hero-slider-wrap .slide-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(15,61,46,.92) 0%,rgba(15,61,46,.5) 50%,rgba(15,61,46,.82) 100%)}
+    .hero-slider-wrap .slide-overlay::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(202,166,75,.06) 0%,transparent 60%)}
+    .hero-slider-wrap .slide-content{position:relative;z-index:3;max-width:740px;width:90%;padding:38px 44px;background:rgba(255,255,255,.05);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);border-radius:20px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.3)}
+    .hero-slider-wrap .slide-content > *{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+    .swiper-slide-active .slide-content > *{opacity:1;transform:translateY(0)}
+    .hero-slider-wrap .slide-badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;transition-delay:.15s!important}
+    .hero-slider-wrap .slide-badge{padding:5px 14px;border-radius:50px;font-size:.68rem;font-weight:600;background:rgba(202,166,75,.12);border:1px solid rgba(202,166,75,.2);color:var(--gold);display:flex;align-items:center;gap:5px;backdrop-filter:blur(8px);letter-spacing:.3px}
+    .hero-slider-wrap .slide-badge i{font-size:.72rem}
+    .hero-slider-wrap h1{font-size:2.8rem;font-weight:800;color:var(--white);margin-bottom:10px;line-height:1.15;transition-delay:.3s!important}
+    .hero-slider-wrap h1 .highlight{background:linear-gradient(135deg,var(--gold),#f0dfa8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero-slider-wrap .slide-sub{color:rgba(255,255,255,.7);font-size:.9rem;max-width:540px;margin:0 auto 8px;line-height:1.7;transition-delay:.45s!important}
+    .hero-slider-wrap .slide-points{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:center;margin:12px 0 18px;transition-delay:.55s!important}
+    .hero-slider-wrap .slide-point{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.85);font-size:.82rem}
+    .hero-slider-wrap .slide-point i{color:var(--gold);font-size:.75rem}
+    .hero-slider-wrap .slide-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;transition-delay:.7s!important}
+    .hero-slider-wrap .btn-slide{padding:13px 32px;border-radius:50px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;transition:all .35s cubic-bezier(.22,1,.36,1);text-decoration:none;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+    .hero-slider-wrap .btn-slide-primary{background:var(--gold);color:#2c1a0e}
+    .hero-slider-wrap .btn-slide-primary:hover{background:#b8943a;transform:translateY(-3px);box-shadow:0 12px 32px rgba(202,166,75,.4)}
+    .hero-slider-wrap .btn-slide-outline{background:rgba(255,255,255,.06);color:var(--white);border:1.5px solid rgba(255,255,255,.15);backdrop-filter:blur(8px);box-shadow:none}
+    .hero-slider-wrap .btn-slide-outline:hover{background:rgba(202,166,75,.12);border-color:var(--gold);color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+    .hero-slider-wrap .swiper-button-next,.hero-slider-wrap .swiper-button-prev{color:var(--white);transition:all .35s;width:46px;height:46px;background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border-radius:50%;border:1px solid rgba(255,255,255,.1)}
+    .hero-slider-wrap .swiper-button-next::after,.hero-slider-wrap .swiper-button-prev::after{font-size:1.1rem;font-weight:700}
+    .hero-slider-wrap .swiper-button-next:hover,.hero-slider-wrap .swiper-button-prev:hover{background:rgba(202,166,75,.18);color:var(--gold);border-color:var(--gold);transform:scale(1.06)}
+    .hero-slider-wrap .swiper-pagination-bullet{width:10px;height:10px;background:rgba(255,255,255,.3);opacity:1;transition:all .35s}
+    .hero-slider-wrap .swiper-pagination-bullet-active{background:var(--gold);width:28px;border-radius:5px}
+    .hero-slider-wrap .slide-deco{position:absolute;width:400px;height:400px;border-radius:50%;border:1px solid rgba(202,166,75,.05);pointer-events:none;z-index:1}
+    .hero-slider-wrap .slide-deco.d1{top:-120px;right:-100px}
+    .hero-slider-wrap .slide-deco.d2{bottom:-160px;left:-80px;width:300px;height:300px;border-color:rgba(255,255,255,.04)}
+    @media(max-width:1024px){.hero-slider-wrap .swiper{height:75vh;min-height:500px}.hero-slider-wrap h1{font-size:2.2rem}}
+    @media(max-width:900px){.hero-slider-wrap .swiper{height:70vh;min-height:460px}.hero-slider-wrap h1{font-size:1.9rem}}
+    @media(max-width:768px){
+      .hero-slider-wrap .swiper{height:68vh;min-height:420px;max-height:none}
+      .hero-slider-wrap h1{font-size:1.7rem}
+      .hero-slider-wrap .slide-sub{font-size:.82rem}
+      .hero-slider-wrap .btn-slide{padding:11px 24px;font-size:.8rem}
+      .hero-slider-wrap .slide-content{padding:28px 24px;width:92%}
+      .hero-slider-wrap .swiper-pagination-bullet{width:8px;height:8px}
+      .hero-slider-wrap .swiper-pagination-bullet-active{width:22px}
+    }
+    @media(max-width:430px){
+      .hero-slider-wrap .swiper{height:65vh;min-height:380px;max-height:none}
+      .hero-slider-wrap h1{font-size:1.4rem}
+      .hero-slider-wrap .slide-sub{font-size:.78rem}
+      .hero-slider-wrap .slide-points{font-size:.75rem}
+      .hero-slider-wrap .slide-point{font-size:.75rem}
+      .hero-slider-wrap .slide-badge{font-size:.62rem;padding:4px 11px}
+      .hero-slider-wrap .btn-slide{padding:10px 20px;font-size:.78rem;width:100%;justify-content:center}
+      .hero-slider-wrap .slide-content{padding:20px 16px;width:92%}
+      .hero-slider-wrap .swiper-button-next,.hero-slider-wrap .swiper-button-prev{display:none}
+      .hero-slider-wrap .slide-deco{display:none}
+    }
 
     /*** TRUST BAR ***/
     .trust-bar{padding:20px 24px;border-bottom:1px solid var(--border)}
@@ -343,7 +401,101 @@
   </div>
 </header>
 
-
+<section class="hero-slider-wrap">
+  <div class="swiper" id="heroSwiper">
+    <div class="swiper-wrapper">
+      <!-- SLIDE 1 — Medical Professional -->
+      <div class="swiper-slide">
+        <div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1600&q=85')"></div>
+        <div class="slide-overlay"></div>
+        <div class="slide-deco d1"></div>
+        <div class="slide-deco d2"></div>
+        <div class="slide-content">
+          <div class="slide-badges">
+            <span class="slide-badge"><i class="fas fa-leaf"></i> 100% Ayurvedic</span>
+            <span class="slide-badge"><i class="fas fa-stethoscope"></i> Doctor Consultation</span>
+            <span class="slide-badge"><i class="fas fa-truck"></i> Fast Delivery</span>
+          </div>
+          <h1>We Go Beyond Symptoms.<br><span class="highlight">We Focus on Complete Men's Wellness.</span></h1>
+          <p class="slide-sub">Private Consultation • Discreet Packaging • Fast Delivery • Trusted Ayurvedic Wellness</p>
+          <div class="slide-actions">
+            <a href="#products" class="btn-slide btn-slide-primary"><i class="fas fa-shopping-bag"></i> View Products</a>
+            <a href="https://wa.me/919557687044" class="btn-slide btn-slide-outline"><i class="fas fa-calendar-check"></i> Book Consultation</a>
+          </div>
+        </div>
+      </div>
+      <!-- SLIDE 2 — Privacy & Security -->
+      <div class="swiper-slide">
+        <div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&q=85')"></div>
+        <div class="slide-overlay"></div>
+        <div class="slide-deco d1"></div>
+        <div class="slide-deco d2"></div>
+        <div class="slide-content">
+          <div class="slide-badges">
+            <span class="slide-badge"><i class="fas fa-shield-alt"></i> Private & Secure</span>
+            <span class="slide-badge"><i class="fas fa-lock"></i> 100% Discreet</span>
+          </div>
+          <h1>Your Privacy.<br><span class="highlight">Our Highest Priority.</span></h1>
+          <div class="slide-points">
+            <span class="slide-point"><i class="fas fa-check-circle"></i> 100% Discreet Packaging</span>
+            <span class="slide-point"><i class="fas fa-check-circle"></i> Private Consultation</span>
+            <span class="slide-point"><i class="fas fa-check-circle"></i> COD Available</span>
+            <span class="slide-point"><i class="fas fa-check-circle"></i> Secure Ordering</span>
+          </div>
+          <div class="slide-actions">
+            <a href="#products" class="btn-slide btn-slide-primary"><i class="fas fa-shopping-bag"></i> Shop Now</a>
+            <a href="contact.html" class="btn-slide btn-slide-outline"><i class="fas fa-user-md"></i> Contact Expert</a>
+          </div>
+        </div>
+      </div>
+      <!-- SLIDE 3 — Premium Herbal -->
+      <div class="swiper-slide">
+        <div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1545389336-cf090694435e?w=1600&q=85')"></div>
+        <div class="slide-overlay"></div>
+        <div class="slide-deco d1"></div>
+        <div class="slide-deco d2"></div>
+        <div class="slide-content">
+          <div class="slide-badges">
+            <span class="slide-badge"><i class="fas fa-mortar-pestle"></i> Premium Ayurvedic</span>
+            <span class="slide-badge"><i class="fas fa-flask"></i> Quality Tested</span>
+          </div>
+          <h1>Premium Ayurvedic Ingredients.<br><span class="highlight">Modern Wellness.</span></h1>
+          <p class="slide-sub">Traditional herbs combined with modern quality standards for men's wellness.</p>
+          <div class="slide-actions">
+            <a href="#products" class="btn-slide btn-slide-primary"><i class="fas fa-shopping-bag"></i> Explore Collection</a>
+          </div>
+        </div>
+      </div>
+      <!-- SLIDE 4 — Trusted Across India -->
+      <div class="swiper-slide">
+        <div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1600&q=85')"></div>
+        <div class="slide-overlay"></div>
+        <div class="slide-deco d1"></div>
+        <div class="slide-deco d2"></div>
+        <div class="slide-content">
+          <div class="slide-badges">
+            <span class="slide-badge"><i class="fas fa-trophy"></i> Trusted Across India</span>
+            <span class="slide-badge"><i class="fas fa-star"></i> Premium Quality</span>
+            <span class="slide-badge"><i class="fas fa-headset"></i> Support 7 Days</span>
+          </div>
+          <h1>Trusted Across India.<br><span class="highlight">We Deliver Wellness.</span></h1>
+          <div class="slide-points">
+            <span class="slide-point"><i class="fas fa-check-circle"></i> Fast Shipping</span>
+            <span class="slide-point"><i class="fas fa-check-circle"></i> COD Available</span>
+            <span class="slide-point"><i class="fas fa-check-circle"></i> Premium Quality</span>
+            <span class="slide-point"><i class="fas fa-check-circle"></i> Customer Support 7 Days</span>
+          </div>
+          <div class="slide-actions">
+            <a href="#products" class="btn-slide btn-slide-primary"><i class="fas fa-shopping-bag"></i> Order Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+</section>
 
 <div class="trust-bar" data-aos="fade-up">
   <div class="trust-inner">
@@ -639,6 +791,20 @@
   function renderRecommendations(cart){const grid=document.getElementById('cartRecGrid');if(!grid)return;const cartIds=cart.map(x=>x.id);const avail=hardcodedCart.filter(x=>!cartIds.includes(x.id));const shuffled=avail.sort(()=>Math.random()-0.5).slice(0,4);grid.innerHTML=shuffled.map(p=>`<a href="product.html?id=${p.id}" class="cart-rec-item"><img src="${p.img}"><div class="r-info"><h5>${p.name}</h5><div class="r-price">₹${p.price.toLocaleString()}</div><button class="r-add" onclick="event.preventDefault();addToCart(${p.id})">+ Add</button></div></a>`).join('')}
   function proceedCheckout(){const cart=getCart();if(cart.length===0){showToast('Your cart is empty');return};closeCart();window.location.href='checkout.html'}
   updateCartBadge();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  new Swiper('#heroSwiper', {
+    loop:true,
+    autoplay:{delay:5000,disableOnInteraction:false},
+    speed:700,
+    effect:'fade',
+    fadeEffect:{crossFade:true},
+    navigation:{nextEl:'.swiper-button-next',prevEl:'.swiper-button-prev'},
+    pagination:{el:'.swiper-pagination',clickable:true, dynamicBullets:false},
+    grabCursor:true,
+    keyboard:{enabled:true}
+  });
 </script>
   var showcaseTrack = document.getElementById('showcaseTrack');
   if (showcaseTrack && typeof hardcodedCart !== 'undefined') {
