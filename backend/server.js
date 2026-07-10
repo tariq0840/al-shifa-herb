@@ -103,9 +103,9 @@ app.post('/api/verify-otp', async (req, res) => {
 
 app.post('/api/orders', async (req, res) => {
   try {
-    const { items, total_amount, customer_name, phone, address, city, pincode, payment_method } = req.body;
+    const { items, total_amount, customer_name, phone, address, city, state, pincode, payment_method } = req.body;
 
-    if (!customer_name || !phone || !address || !city || !pincode || !items || items.length === 0) {
+    if (!customer_name || !phone || !address || !city || !state || !pincode || !items || items.length === 0) {
       return res.json({ success: false, message: 'All fields are required' });
     }
 
@@ -116,6 +116,7 @@ app.post('/api/orders', async (req, res) => {
       phone,
       address,
       city,
+      state,
       pincode,
       payment_method: payment_method || 'COD',
       status: 'pending'
@@ -126,7 +127,7 @@ app.post('/api/orders', async (req, res) => {
       return res.json({ success: false, message: 'Order placement failed', error: error.message });
     }
 
-    const order = { id: data[0].id, items, total_amount, customer_name, phone, address, city, pincode, payment_method: payment_method || 'COD' };
+    const order = { id: data[0].id, items, total_amount, customer_name, phone, address, city, state, pincode, payment_method: payment_method || 'COD' };
 
     sendAdminWhatsApp(order);
     sendCustomerWhatsApp(order);
@@ -284,7 +285,7 @@ async function sendAdminWhatsApp(order) {
 
 Customer: ${order.customer_name}
 Phone: ${order.phone}
-Address: ${order.address}, ${order.city}, ${order.pincode}
+Address: ${order.address}, ${order.city}, ${order.state} - ${order.pincode}
 
 Items:
 ${itemsList}
@@ -353,10 +354,11 @@ async function createItlDraft(order) {
           order: `AL${order.id}`,
           order_date: new Date().toLocaleDateString('en-IN'),
           total_amount: parseFloat(order.total_amount || 0),
-          name: order.customer_name,
-          add: order.address,
-          city: order.city,
-          pin: order.pincode,
+        name: order.customer_name,
+        add: order.address,
+        city: order.city,
+        state: order.state || '',
+        pin: order.pincode,
           phone: order.phone.replace(/[^0-9]/g, '').slice(-10),
           payment_mode: 'COD',
           products: productList,

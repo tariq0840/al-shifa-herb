@@ -30,9 +30,15 @@
     .order-summary .info .q{font-size:.82rem;color:var(--text-light)}
     .form-group{margin-bottom:14px}
     .form-group label{display:block;font-weight:600;font-size:.82rem;margin-bottom:4px;color:var(--text)}
-    .form-group input,.form-group textarea{width:100%;padding:11px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);font-family:'Inter',sans-serif;font-size:.88rem;transition:var(--transition)}
-    .form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1)}
+    .form-group input,.form-group textarea,.form-group select{width:100%;padding:11px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);font-family:'Inter',sans-serif;font-size:.88rem;transition:var(--transition);background:var(--white)}
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1)}
     .form-group textarea{min-height:80px;resize:vertical}
+    .form-group select{cursor:pointer;appearance:auto;color:var(--text)}
+    .pincode-status{font-size:.75rem;margin-top:3px;min-height:18px}
+    .pincode-status.match{color:#16a34a}
+    .pincode-status.mismatch{color:#dc2626}
+    .pincode-status.loading{color:var(--text-light)}
+    .pincode-status i{margin-right:4px}
     .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     .phone-row{display:flex;gap:8px}
     .phone-row input{flex:1}
@@ -85,7 +91,7 @@
       .cart-total-bar{padding:10px 0;font-size:.92rem}
       .form-group{margin-bottom:12px}
       .form-group label{font-size:.82rem}
-      .form-group input,.form-group textarea{padding:12px 14px;font-size:.88rem;border-radius:8px}
+      .form-group input,.form-group textarea,.form-group select{padding:12px 14px;font-size:.88rem;border-radius:8px}
       .phone-row{gap:8px}
       .btn-otp{padding:12px 16px;font-size:.85rem;border-radius:8px}
       .otp-row{gap:8px}
@@ -151,8 +157,53 @@
         <input type="text" id="city" required placeholder="City">
       </div>
       <div class="form-group">
+        <label>State *</label>
+        <select id="state" required>
+          <option value="">Select State</option>
+          <option value="Andhra Pradesh">Andhra Pradesh</option>
+          <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+          <option value="Assam">Assam</option>
+          <option value="Bihar">Bihar</option>
+          <option value="Chhattisgarh">Chhattisgarh</option>
+          <option value="Goa">Goa</option>
+          <option value="Gujarat">Gujarat</option>
+          <option value="Haryana">Haryana</option>
+          <option value="Himachal Pradesh">Himachal Pradesh</option>
+          <option value="Jharkhand">Jharkhand</option>
+          <option value="Karnataka">Karnataka</option>
+          <option value="Kerala">Kerala</option>
+          <option value="Madhya Pradesh">Madhya Pradesh</option>
+          <option value="Maharashtra">Maharashtra</option>
+          <option value="Manipur">Manipur</option>
+          <option value="Meghalaya">Meghalaya</option>
+          <option value="Mizoram">Mizoram</option>
+          <option value="Nagaland">Nagaland</option>
+          <option value="Odisha">Odisha</option>
+          <option value="Punjab">Punjab</option>
+          <option value="Rajasthan">Rajasthan</option>
+          <option value="Sikkim">Sikkim</option>
+          <option value="Tamil Nadu">Tamil Nadu</option>
+          <option value="Telangana">Telangana</option>
+          <option value="Tripura">Tripura</option>
+          <option value="Uttar Pradesh">Uttar Pradesh</option>
+          <option value="Uttarakhand">Uttarakhand</option>
+          <option value="West Bengal">West Bengal</option>
+          <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+          <option value="Chandigarh">Chandigarh</option>
+          <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+          <option value="Delhi">Delhi</option>
+          <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+          <option value="Ladakh">Ladakh</option>
+          <option value="Lakshadweep">Lakshadweep</option>
+          <option value="Puducherry">Puducherry</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
         <label>Pincode *</label>
         <input type="text" id="pincode" required placeholder="6-digit pincode" maxlength="6" pattern="[0-9]{6}">
+        <div class="pincode-status" id="pincodeStatus"></div>
       </div>
     </div>
     <div class="form-row">
@@ -250,6 +301,56 @@
     el.innerHTML = html;
     gt.textContent = '₹' + total.toLocaleString();
   }
+
+  let pincodeValidated = false;
+  let pincodeTimer = null;
+
+  document.getElementById('pincode').addEventListener('input', function() {
+    clearTimeout(pincodeTimer);
+    const el = document.getElementById('pincodeStatus');
+    el.className = 'pincode-status';
+    el.innerHTML = '';
+    pincodeValidated = false;
+    const pin = this.value.trim();
+    if (pin.length !== 6) return;
+    el.className = 'pincode-status loading';
+    el.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Validating pincode...';
+    pincodeTimer = setTimeout(async function() {
+      try {
+        const res = await fetch('https://api.postalpincode.in/pincode/' + pin);
+        const data = await res.json();
+        if (data[0].Status === 'Success') {
+          const state = data[0].PostOffice[0].State;
+          const selected = document.getElementById('state').value;
+          el.innerHTML = '<i class="fas fa-map-marker-alt"></i> ' + data[0].PostOffice[0].District + ', ' + state;
+          if (selected && selected !== state) {
+            el.className = 'pincode-status mismatch';
+            el.innerHTML += ' <i class="fas fa-exclamation-circle"></i> Pincode belongs to <strong>' + state + '</strong>, not ' + selected + '. Please correct the state.';
+            pincodeValidated = false;
+          } else {
+            el.className = 'pincode-status match';
+            el.innerHTML += ' <i class="fas fa-check-circle"></i> Match';
+            pincodeValidated = true;
+          }
+        } else {
+          el.className = 'pincode-status mismatch';
+          el.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid pincode';
+          pincodeValidated = false;
+        }
+      } catch(e) {
+        el.className = 'pincode-status';
+        el.innerHTML = '';
+        pincodeValidated = true;
+      }
+    }, 600);
+  });
+
+  document.getElementById('state').addEventListener('change', function() {
+    const pin = document.getElementById('pincode').value.trim();
+    if (pin.length === 6) {
+      document.getElementById('pincode').dispatchEvent(new Event('input'));
+    }
+  });
 
   function setOtpStatus(msg, type) {
     const el = document.getElementById('otpStatus');
@@ -376,6 +477,13 @@
     }));
     const total_amount = items.reduce((s, x) => s + (x.price * x.quantity), 0);
 
+    const state = document.getElementById('state').value;
+    if (!pincodeValidated) {
+      setOtpStatus('Please enter a valid pincode matching your state', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Order';
+      return;
+    }
     const payload = {
       items,
       total_amount,
@@ -383,6 +491,7 @@
       phone: document.getElementById('phone').value,
       address: document.getElementById('address').value,
       city: document.getElementById('city').value,
+      state,
       pincode: document.getElementById('pincode').value,
       payment_method: 'COD'
     };
@@ -408,6 +517,7 @@
           phone: payload.phone,
           address: payload.address,
           city: payload.city,
+          state: payload.state,
           pincode: payload.pincode,
           payment_method: 'COD',
           status: 'pending'
