@@ -87,10 +87,10 @@
       .phone-row{flex-direction:column}
       .btn-otp{width:100%;padding:11px}
       .otp-row{flex-direction:column}
-      .header-inner{justify-content:center;position:relative}.nav-right{position:absolute;left:14px;top:50%;transform:translateY(-50%);gap:10px}
+      .header-inner{display:grid;grid-template-columns:120px 1fr 120px;padding:0;gap:0;align-items:center;height:70px}.nav-right{display:flex;align-items:center;gap:14px;grid-column:1;grid-row:1}.logo{grid-column:2;grid-row:1;justify-self:center;text-align:center}
     }
     @media(max-width:430px){
-      .header-inner{padding:6px 14px;gap:4px}
+      .header-inner{padding:0;gap:0;height:70px}
       .logo{font-size:1rem;gap:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
       .logo-icon{width:26px;height:26px;font-size:.8rem;flex-shrink:0}
       .checkout-wrap{padding:80px 16px 26px}

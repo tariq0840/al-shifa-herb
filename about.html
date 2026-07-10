@@ -128,15 +128,15 @@ footer{padding:32px 18px 18px}
 .phone-text{display:none}
 .phone-header{font-size:0;gap:4px;padding:5px 8px 5px 6px}
 .phone-header i{font-size:.9rem;margin:0}
-.header-inner{justify-content:center;position:relative}.nav-right{position:absolute;left:24px;top:50%;transform:translateY(-50%)}
+.header-inner{display:grid;grid-template-columns:120px 1fr 120px;padding:0;gap:0;align-items:center;height:70px}.nav-right{display:flex;align-items:center;gap:14px;grid-column:1;grid-row:1}.nav-right .hamburger{order:0}.nav-right .cart-icon{order:1}.nav-right .phone-header{order:2}.logo{grid-column:2;grid-row:1;justify-self:center;text-align:center}
 .page-content{padding:90px 18px 30px}
 .page-content h1{font-size:1.7rem}
 }
 @media(max-width:430px){
-.header-inner{padding:6px 14px;gap:4px}
+.header-inner{padding:0;gap:0;height:70px}
 .logo{font-size:1rem;gap:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
 .logo-icon{width:26px;height:26px;font-size:.8rem;flex-shrink:0}
-.nav-right{gap:4px;flex-shrink:0;position:absolute;left:14px;top:50%;transform:translateY(-50%)}
+.nav-right{gap:14px}
 .phone-header{padding:4px 8px;font-size:0;gap:0}
 .phone-header i{font-size:.9rem;margin:0}
 .phone-text{display:none}
