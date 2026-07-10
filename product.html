@@ -994,8 +994,10 @@
   ];
 
   let currentVar = null;
-  const id = parseInt(new URLSearchParams(window.location.search).get('id')) || 1;
-  const p = products.find(x => x.id === id);
+  let id = parseInt(new URLSearchParams(window.location.search).get('id')) || 1;
+  let p = products.find(x => x.id === id);
+  if (!p && id === 15) { id = 14; p = products.find(x => x.id === 14); window.history.replaceState(null, '', '?id=14'); }
+  if (!p) { id = 1; p = products.find(x => x.id === 1); window.history.replaceState(null, '', '?id=1'); }
 
   if (!p) {
     document.getElementById('loading').innerHTML = '<i class="fas fa-exclamation-circle"></i> Product not found. <a href="index.html" style="color:var(--green-700)">Back to store</a>';
