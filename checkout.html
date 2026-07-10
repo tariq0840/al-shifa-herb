@@ -26,6 +26,7 @@
     :root{--green-900:#0a2e1a;--green-800:#0f4124;--green-700:#155f33;--green-600:#1e8045;--gold:#c9a84c;--gold-dark:#a8882e;--cream:#faf7f0;--white:#fff;--text:#1a1a2e;--text-light:#6b7280;--border:#eee;--shadow:0 2px 16px rgba(0,0,0,.06);--shadow-lg:0 12px 48px rgba(0,0,0,.1);--radius:14px;--radius-sm:8px;--transition:.4s cubic-bezier(.22,1,.36,1)}
     header{position:fixed;top:0;left:0;width:100%;z-index:1000;transition:var(--transition);background:rgba(255,255,255,.95);backdrop-filter:blur(20px);box-shadow:0 2px 40px rgba(0,0,0,.06)}
     .header-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between}
+    .nav-right{display:flex;align-items:center;gap:10px}
     .logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800;color:var(--green-800);text-decoration:none;display:flex;align-items:center;gap:8px}
     .logo span{color:var(--gold)}
     .logo-icon{width:34px;height:34px;background:var(--green-700);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:1rem}
@@ -86,6 +87,7 @@
       .phone-row{flex-direction:column}
       .btn-otp{width:100%;padding:11px}
       .otp-row{flex-direction:column}
+      .header-inner{justify-content:center;position:relative}.nav-right{position:absolute;left:14px;top:50%;transform:translateY(-50%);gap:10px}
     }
     @media(max-width:430px){
       .header-inner{padding:6px 14px;gap:4px}
@@ -123,8 +125,10 @@
 <header>
   <div class="header-inner">
     <a href="index.html" class="logo"><span class="logo-icon"><i class="fas fa-leaf"></i></span> AL SHIFA <span>HERB</span></a>
+    <div class="nav-right">
     <a href="#" class="cart-icon" onclick="openCart();return false;"><i class="fas fa-shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></a>
     <a href="javascript:history.back()" style="font-size:.82rem;color:var(--text);text-decoration:none;font-weight:500"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
   </div>
 </header>
 
