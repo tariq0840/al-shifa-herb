@@ -99,7 +99,29 @@
     .pagination button:hover{background:var(--green-700);color:#fff;border-color:var(--green-700)}
     .pagination button:disabled{opacity:.4;cursor:not-allowed;background:#fff;color:var(--text-light)}
     .pagination .page-info{font-size:.82rem;color:var(--text-light)}
+    .analytics-toggle{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:.82rem;transition:.3s;color:var(--text)}
+    .analytics-toggle:hover{background:var(--green-700);color:#fff;border-color:var(--green-700)}
+    .analytics-toggle.active{background:var(--green-700);color:#fff;border-color:var(--green-700)}
+    .analytics-section{display:none;margin-bottom:24px}
+    .analytics-section.open{display:block}
+    .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    .chart-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+    .chart-card h3{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .chart-card h3 i{color:var(--gold);font-size:.9rem}
+    .chart-card canvas{max-height:220px;max-width:100%}
+    .chart-card .mini-stats{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+    .chart-card .mini-stats .ms{font-size:.78rem;color:var(--text-light)}
+    .chart-card .mini-stats .ms strong{display:block;font-size:1.1rem;color:var(--text);font-weight:700}
+    .top-products-list{list-style:none;font-size:.82rem}
+    .top-products-list li{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
+    .top-products-list li:last-child{border:none}
+    .top-products-list li .tp-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+    .top-products-list li .tp-count{font-weight:600;color:var(--green-700);margin-left:10px}
+    .top-products-list li .tp-rev{color:var(--text-light);margin-left:8px;font-size:.75rem}
     @media(max-width:900px){
+      .analytics-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:600px){
       .stats{grid-template-columns:repeat(2,1fr)}
       .admin-content{padding:16px}
       .top-bar{padding:0 16px}
@@ -142,6 +164,17 @@
 
   <div class="admin-content">
     <div class="stats" id="statsRow"></div>
+
+    <button class="analytics-toggle" id="analyticsToggle" onclick="toggleAnalytics()"><i class="fas fa-chart-bar"></i> Analytics</button>
+
+    <div class="analytics-section" id="analyticsSection">
+      <div class="analytics-grid">
+        <div class="chart-card"><h3><i class="fas fa-chart-line"></i> Daily Sales (30 days)</h3><canvas id="salesChart"></canvas></div>
+        <div class="chart-card"><h3><i class="fas fa-box"></i> Top Products</h3><div id="topProductsList" class="top-products-list"></div></div>
+        <div class="chart-card"><h3><i class="fas fa-chart-pie"></i> Orders by Status</h3><canvas id="statusChart"></canvas></div>
+        <div class="chart-card"><h3><i class="fas fa-users"></i> Customer Insights</h3><div class="mini-stats" id="customerInsights"></div><div style="margin-top:12px"><canvas id="cityChart" style="max-height:160px"></canvas></div></div>
+      </div>
+    </div>
 
     <div class="toolbar">
       <div class="toolbar-left">
@@ -204,6 +237,7 @@
   <div class="modal" id="modalBody"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const ADMIN_PASS = 'alshifa123';
@@ -471,6 +505,110 @@
     a.download = 'al-shifa-orders-' + new Date().toISOString().split('T')[0] + '.csv';
     a.click();
     showToast('Exported ' + filteredOrders.length + ' orders');
+  }
+
+  let salesChartInst, statusChartInst, cityChartInst;
+
+  function toggleAnalytics() {
+    const el = document.getElementById('analyticsSection');
+    const btn = document.getElementById('analyticsToggle');
+    el.classList.toggle('open');
+    btn.classList.toggle('active');
+    if (el.classList.contains('open')) renderAnalytics();
+  }
+
+  function renderAnalytics() {
+    renderSalesChart();
+    renderTopProducts();
+    renderStatusChart();
+    renderCustomerInsights();
+  }
+
+  function getDailySales() {
+    const sales = {};
+    const now = new Date();
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(now); d.setDate(d.getDate() - i);
+      const key = d.toLocaleDateString('en-IN', {day:'2-digit', month:'short'});
+      sales[key] = 0;
+    }
+    allOrders.forEach(o => {
+      if (!o.created_at) return;
+      const d = new Date(o.created_at);
+      const key = d.toLocaleDateString('en-IN', {day:'2-digit', month:'short'});
+      if (sales[key] !== undefined) sales[key] += Number(o.total_amount || 0);
+    });
+    return { labels: Object.keys(sales), data: Object.values(sales) };
+  }
+
+  function renderSalesChart() {
+    if (salesChartInst) { salesChartInst.destroy(); salesChartInst = null; }
+    const { labels, data } = getDailySales();
+    const ctx = document.getElementById('salesChart');
+    if (!ctx) return;
+    salesChartInst = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets: [{ label: 'Revenue', data, borderColor: '#155f33', backgroundColor: 'rgba(21,95,51,.08)', fill: true, tension: .3, pointRadius: 3, pointBackgroundColor: '#155f33' }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => '₹' + v.toLocaleString() } } } }
+    });
+  }
+
+  function renderTopProducts() {
+    const counts = {};
+    allOrders.forEach(o => {
+      const items = o.items || (o.product_name ? [{product_name: o.product_name, quantity: o.quantity || 1, price: o.price || 0}] : []);
+      items.forEach(i => {
+        const name = i.product_name || 'Unknown';
+        if (!counts[name]) counts[name] = { qty: 0, rev: 0 };
+        counts[name].qty += i.quantity || 1;
+        counts[name].rev += (i.price || 0) * (i.quantity || 1);
+      });
+    });
+    const sorted = Object.entries(counts).sort((a, b) => b[1].qty - a[1].qty).slice(0, 10);
+    const el = document.getElementById('topProductsList');
+    if (!el) return;
+    el.innerHTML = sorted.length ? sorted.map(([name, d]) => '<li><span class="tp-name">' + name + '</span><span class="tp-count">' + d.qty + ' sold</span><span class="tp-rev">₹' + d.rev.toLocaleString() + '</span></li>').join('') : '<li style="color:var(--text-light);text-align:center;padding:20px">No data yet</li>';
+  }
+
+  function renderStatusChart() {
+    if (statusChartInst) { statusChartInst.destroy(); statusChartInst = null; }
+    const counts = { pending: 0, confirmed: 0, shipped: 0, delivered: 0, cancelled: 0 };
+    allOrders.forEach(o => { if (counts[o.status] !== undefined) counts[o.status]++; });
+    const ctx = document.getElementById('statusChart');
+    if (!ctx) return;
+    statusChartInst = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
+        datasets: [{ data: [counts.pending, counts.confirmed, counts.shipped, counts.delivered, counts.cancelled], backgroundColor: ['#fcd34d', '#93c5fd', '#7dd3fc', '#86efac', '#fca5a5'], borderWidth: 0 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 12, font: { size: 11 }, usePointStyle: true } } } }
+    });
+  }
+
+  function renderCustomerInsights() {
+    const phones = [...new Set(allOrders.map(o => o.phone))].filter(Boolean);
+    const repeat = phones.filter(p => allOrders.filter(o => o.phone === p).length > 1).length;
+    const totalRev = allOrders.reduce((s, o) => s + Number(o.total_amount || 0), 0);
+    const aov = allOrders.length ? Math.round(totalRev / allOrders.length) : 0;
+    const cities = {};
+    allOrders.forEach(o => {
+      const c = o.city || 'Unknown';
+      cities[c] = (cities[c] || 0) + 1;
+    });
+    const sortedCities = Object.entries(cities).sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+    const el = document.getElementById('customerInsights');
+    if (el) el.innerHTML = '<div class="ms"><strong>₹' + aov.toLocaleString() + '</strong>Avg Order Value</div><div class="ms"><strong>' + phones.length + '</strong>Total Customers</div><div class="ms"><strong>' + repeat + '</strong>Repeat Customers</div><div class="ms"><strong>' + (phones.length ? Math.round(repeat/phones.length*100) : 0) + '%</strong>Repeat Rate</div>';
+
+    if (cityChartInst) { cityChartInst.destroy(); cityChartInst = null; }
+    const ctx = document.getElementById('cityChart');
+    if (!ctx) return;
+    cityChartInst = new Chart(ctx, {
+      type: 'bar',
+      data: { labels: sortedCities.map(c => c[0]), datasets: [{ label: 'Orders', data: sortedCities.map(c => c[1]), backgroundColor: '#c9a84c', borderRadius: 4 }] },
+      options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    });
   }
 </script>
 </body>
