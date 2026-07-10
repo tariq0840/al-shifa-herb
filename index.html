@@ -547,7 +547,8 @@
     {id:10,name:"Al-Shifa Shilajit Gold",cat:"Men's Vitality",price:"₹999",old:"₹1,650",badge:"Bestseller",bclass:"bestseller",img:"images/shilajit.jpeg",rating:4.8,rev:189,discount:40},
     {id:11,name:"Majoon Extra Time 150g",cat:"Men's Vitality",price:"₹949",old:"₹1,250",badge:"Bestseller",bclass:"bestseller",img:"images/majoon-extra-time-150.png",rating:4.6,rev:89,discount:24},
     {id:12,name:"King Kong Oil",cat:"Men's Care Oil",price:"₹1,350",old:"₹1,850",badge:"New",bclass:"new",img:"images/king-kong-oil.png",rating:4.7,rev:114,discount:27},
-    {id:13,name:"AS 81 Drops (Pack of 3)",cat:"Men's Vitality",price:"₹1,599",old:"₹1,999",badge:"Bestseller",bclass:"bestseller",img:"images/as81-pack3.png",rating:4.8,rev:312,discount:20}
+    {id:13,name:"AS 81 Drops (Pack of 3)",cat:"Men's Vitality",price:"₹1,599",old:"₹1,999",badge:"Bestseller",bclass:"bestseller",img:"images/as81-pack3.png",rating:4.8,rev:312,discount:20},
+    {id:14,name:"MAJOON E-KHASS",cat:"Men's Vitality",price:"₹800",old:"₹1,250",badge:"New",bclass:"new",img:"images/majoon-ekhass-150.png",rating:4.7,rev:186,discount:36}
   ];
 
   async function init() {
@@ -608,7 +609,9 @@
     {id:10,name:"Al-Shifa Shilajit Gold",price:999,img:"images/shilajit.jpeg",cat:"Men's Vitality"},
     {id:11,name:"Majoon Extra Time 150g",price:949,img:"images/majoon-extra-time-150.png",cat:"Men's Vitality"},
     {id:12,name:"King Kong Oil",price:1350,img:"images/king-kong-oil.png",cat:"Men's Care Oil"},
-    {id:13,name:"AS 81 Drops (Pack of 3)",price:1599,img:"images/as81-pack3.png",cat:"Men's Vitality"}
+    {id:13,name:"AS 81 Drops (Pack of 3)",price:1599,img:"images/as81-pack3.png",cat:"Men's Vitality"},
+    {id:14,name:"MAJOON E-KHASS 150g",price:800,img:"images/majoon-ekhass-150.png",cat:"Men's Vitality"},
+    {id:15,name:"MAJOON E-KHASS 300g",price:450,img:"images/majoon-ekhass-300.png",cat:"Men's Vitality"}
   ];
   const FREE_SHIPPING_THRESHOLD = 499;
   function getCart(){try{return JSON.parse(localStorage.getItem('alCart')||'[]')}catch(e){return[]}}

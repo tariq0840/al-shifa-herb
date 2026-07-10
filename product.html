@@ -53,6 +53,12 @@
     .pd-price .old{font-size:.9rem;font-weight:400;color:var(--text-light);text-decoration:line-through;margin-left:8px}
     .pd-price .save{font-size:.7rem;font-weight:700;color:#dc2626;background:#fce4e4;padding:2px 10px;border-radius:50px;margin-left:10px;vertical-align:middle}
     .pd-tax{font-size:.72rem;color:var(--text-light);margin-bottom:14px}
+    .pd-variants{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .pd-variants label{font-size:.82rem;font-weight:600;color:var(--text);min-width:60px}
+    .var-btns{display:flex;gap:8px}
+    .var-btn{padding:8px 20px;border:2px solid var(--border);border-radius:50px;background:#fff;font-size:.82rem;font-weight:600;cursor:pointer;transition:var(--transition);color:var(--text)}
+    .var-btn:hover{border-color:var(--green-600);color:var(--green-600)}
+    .var-btn.active{border-color:var(--green-600);background:var(--green-600);color:#fff}
     .pd-actions{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
     .qty-row{display:flex;align-items:center;gap:10px}
     .qty-row label{font-weight:600;font-size:.82rem}
@@ -943,8 +949,51 @@
       dosage:"Morning Dose – Take 15 drops of AS 81 in half a cup of water, approximately 30 minutes before or after breakfast. Afternoon Dose – Take 15 drops in half a cup of water, 30 minutes before or after lunch. Evening Dose – Take 15 drops in half a cup of water, 30 minutes before or after dinner. Consistency is Essential – Take AS 81 every day without missing doses. Daily use is required to maintain steady improvement in sexual health and overall vitality.",
       results:"Homeopathic and herbal medicines work gradually and gently by supporting the body's own natural healing processes. Most men begin to notice early improvements in energy levels, mood, and libido within the first 2 to 3 weeks of consistent three-times-daily use. Improvements in erection quality, stamina, and sexual confidence typically become more noticeable between weeks 3 and 6. For comprehensive and lasting results — including hormonal balance, improved size, and sustained reproductive health — a minimum course of 8 to 12 weeks of regular use is recommended. Results may vary depending on the severity of the condition, individual body response, age, consistency of use, and overall lifestyle and health habits."
     },
+    {
+      id:14, name:"MAJOON E-KHASS", cat:"Men's Vitality",
+      tagline:"Pure Unani Power — Stronger Stamina, Better Control, Natural Vitality",
+      variants:[
+        {id:14, weight:"150g", price:"₹800", old:"₹1,250", img:"images/majoon-ekhass-150.png"},
+        {id:15, weight:"300g", price:"₹450", old:"₹850", img:"images/majoon-ekhass-300.png"}
+      ],
+      price:"₹800", old:"₹1,250", img:"images/majoon-ekhass-150.png",
+      imgs:["images/majoon-ekhass-150.png","images/majoon-ekhass-300.png"],
+      rating:4.7, rev:186,
+      desc:"MAJOON E-KHASS is a premium Unani herbal formulation crafted from a potent blend of dry fruits, nuts, and classical Unani herbs. Designed for men seeking enhanced physical stamina, ejaculatory control, and overall male vitality, this traditional Majoon preparation combines nerve-strengthening herbs with nutrient-dense ingredients for comprehensive male wellness support.",
+      problems:[
+        "Premature Ejaculation & Poor Timing – Strengthens the nerves responsible for ejaculatory control, helping you last longer naturally.",
+        "Low Stamina & Physical Fatigue – Nutrient-dense dry fruits and nuts rebuild physical endurance at its root.",
+        "Weak Erections & Poor Blood Flow – Supports circulation to reproductive tissues for firmer, more consistent erections.",
+        "Low Libido & Reduced Sexual Desire – Herbal tonics help restore natural drive and arousal.",
+        "General Body Weakness & Lack of Vitality – Replenishes deep nutritional reserves for sustained energy.",
+        "Performance Anxiety & Lack of Confidence – Nervous system support helps approach intimacy with calm confidence.",
+        "Weakness Due to Past Habits – Restores depleted reserves through deep nutritional nourishment."
+      ],
+      keyBenefits:[
+        "Supports improved ejaculatory control and timing through classical nervine tonic herbs",
+        "Boosts physical stamina and strength with dense natural nutrition from premium dry fruits",
+        "Supports healthy blood circulation for better erection quality and fullness",
+        "Helps restore natural libido and sexual desire",
+        "100% natural Unani formula — no chemicals, no synthetic hormones",
+        "Deep nutritional nourishment with dry fruits, nuts, and classical Unani botanicals",
+        "Suitable for long-term daily use as a comprehensive male wellness tonic",
+        "Discreet packaging and fast delivery"
+      ],
+      whatMakesDiff:[
+        "Premium Unani formulation with the goodness of dry fruits, nuts, and classical herbs",
+        "Dual weight options — 150g for trial and 300g for complete course",
+        "Nerve-strengthening formula for ejaculatory timing and control",
+        "No synthetic hormones or chemical stimulants — 100% natural and herbal",
+        "Deep nutritional nourishment from Khajur, Badam, Chilghoza, and other premium ingredients",
+        "Manufactured under quality-controlled standards"
+      ],
+      ingredients:"Khajur (Dates), Singhara (Water Chestnut), Badam Shireen (Sweet Almond), Maghz-e-Chilghoza (Pine Nut), Satawar (Shatavari), Samagh-e-Arabi (Acacia Gum), Behman Surkh, Jauzbuwa (Nutmeg), Qaranful (Clove), Funduq (Hazelnut), Pambadana (Cotton Seed), Bisbasa (Mace), and other classical Unani herbs in precise formulation.",
+      dosage:"Daily Dose – Take 10g (approximately one heaped teaspoon) per day, divided into two servings of 5g each. Morning Serving – Take 5g 15 minutes before breakfast, preferably with warm milk. Evening Serving – Take 5g 1 hour after dinner with warm water or milk. For best absorption, taking with warm milk is recommended. Drink adequate water throughout the day.",
+      results:"MAJOON E-KHASS works gradually by nourishing the body from within. Most users notice improved daily energy levels and reduced physical fatigue within the first 1-2 weeks. Stamina and ejaculatory timing begin to improve by weeks 3-4 as the nerve-strengthening herbs take effect. For comprehensive, lasting results, consistent daily use for 2-3 months is recommended."
+    }
   ];
 
+  let currentVar = null;
   const id = parseInt(new URLSearchParams(window.location.search).get('id')) || 1;
   const p = products.find(x => x.id === id);
 
@@ -954,6 +1003,19 @@
     document.getElementById('loading').style.display = 'none';
     document.title = `${p.name} – AL SHIFA HERB`;
     try { window.trackEvent && window.trackEvent('product_view', { product_id: id, product_name: p.name, category: p.cat, price: p.price }); } catch(e){}
+
+    // Variant state
+    currentVar = p.variants ? p.variants[0] : null;
+    window.switchVariant = function(i) {
+      if (!p.variants || !p.variants[i]) return;
+      currentVar = p.variants[i];
+      document.querySelectorAll('.var-btn').forEach((b,idx) => b.classList.toggle('active', idx === i));
+      document.getElementById('mainImg').src = currentVar.img;
+      const priceEl = document.querySelector('.pd-price');
+      if (priceEl) priceEl.innerHTML = currentVar.price + (currentVar.old ? ` <span class="old">${currentVar.old}</span>` : '');
+      document.title = `${p.name} ${currentVar.weight} – AL SHIFA HERB`;
+      try{ window.trackEvent && window.trackEvent('product_view', { product_id: currentVar.id, product_name: p.name + ' ' + currentVar.weight, price: currentVar.price }); }catch(e){}
+    }
 
     const stars = '<i class="fas fa-star"></i>'.repeat(Math.floor(p.rating)) + (p.rating%1>=.5?'<i class="fas fa-star-half-alt"></i>':'');
     const badge = p.badge ? `<span class="pd-badge ${p.bclass}">${p.badge}</span>` : '';
@@ -978,6 +1040,7 @@
         <div class="pd-rating">${stars} <span>(${p.rev} reviews)</span></div>
         <div class="pd-price">${p.price} ${oldP} ${saveH}</div>
         <p class="pd-tax">Tax included. Shipping calculated at checkout.</p>
+        ${p.variants ? `<div class="pd-variants"><label>Weight:</label><div class="var-btns">${p.variants.map((v,i) => `<button class="var-btn${i===0?' active':''}" onclick="switchVariant(${i})">${v.weight}</button>`).join('')}</div></div>` : ''}
         <p style="font-size:.85rem;color:var(--text-light);margin-bottom:14px;line-height:1.7">${p.desc}</p>
         <div class="pd-actions">
           <div class="qty-row">
@@ -1092,7 +1155,9 @@
     {id:10,name:"Al-Shifa Shilajit Gold",price:999,img:"images/shilajit.jpeg",cat:"Men's Vitality"},
     {id:11,name:"Majoon Extra Time 150g",price:949,img:"images/majoon-extra-time-150.png",cat:"Men's Vitality"},
     {id:12,name:"King Kong Oil",price:1350,img:"images/king-kong-oil.png",cat:"Men's Care Oil"},
-    {id:13,name:"AS 81 Drops (Pack of 3)",price:1599,img:"images/as81-pack3.png",cat:"Men's Vitality"}
+    {id:13,name:"AS 81 Drops (Pack of 3)",price:1599,img:"images/as81-pack3.png",cat:"Men's Vitality"},
+    {id:14,name:"MAJOON E-KHASS 150g",price:800,img:"images/majoon-ekhass-150.png",cat:"Men's Vitality"},
+    {id:15,name:"MAJOON E-KHASS 300g",price:450,img:"images/majoon-ekhass-300.png",cat:"Men's Vitality"}
   ];
   const FREE_SHIPPING_THRESHOLD = 499;
   function getCart(){try{return JSON.parse(localStorage.getItem('alCart')||'[]')}catch(e){return[]}}
@@ -1101,8 +1166,9 @@
   function openCart(){const o=document.getElementById('cartOverlay'),d=document.getElementById('cartDrawer');o.classList.add('open');d.classList.add('open');document.body.style.overflow='hidden';renderCart()}
   function closeCart(){document.getElementById('cartOverlay').classList.remove('open');document.getElementById('cartDrawer').classList.remove('open');document.body.style.overflow=''}
   function addToCart(id,qty=1){const cart=getCart(),p=hardcodedCart.find(x=>x.id===id);if(!p)return;const idx=cart.findIndex(x=>x.id===id);if(idx>-1){cart[idx].qty+=qty}else{cart.push({id:p.id,name:p.name,price:p.price,img:p.img,qty})}saveCart(cart);showToast('Added to cart!');openCart();try{window.trackEvent&&window.trackEvent('add_to_cart',{product_id:id,product_name:p.name,price:p.price,qty})}catch(e){}}
-  function addToCartFromPage(){try{const id=parseInt(new URLSearchParams(window.location.search).get('id'))||0;const qty=parseInt(document.getElementById('qty')?.value)||1;if(!id)return;addToCart(id,qty)}catch(e){}}
-  function buyNow(){try{const id=parseInt(new URLSearchParams(window.location.search).get('id'))||0;const qty=parseInt(document.getElementById('qty')?.value)||1;if(!id)return;const cart=getCart(),p=hardcodedCart.find(x=>x.id===id);if(!p)return;const idx=cart.findIndex(x=>x.id===id);if(idx>-1){cart[idx].qty+=qty}else{cart.push({id:p.id,name:p.name,price:p.price,img:p.img,qty})}saveCart(cart);try{window.trackEvent&&window.trackEvent('checkout_start',{product_id:id,product_name:p.name,price:p.price,qty})}catch(e){}window.location.href='checkout.html'}catch(e){window.location.href='checkout.html'}}
+  function getVariantId(){try{return (typeof currentVar !== 'undefined' && currentVar) ? currentVar.id : parseInt(new URLSearchParams(window.location.search).get('id'))||0}catch(e){return parseInt(new URLSearchParams(window.location.search).get('id'))||0}}
+  function addToCartFromPage(){try{const id=getVariantId();const qty=parseInt(document.getElementById('qty')?.value)||1;if(!id)return;addToCart(id,qty)}catch(e){}}
+  function buyNow(){try{const id=getVariantId();const qty=parseInt(document.getElementById('qty')?.value)||1;if(!id)return;const cart=getCart(),p=hardcodedCart.find(x=>x.id===id);if(!p)return;const idx=cart.findIndex(x=>x.id===id);if(idx>-1){cart[idx].qty+=qty}else{cart.push({id:p.id,name:p.name,price:p.price,img:p.img,qty})}saveCart(cart);try{window.trackEvent&&window.trackEvent('checkout_start',{product_id:id,product_name:p.name,price:p.price,qty})}catch(e){}window.location.href='checkout.html'}catch(e){window.location.href='checkout.html'}}
   function removeFromCart(id){let cart=getCart();cart=cart.filter(x=>x.id!==id);saveCart(cart);renderCart()}
   function updateQty(id,delta){const cart=getCart(),idx=cart.findIndex(x=>x.id===id);if(idx<0)return;cart[idx].qty+=delta;if(cart[idx].qty<1){cart.splice(idx,1)}saveCart(cart);renderCart()}
   function updateCartBadge(){const cart=getCart();const el=document.getElementById('cartBadge');if(!el)return;const total=cart.reduce((s,x)=>s+x.qty,0);el.textContent=total;el.style.display=total>0?'flex':'none'}
