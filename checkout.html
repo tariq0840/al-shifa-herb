@@ -266,6 +266,8 @@
   let supabaseClient;
   try { const { createClient } = supabase; supabaseClient = createClient('https://nbbkbsdikayrdocvpmea.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iYmtic2Rpa2F5cmRvY3ZwbWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNDMwMjEsImV4cCI6MjA5ODgxOTAyMX0.t5EV8_mahMxP2VDYoFmv1sgW3RYjxeUlQkqbN9EHd2U'); } catch(e) {}
 
+  try { var _cart = JSON.parse(localStorage.getItem('alCart')||'[]'); window.trackEvent && window.trackEvent('checkout_start', { item_count: _cart.length, items: _cart.map(function(x){return {product_id:x.id,product_name:x.name,qty:x.qty,price:x.price}}) }); } catch(e){}
+
   const API_URL = localStorage.getItem('alshifa_api_url') || 'https://al-shifa-herb.onrender.com';
 
   let phoneVerified = false;
@@ -526,6 +528,8 @@
         orderId = data[0].id;
       }
 
+      try { window.trackEvent && window.trackEvent('purchase', { order_id: orderId, total: payload.total_amount, items: payload.items }); } catch(e){}
+
       localStorage.setItem('alCart', '[]');
       updateCartUI();
 
@@ -570,5 +574,6 @@
   function proceedCheckout(){const cart=getCart();if(cart.length===0){return};closeCart();window.location.href='checkout.html'}
   updateCartBadge();
 </script>
+<script src="track.js"></script>
 </body>
 </html>

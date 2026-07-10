@@ -168,11 +168,16 @@
     <button class="analytics-toggle" id="analyticsToggle" onclick="toggleAnalytics()"><i class="fas fa-chart-bar"></i> Analytics</button>
 
     <div class="analytics-section" id="analyticsSection">
+      <div class="stats" id="analyticsStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px"></div>
       <div class="analytics-grid">
         <div class="chart-card"><h3><i class="fas fa-chart-line"></i> Daily Sales (30 days)</h3><canvas id="salesChart"></canvas></div>
         <div class="chart-card"><h3><i class="fas fa-box"></i> Top Products</h3><div id="topProductsList" class="top-products-list"></div></div>
         <div class="chart-card"><h3><i class="fas fa-chart-pie"></i> Orders by Status</h3><canvas id="statusChart"></canvas></div>
         <div class="chart-card"><h3><i class="fas fa-users"></i> Customer Insights</h3><div class="mini-stats" id="customerInsights"></div><div style="margin-top:12px"><canvas id="cityChart" style="max-height:160px"></canvas></div></div>
+        <div class="chart-card"><h3><i class="fas fa-eye"></i> Visitors & Pageviews</h3><canvas id="visitorChart"></canvas></div>
+        <div class="chart-card"><h3><i class="fas fa-file-alt"></i> Most Viewed Pages</h3><div id="topPagesList" class="top-products-list"></div></div>
+        <div class="chart-card"><h3><i class="fas fa-funnel"></i> Conversion Funnel</h3><canvas id="funnelChart"></canvas></div>
+        <div class="chart-card"><h3><i class="fas fa-clock"></i> Avg. Time on Site</h3><div id="avgTimeDisplay" class="mini-stats"></div><div style="margin-top:12px"><canvas id="avgTimeChart" style="max-height:120px"></canvas></div></div>
       </div>
     </div>
 
@@ -534,7 +539,8 @@
     showToast('Exported ' + filteredOrders.length + ' orders');
   }
 
-  let salesChartInst, statusChartInst, cityChartInst;
+  let salesChartInst, statusChartInst, cityChartInst, visitorChartInst, funnelChartInst, avgTimeChartInst;
+  let analyticsData = null;
 
   function toggleAnalytics() {
     const el = document.getElementById('analyticsSection');
@@ -549,6 +555,138 @@
     renderTopProducts();
     renderStatusChart();
     renderCustomerInsights();
+    loadAnalyticsData();
+  }
+
+  async function loadAnalyticsData() {
+    try {
+      const thirtyAgo = new Date(Date.now() - 30*24*60*60*1000).toISOString();
+      const { data, error } = await supabaseClient.from('analytics').select('*').gte('created_at', thirtyAgo).order('created_at', { ascending: false });
+      if (error || !data) { document.getElementById('analyticsStats').innerHTML = '<div style="grid-column:1/-1;padding:12px;text-align:center;color:var(--text-light);font-size:.82rem">Analytics data not available (run SQL in Supabase first)</div>'; return; }
+      analyticsData = data;
+      renderAnalyticsStats(data);
+      renderVisitorChart(data);
+      renderTopPages(data);
+      renderFunnelChart(data);
+      renderAvgTime(data);
+    } catch(e) {
+      document.getElementById('analyticsStats').innerHTML = '<div style="grid-column:1/-1;padding:12px;text-align:center;color:var(--text-light);font-size:.82rem">Analytics data not available (run SQL in Supabase first)</div>';
+    }
+  }
+
+  function renderAnalyticsStats(data) {
+    if (!data || !data.length) { document.getElementById('analyticsStats').innerHTML = ''; return; }
+    var sessions = new Set(data.filter(function(e){return e.event_type==='pageview'}).map(function(e){return e.session_id})).size;
+    var pageviews = data.filter(function(e){return e.event_type==='pageview'}).length;
+    var today = new Date(); today.setHours(0,0,0,0);
+    var todayViews = data.filter(function(e){return e.event_type==='pageview' && new Date(e.created_at)>=today}).length;
+    var todaySessions = new Set(data.filter(function(e){return e.event_type==='pageview' && new Date(e.created_at)>=today}).map(function(e){return e.session_id})).size;
+    var cartAdds = data.filter(function(e){return e.event_type==='add_to_cart'}).length;
+    var purchases = data.filter(function(e){return e.event_type==='purchase'}).length;
+    document.getElementById('analyticsStats').innerHTML =
+      '<div class="stat-card"><div class="si" style="background:#f0f9ff;color:#075985"><i class="fas fa-users"></i></div><div class="info"><div class="num">'+todaySessions+'</div><div class="label">Today Visitors</div></div></div>' +
+      '<div class="stat-card"><div class="si" style="background:#eff6ff;color:#1e40af"><i class="fas fa-eye"></i></div><div class="info"><div class="num">'+todayViews+'</div><div class="label">Today Views</div></div></div>' +
+      '<div class="stat-card"><div class="si" style="background:#f0fdf4;color:#166534"><i class="fas fa-shopping-cart"></i></div><div class="info"><div class="num">'+cartAdds+'</div><div class="label">Cart Adds (30d)</div></div></div>' +
+      '<div class="stat-card"><div class="si" style="background:#fef2f2;color:#991b1b"><i class="fas fa-check-circle"></i></div><div class="info"><div class="num">'+purchases+'</div><div class="label">Purchases (30d)</div></div></div>' +
+      '<div class="stat-card"><div class="si" style="background:#fffbeb;color:#92400e"><i class="fas fa-chart-line"></i></div><div class="info"><div class="num">'+pageviews+'</div><div class="label">Total Views (30d)</div></div></div>' +
+      '<div class="stat-card"><div class="si" style="background:#f5f3ff;color:#5b21b6"><i class="fas fa-user-friends"></i></div><div class="info"><div class="num">'+sessions+'</div><div class="label">Visitors (30d)</div></div></div>';
+  }
+
+  function renderVisitorChart(data) {
+    if (visitorChartInst) { visitorChartInst.destroy(); visitorChartInst = null; }
+    var days = {};
+    var now = new Date();
+    for (var i = 29; i >= 0; i--) {
+      var d = new Date(now); d.setDate(d.getDate() - i);
+      var key = d.toLocaleDateString('en-IN', {day:'2-digit', month:'short'});
+      days[key] = { views: 0, visitors: new Set() };
+    }
+    data.forEach(function(e) {
+      if (e.event_type !== 'pageview') return;
+      var d = new Date(e.created_at);
+      var key = d.toLocaleDateString('en-IN', {day:'2-digit', month:'short'});
+      if (days[key]) { days[key].views++; days[key].visitors.add(e.session_id); }
+    });
+    var labels = Object.keys(days);
+    var viewData = Object.values(days).map(function(v){ return v.views; });
+    var visitData = Object.values(days).map(function(v){ return v.visitors.size; });
+    var ctx = document.getElementById('visitorChart');
+    if (!ctx) return;
+    visitorChartInst = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          { label: 'Pageviews', data: viewData, backgroundColor: 'rgba(21,95,51,.6)', borderRadius: 3 },
+          { label: 'Visitors', data: visitData, backgroundColor: 'rgba(201,168,76,.6)', borderRadius: 3 }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { font: { size: 10 }, usePointStyle: true } } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    });
+  }
+
+  function renderTopPages(data) {
+    var pages = {};
+    data.forEach(function(e) {
+      if (e.event_type !== 'pageview' || !e.path) return;
+      var p = e.path.replace(/\/+$/,'') || '/';
+      pages[p] = (pages[p] || 0) + 1;
+    });
+    var sorted = Object.entries(pages).sort(function(a,b){return b[1]-a[1]}).slice(0,10);
+    var el = document.getElementById('topPagesList');
+    if (!el) return;
+    el.innerHTML = sorted.length ? sorted.map(function(p){ return '<li><span class="tp-name">' + (p[0] || '/') + '</span><span class="tp-count">' + p[1] + ' views</span></li>'; }).join('') : '<li style="color:var(--text-light);text-align:center;padding:20px">No data yet</li>';
+  }
+
+  function renderFunnelChart(data) {
+    if (funnelChartInst) { funnelChartInst.destroy(); funnelChartInst = null; }
+    var counts = { pageview: 0, add_to_cart: 0, checkout_start: 0, purchase: 0 };
+    data.forEach(function(e) { if (counts[e.event_type] !== undefined) counts[e.event_type]++; });
+    var ctx = document.getElementById('funnelChart');
+    if (!ctx) return;
+    funnelChartInst = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Page Views', 'Add to Cart', 'Checkout', 'Purchases'],
+        datasets: [{ label: 'Events', data: [counts.pageview, counts.add_to_cart, counts.checkout_start, counts.purchase], backgroundColor: ['#93c5fd', '#86efac', '#fcd34d', '#fca5a5'], borderRadius: 4 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    });
+  }
+
+  function renderAvgTime(data) {
+    if (avgTimeChartInst) { avgTimeChartInst.destroy(); avgTimeChartInst = null; }
+    var leaves = data.filter(function(e){ return e.event_type === 'pageleave' && e.event_data && e.event_data.duration_ms; });
+    var totalDuration = 0;
+    leaves.forEach(function(e){ totalDuration += e.event_data.duration_ms || 0; });
+    var avgSec = leaves.length ? Math.round(totalDuration / leaves.length / 1000) : 0;
+    var avgMin = Math.floor(avgSec / 60);
+    var avgSecRem = avgSec % 60;
+    var bounceCount = leaves.filter(function(e){ return (e.event_data.duration_ms || 0) < 15000; }).length;
+    var bounceRate = leaves.length ? Math.round(bounceCount / leaves.length * 100) : 0;
+
+    var el = document.getElementById('avgTimeDisplay');
+    if (el) el.innerHTML = '<div class="ms"><strong>' + (avgMin ? avgMin+'m ' : '') + avgSecRem + 's</strong>Avg. Time</div><div class="ms"><strong>' + leaves.length + '</strong>Tracked Visits</div><div class="ms"><strong>' + bounceRate + '%</strong>Bounce Rate (&lt;15s)</div>';
+
+    var buckets = { '0-10s': 0, '10-30s': 0, '30-60s': 0, '1-3m': 0, '3m+': 0 };
+    leaves.forEach(function(e) {
+      var d = (e.event_data.duration_ms || 0) / 1000;
+      if (d < 10) buckets['0-10s']++;
+      else if (d < 30) buckets['10-30s']++;
+      else if (d < 60) buckets['30-60s']++;
+      else if (d < 180) buckets['1-3m']++;
+      else buckets['3m+']++;
+    });
+    var ctx = document.getElementById('avgTimeChart');
+    if (!ctx) return;
+    avgTimeChartInst = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(buckets),
+        datasets: [{ data: Object.values(buckets), backgroundColor: ['#fca5a5', '#fcd34d', '#93c5fd', '#86efac', '#c4b5fd'], borderWidth: 0 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 8, font: { size: 9 }, usePointStyle: true } } } }
+    });
   }
 
   function getDailySales() {

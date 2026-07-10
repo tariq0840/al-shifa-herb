@@ -953,6 +953,7 @@
   } else {
     document.getElementById('loading').style.display = 'none';
     document.title = `${p.name} – AL SHIFA HERB`;
+    try { window.trackEvent && window.trackEvent('product_view', { product_id: id, product_name: p.name, category: p.cat, price: p.price }); } catch(e){}
 
     const stars = '<i class="fas fa-star"></i>'.repeat(Math.floor(p.rating)) + (p.rating%1>=.5?'<i class="fas fa-star-half-alt"></i>':'');
     const badge = p.badge ? `<span class="pd-badge ${p.bclass}">${p.badge}</span>` : '';
@@ -1099,9 +1100,9 @@
   function toggleCart(){const o=document.getElementById('cartOverlay'),d=document.getElementById('cartDrawer');o.classList.toggle('open');d.classList.toggle('open');document.body.style.overflow=o.classList.contains('open')?'hidden':''}
   function openCart(){const o=document.getElementById('cartOverlay'),d=document.getElementById('cartDrawer');o.classList.add('open');d.classList.add('open');document.body.style.overflow='hidden';renderCart()}
   function closeCart(){document.getElementById('cartOverlay').classList.remove('open');document.getElementById('cartDrawer').classList.remove('open');document.body.style.overflow=''}
-  function addToCart(id,qty=1){const cart=getCart(),p=hardcodedCart.find(x=>x.id===id);if(!p)return;const idx=cart.findIndex(x=>x.id===id);if(idx>-1){cart[idx].qty+=qty}else{cart.push({id:p.id,name:p.name,price:p.price,img:p.img,qty})}saveCart(cart);showToast('Added to cart!');openCart()}
+  function addToCart(id,qty=1){const cart=getCart(),p=hardcodedCart.find(x=>x.id===id);if(!p)return;const idx=cart.findIndex(x=>x.id===id);if(idx>-1){cart[idx].qty+=qty}else{cart.push({id:p.id,name:p.name,price:p.price,img:p.img,qty})}saveCart(cart);showToast('Added to cart!');openCart();try{window.trackEvent&&window.trackEvent('add_to_cart',{product_id:id,product_name:p.name,price:p.price,qty})}catch(e){}}
   function addToCartFromPage(){try{const id=parseInt(new URLSearchParams(window.location.search).get('id'))||0;const qty=parseInt(document.getElementById('qty')?.value)||1;if(!id)return;addToCart(id,qty)}catch(e){}}
-  function buyNow(){try{const id=parseInt(new URLSearchParams(window.location.search).get('id'))||0;const qty=parseInt(document.getElementById('qty')?.value)||1;if(!id)return;const cart=getCart(),p=hardcodedCart.find(x=>x.id===id);if(!p)return;const idx=cart.findIndex(x=>x.id===id);if(idx>-1){cart[idx].qty+=qty}else{cart.push({id:p.id,name:p.name,price:p.price,img:p.img,qty})}saveCart(cart);window.location.href='checkout.html'}catch(e){window.location.href='checkout.html'}}
+  function buyNow(){try{const id=parseInt(new URLSearchParams(window.location.search).get('id'))||0;const qty=parseInt(document.getElementById('qty')?.value)||1;if(!id)return;const cart=getCart(),p=hardcodedCart.find(x=>x.id===id);if(!p)return;const idx=cart.findIndex(x=>x.id===id);if(idx>-1){cart[idx].qty+=qty}else{cart.push({id:p.id,name:p.name,price:p.price,img:p.img,qty})}saveCart(cart);try{window.trackEvent&&window.trackEvent('checkout_start',{product_id:id,product_name:p.name,price:p.price,qty})}catch(e){}window.location.href='checkout.html'}catch(e){window.location.href='checkout.html'}}
   function removeFromCart(id){let cart=getCart();cart=cart.filter(x=>x.id!==id);saveCart(cart);renderCart()}
   function updateQty(id,delta){const cart=getCart(),idx=cart.findIndex(x=>x.id===id);if(idx<0)return;cart[idx].qty+=delta;if(cart[idx].qty<1){cart.splice(idx,1)}saveCart(cart);renderCart()}
   function updateCartBadge(){const cart=getCart();const el=document.getElementById('cartBadge');if(!el)return;const total=cart.reduce((s,x)=>s+x.qty,0);el.textContent=total;el.style.display=total>0?'flex':'none'}
@@ -1126,5 +1127,6 @@
   function proceedCheckout(){const cart=getCart();if(cart.length===0){showToast('Your cart is empty');return};closeCart();window.location.href='checkout.html'}
   updateCartBadge();
 </script>
+<script src="track.js"></script>
 </body>
 </html>
