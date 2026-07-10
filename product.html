@@ -18,17 +18,27 @@
   <meta name="twitter:title" id="twTitle" content="AL SHIFA HERB – Herbal Products">
   <meta name="twitter:description" id="twDesc" content="100% natural herbal products for men's health.">
   <meta name="twitter:image" id="twImage" content="https://tariq0840.github.io/al-shifa-herb/images/as81-1.png">
+  <script type="application/ld+json" id="breadcrumbSchema">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://tariq0840.github.io/al-shifa-herb/"},{"@type":"ListItem","position":2,"name":"Products","item":"https://tariq0840.github.io/al-shifa-herb/index.html#products"},{"@type":"ListItem","position":3,"name":"Product","item":"https://tariq0840.github.io/al-shifa-herb/product.html"}]}
+  </script>
   <script type="application/ld+json" id="productSchema">
-  { "@context": "https://schema.org", "@type": "Product", "name": "AL SHIFA HERB Products", "description": "Herbal products for men's wellness", "brand": { "@type": "Brand", "name": "AL SHIFA HERB" } }
+  {"@context":"https://schema.org","@type":"Product","name":"AL SHIFA HERB Products","description":"Herbal products for men's wellness","brand":{"@type":"Brand","name":"AL SHIFA HERB"}}
+  </script>
+  <script type="application/ld+json" id="faqSchema">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long does it take to see results?","acceptedAnswer":{"@type":"Answer","text":"Results vary by product and individual. Most customers notice improvements within 2-4 weeks of consistent use."}},{"@type":"Question","name":"Are AL SHIFA HERB products safe?","acceptedAnswer":{"@type":"Answer","text":"Yes, all our products are 100% natural herbal formulations with no synthetic chemicals or hormones."}},{"@type":"Question","name":"Is Cash on Delivery available?","acceptedAnswer":{"@type":"Answer","text":"Yes, we offer Cash on Delivery across India for all orders."}},{"@type":"Question","name":"How should I store herbal products?","acceptedAnswer":{"@type":"Answer","text":"Store in a cool, dry place away from direct sunlight. Keep lid tightly sealed after use."}}]}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://unpkg.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{font-family:'Inter',sans-serif;background:#fff;color:#1a1a2e;line-height:1.6;overflow-x:hidden}
+    body{font-family:'Inter',sans-serif;background:#fff;color:#1a1a2e;line-height:1.6;overflow-x:hidden;font-display:swap}
     h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:700}
     :root{--green-900:#0a2e1a;--green-800:#0f4124;--green-700:#155f33;--green-600:#1e8045;--gold:#c9a84c;--gold-dark:#a8882e;--cream:#faf6ef;--white:#fff;--text:#1a1a2e;--text-light:#6b7280;--border:#eee;--shadow:0 2px 16px rgba(0,0,0,.06);--shadow-lg:0 12px 48px rgba(0,0,0,.1);--radius:14px;--radius-sm:8px;--transition:.4s cubic-bezier(.22,1,.36,1)}
 
@@ -251,7 +261,7 @@
         <a href="https://wa.me/919557687044"><i class="fab fa-whatsapp"></i></a>
       </div>
     </div>
-    <div><h4>Quick Links</h4><a href="index.html">Home</a><a href="index.html#products">All Products</a><a href="index.html#combo">Combos</a><a href="index.html#testimonials">Reviews</a><a href="index.html#faq">FAQ</a><a href="index.html#contact">Contact</a></div>
+    <div><h4>Quick Links</h4><a href="index.html">Home</a><a href="index.html#products">All Products</a><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy</a><a href="shipping.html">Shipping</a><a href="refund.html">Refund</a><a href="terms.html">Terms</a></div>
     <div><h4>Categories</h4><a href="index.html#products">Men's Vitality</a><a href="index.html#products">Men's Care Oil</a><a href="index.html#products">Digestive Health</a><a href="index.html#products">Best Sellers</a></div>
     <div><h4>Contact</h4><a href="tel:+919557687044">+91 9557687044</a><a href="mailto:alshifaherb000@gmail.com">alshifaherb000@gmail.com</a><a href="#">Uttar Pradesh, India</a><a href="https://wa.me/919557687044">WhatsApp</a></div>
   </div>
@@ -1042,10 +1052,19 @@
         "description": (p.desc || '').slice(0,200),
         "image": img,
         "brand":{"@type":"Brand","name":"AL SHIFA HERB"},
-        "offers":{"@type":"Offer","price":priceNum,"priceCurrency":"INR","availability":"https://schema.org/InStock","url":base + '/product.html?id=' + id}
+        "sku": "ASH-" + id,
+        "mpn": "ASH-" + id,
+        "offers":{"@type":"Offer","price":priceNum,"priceCurrency":"INR","availability":"https://schema.org/InStock","url":base + '/product.html?id=' + id, "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear()+1)).toISOString().split('T')[0]},
+        "aggregateRating":{"@type":"AggregateRating","ratingValue":p.rating,"reviewCount":p.rev,"bestRating":5,"worstRating":1}
       };
-      if (p.old) { const oldNum = parseInt(p.old.replace(/[₹,]/g,'')); schema.offers = {...schema.offers, "priceSpecification":{"@type":"CompoundPriceSpecification","price":priceNum,"priceCurrency":"INR","valueAddedTaxIncluded":"true","referencePrice":oldNum}}; }
+      if (p.old) { const oldNum = parseInt(p.old.replace(/[₹,]/g,'')); schema.offers.priceSpecification = {"@type":"CompoundPriceSpecification","price":priceNum,"priceCurrency":"INR","valueAddedTaxIncluded":"true","referencePrice":oldNum}; }
+      if (p.ingredients) schema.ingredients = p.ingredients.slice(0,300);
       document.getElementById('productSchema').textContent = JSON.stringify(schema);
+      const bcSchema = {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://tariq0840.github.io/al-shifa-herb/"},{"@type":"ListItem","position":2,"name":p.cat||"Products","item":"https://tariq0840.github.io/al-shifa-herb/index.html#products"},{"@type":"ListItem","position":3,"name":p.name,"item":"https://tariq0840.github.io/al-shifa-herb/product.html?id="+id}]};
+      document.getElementById('breadcrumbSchema').textContent = JSON.stringify(bcSchema);
+      const fqa = [["How long until I see results with " + p.name + "?","Results vary, but most customers notice improvements within 2-4 weeks of consistent daily use as directed."],["Is " + p.name + " safe for daily use?","Yes, " + p.name + " is made with 100% natural herbal ingredients and is suitable for long-term daily use when taken as directed."],["How should I take " + p.name + "?","Follow the dosage instructions provided in the product page. Consistency is key for best results."],["Is Cash on Delivery available for " + p.name + "?","Yes, COD is available across India for all orders including " + p.name + "."]];
+      const fqSchema = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":fqa.map(function(q){return{"@type":"Question","name":q[0],"acceptedAnswer":{"@type":"Answer","text":q[1]}}})};
+      document.getElementById('faqSchema').textContent = JSON.stringify(fqSchema);
     } catch(e){}
     try { window.trackEvent && window.trackEvent('product_view', { product_id: id, product_name: p.name, category: p.cat, price: p.price }); } catch(e){}
 
@@ -1070,7 +1089,7 @@
 
     // Gallery thumbs
     const imgs = p.imgs || [p.img];
-    let thumbs = imgs.map((x,i) => `<img src="${x}" onclick="changeImg(this,'${x}')" class="${i===0?'active':''}" alt="">`).join('');
+    let thumbs = imgs.map((x,i) => `<img src="${x}" onclick="changeImg(this,'${x}')" class="${i===0?'active':''}" alt="${p.name} image ${i+1}" loading="lazy">`).join('');
 
     document.getElementById('pdWrap').innerHTML = `
       <div class="pd-gallery" data-aos="fade-right">
