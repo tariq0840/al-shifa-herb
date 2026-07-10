@@ -439,67 +439,51 @@
     return dt.toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'2-digit'});
   }
 
-  async function apiPost(path, body) {
-    try {
-      const controller = new AbortController();
-      const id = setTimeout(() => controller.abort(), 8000);
-      const res = await fetch(API_URL + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: controller.signal });
-      clearTimeout(id);
-      return await res.json();
-    } catch(e) { return { success: false, message: null }; }
-  }
-
-  async function adminPost(path, body) {
-    const result = await apiPost(path, { ...body, pass: ADMIN_PASS });
-    if (!result.success && result.message === null) {
-      const supabaseResult = await supabaseFallback(path, body);
-      if (supabaseResult) return supabaseResult;
-    }
-    return result;
-  }
-
-  async function supabaseFallback(path, body) {
-    try {
-      if (path.includes('/status')) {
-        const id = path.split('/')[4];
-        await supabaseClient.from('orders').update({ status: body.status }).eq('id', id);
-        return { success: true };
-      }
-      if (path.includes('/tracking')) {
-        const id = path.split('/')[4];
-        await supabaseClient.from('orders').update({ tracking_number: body.tracking_number || null }).eq('id', id);
-        return { success: true };
-      }
-      if (path.includes('/delete')) {
-        const id = path.split('/')[4];
-        await supabaseClient.from('orders').delete().eq('id', id);
-        return { success: true };
-      }
-    } catch(e) {}
-    return null;
-  }
+  let busyStatus = new Set();
 
   async function updateStatus(id, el) {
+    if (busyStatus.has(id)) return;
     const val = el.value;
     el.className = 'status-select status-' + val;
-    const result = await adminPost('/api/admin/orders/' + id + '/status', { status: val });
-    if (result.success) { showToast('Order #' + id + ' marked as ' + val); allOrders.find(o => o.id === id).status = val; updateStats(); }
-    else { el.value = allOrders.find(o => o.id === id)?.status || 'pending'; el.className = 'status-select status-' + (allOrders.find(o => o.id === id)?.status || 'pending'); showToast('Error updating status'); }
+    busyStatus.add(id);
+    el.disabled = true;
+    try {
+      const { error } = await supabaseClient.from('orders').update({ status: val }).eq('id', id);
+      if (error) throw error;
+      allOrders.find(o => o.id === id).status = val;
+      showToast('Order #' + id + ' marked as ' + val);
+      updateStats();
+    } catch(e) {
+      el.value = allOrders.find(o => o.id === id)?.status || 'pending';
+      el.className = 'status-select status-' + (allOrders.find(o => o.id === id)?.status || 'pending');
+      showToast('Update failed: ' + (e.message || 'unknown error'));
+    }
+    el.disabled = false;
+    busyStatus.delete(id);
   }
 
   async function updateTracking(id, el) {
     const val = el.value.trim();
     el.style.borderColor = val ? '#86efac' : 'var(--border)';
-    const result = await adminPost('/api/admin/orders/' + id + '/tracking', { tracking_number: val || null });
-    if (result.success) { showToast(val ? 'Tracking #' + val + ' saved' : 'Tracking removed'); if (allOrders.find(o => o.id === id)) allOrders.find(o => o.id === id).tracking_number = val || null; }
-    else showToast('Error saving tracking');
+    try {
+      await supabaseClient.from('orders').update({ tracking_number: val || null }).eq('id', id);
+      if (allOrders.find(o => o.id === id)) allOrders.find(o => o.id === id).tracking_number = val || null;
+      showToast(val ? 'Tracking #' + val + ' saved' : 'Tracking removed');
+    } catch(e) {
+      showToast('Error: ' + (e.message || 'unknown error'));
+    }
   }
 
   async function deleteOrder(id) {
     if (!confirm('Delete order #' + id + '?')) return;
-    const result = await adminPost('/api/admin/orders/' + id + '/delete', {});
-    if (result.success) { allOrders = allOrders.filter(o => o.id !== id); applyFilters(); showToast('Order #' + id + ' deleted'); }
-    else showToast('Error deleting order');
+    try {
+      await supabaseClient.from('orders').delete().eq('id', id);
+      allOrders = allOrders.filter(o => o.id !== id);
+      applyFilters();
+      showToast('Order #' + id + ' deleted');
+    } catch(e) {
+      showToast('Delete failed: ' + (e.message || 'unknown error'));
+    }
   }
 
   function viewOrder(id) {
