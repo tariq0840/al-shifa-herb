@@ -241,6 +241,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const ADMIN_PASS = 'alshifa123';
+  const API_URL = localStorage.getItem('alshifa_api_url') || 'https://al-shifa-herb.onrender.com';
   const { createClient } = supabase;
   const supabaseClient = createClient('https://nbbkbsdikayrdocvpmea.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iYmtic2Rpa2F5cmRvY3ZwbWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNDMwMjEsImV4cCI6MjA5ODgxOTAyMX0.t5EV8_mahMxP2VDYoFmv1sgW3RYjxeUlQkqbN9EHd2U');
 
@@ -438,27 +439,38 @@
     return dt.toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'2-digit'});
   }
 
+  async function apiPost(path, body) {
+    try {
+      const res = await fetch(API_URL + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      return await res.json();
+    } catch(e) { return { success: false, message: 'Network error' }; }
+  }
+
+  async function adminPost(path, body) {
+    return apiPost(path, { ...body, pass: ADMIN_PASS });
+  }
+
   async function updateStatus(id, el) {
     const val = el.value;
     el.className = 'status-select status-' + val;
-    await supabaseClient.from('orders').update({ status: val }).eq('id', id);
-    showToast('Order #' + id + ' marked as ' + val);
-    updateStats();
+    const result = await adminPost('/api/admin/orders/' + id + '/status', { status: val });
+    if (result.success) { showToast('Order #' + id + ' marked as ' + val); updateStats(); }
+    else { el.value = allOrders.find(o => o.id === id)?.status || 'pending'; el.className = 'status-select status-' + (allOrders.find(o => o.id === id)?.status || 'pending'); showToast('Error: ' + (result.message || 'Failed'), 'error'); }
   }
 
   async function updateTracking(id, el) {
     const val = el.value.trim();
     el.style.borderColor = val ? '#86efac' : 'var(--border)';
-    await supabaseClient.from('orders').update({ tracking_number: val || null }).eq('id', id);
-    showToast(val ? 'Tracking #' + val + ' saved for order #' + id : 'Tracking removed from order #' + id);
+    const result = await adminPost('/api/admin/orders/' + id + '/tracking', { tracking_number: val || null });
+    if (result.success) showToast(val ? 'Tracking #' + val + ' saved' : 'Tracking removed');
+    else showToast('Error: ' + (result.message || 'Failed'));
   }
 
   async function deleteOrder(id) {
     if (!confirm('Delete order #' + id + '?')) return;
-    await supabaseClient.from('orders').delete().eq('id', id);
-    allOrders = allOrders.filter(o => o.id !== id);
-    applyFilters();
-    showToast('Order #' + id + ' deleted');
+    const result = await adminPost('/api/admin/orders/' + id, {});
+    if (result.success) { allOrders = allOrders.filter(o => o.id !== id); applyFilters(); showToast('Order #' + id + ' deleted'); }
+    else showToast('Error: ' + (result.message || 'Failed'));
   }
 
   function viewOrder(id) {

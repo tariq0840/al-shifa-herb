@@ -255,6 +255,48 @@ app.get('/api/track/:order_id', async (req, res) => {
   }
 });
 
+// ── Admin Operations ──
+
+function checkAdmin(pass) {
+  return pass === 'alshifa123';
+}
+
+app.put('/api/admin/orders/:id/status', async (req, res) => {
+  try {
+    const { pass, status } = req.body;
+    if (!checkAdmin(pass)) return res.json({ success: false, message: 'Unauthorized' });
+    const { error } = await supabase.from('orders').update({ status }).eq('id', req.params.id);
+    if (error) return res.json({ success: false, message: error.message });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+app.put('/api/admin/orders/:id/tracking', async (req, res) => {
+  try {
+    const { pass, tracking_number } = req.body;
+    if (!checkAdmin(pass)) return res.json({ success: false, message: 'Unauthorized' });
+    const { error } = await supabase.from('orders').update({ tracking_number: tracking_number || null }).eq('id', req.params.id);
+    if (error) return res.json({ success: false, message: error.message });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+app.delete('/api/admin/orders/:id', async (req, res) => {
+  try {
+    const { pass } = req.body;
+    if (!checkAdmin(pass)) return res.json({ success: false, message: 'Unauthorized' });
+    const { error } = await supabase.from('orders').delete().eq('id', req.params.id);
+    if (error) return res.json({ success: false, message: error.message });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 // ── WhatsApp ──
 
 function waChatId(phone) {
