@@ -152,6 +152,50 @@
     .romantic-banner .decor{position:absolute;right:-60px;top:-60px;width:300px;height:300px;border-radius:50%;border:2px solid rgba(201,168,76,.15);z-index:1}
     .romantic-banner .decor2{position:absolute;right:80px;bottom:-80px;width:200px;height:200px;border-radius:50%;border:2px solid rgba(255,255,255,.06);z-index:1}
 
+    /*** PRODUCT SHOWCASE ***/
+    .showcase-section{background:linear-gradient(135deg,var(--green-900),#0d4a2a);padding:50px 24px;overflow:hidden}
+    .showcase-inner{max-width:1280px;margin:0 auto;display:flex;gap:48px;align-items:center}
+    .showcase-left{flex:0 0 380px}
+    .showcase-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:50px;background:rgba(201,168,76,.15);color:var(--gold);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+    .showcase-title{font-size:2.2rem;color:var(--white);margin-bottom:12px;line-height:1.2}
+    .showcase-desc{color:rgba(255,255,255,.65);font-size:.92rem;margin-bottom:22px;max-width:420px;line-height:1.6}
+    .showcase-btn{background:var(--gold);color:#2c1a0e}.showcase-btn:hover{background:var(--gold-dark);color:var(--white);transform:translateY(-2px)}
+    .showcase-right{flex:1;overflow:hidden;position:relative;mask-image:linear-gradient(to right,transparent 0,#000 5%,#000 95%,transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0,#000 5%,#000 95%,transparent 100%)}
+    .showcase-track{display:flex;gap:20px;width:max-content;animation:showcaseScroll 45s linear infinite}
+    .showcase-track:hover{animation-play-state:paused}
+    @keyframes showcaseScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .showcase-card{flex-shrink:0;width:195px;background:var(--white);border-radius:16px;padding:18px 14px 14px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:center;transition:transform .35s ease,box-shadow .35s ease;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+    .showcase-card:hover{transform:translateY(-8px);box-shadow:0 16px 48px rgba(0,0,0,.15)}
+    .showcase-card .img-wrap{width:130px;height:130px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+    .showcase-card .img-wrap img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+    .showcase-card h4{font-family:'Inter',sans-serif;font-size:.8rem;font-weight:600;text-align:center;color:var(--text);margin:0 0 10px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .showcase-card .btn-shop{display:inline-flex;align-items:center;gap:5px;padding:7px 18px;border-radius:50px;background:var(--green-700);color:var(--white);font-size:.72rem;font-weight:600;transition:background .3s,border .3s;border:1px solid transparent}
+    .showcase-card .btn-shop i{font-size:.6rem;transition:transform .3s}
+    .showcase-card:hover .btn-shop{background:var(--gold);color:#2c1a0e;border-color:var(--gold)}
+    .showcase-card:hover .btn-shop i{transform:translateX(3px)}
+    .showcase-card .price-tag{font-size:.85rem;font-weight:700;color:var(--green-800);margin-bottom:8px}
+    @media(max-width:1024px){.showcase-left{flex:0 0 320px}.showcase-title{font-size:1.8rem}}
+    @media(max-width:768px){
+      .showcase-section{padding:36px 18px}
+      .showcase-inner{flex-direction:column;gap:28px}
+      .showcase-left{flex:none;width:100%;text-align:center}
+      .showcase-desc{margin-left:auto;margin-right:auto}
+      .showcase-title{font-size:1.5rem}
+      .showcase-right{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+      .showcase-right::-webkit-scrollbar{display:none}
+      .showcase-track{animation:none;gap:14px}
+      .showcase-card{width:170px}
+      .showcase-card .img-wrap{width:110px;height:110px}
+    }
+    @media(max-width:430px){
+      .showcase-section{padding:28px 14px}
+      .showcase-title{font-size:1.3rem}
+      .showcase-card{width:155px;padding:14px 10px 12px}
+      .showcase-card .img-wrap{width:100px;height:100px}
+      .showcase-card h4{font-size:.75rem}
+      .showcase-card .btn-shop{padding:6px 14px;font-size:.68rem}
+    }
+
     /*** CATEGORY TABS ***/
     .cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
     .cat-tab{padding:8px 20px;border-radius:50px;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:.8rem;font-weight:500;transition:var(--transition);color:var(--text)}
@@ -470,19 +514,17 @@
   </div>
 </section>
 
-<!-- ROMANTIC BANNER 2 -->
-<section class="section" style="padding-top:0">
-  <div class="section-inner">
-    <div class="romantic-banner" style="background-image:url('https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=1400&q=85')" data-aos="fade-up">
-      <div class="overlay"></div>
-      <div class="decor"></div>
-      <div class="decor2"></div>
-      <div class="content" style="max-width:440px">
-        <span class="tag">🌿 Gut Health</span>
-        <h2>Good Digestion =<br>Better Performance</h2>
-        <p>Poor digestion affects everything — including your energy. Restore your gut health naturally with our herbal range.</p>
-        <a href="#products" class="btn"><i class="fas fa-leaf"></i> Explore Digestive Range</a>
-      </div>
+<!-- PRODUCT SHOWCASE -->
+<section class="showcase-section">
+  <div class="showcase-inner">
+    <div class="showcase-left">
+      <span class="showcase-tag"><i class="fas fa-leaf"></i> Premium Herbal Solutions</span>
+      <h2 class="showcase-title">Choose Your Perfect<br>Herbal Solution</h2>
+      <p class="showcase-desc">Discover our premium herbal products for Men's Wellness, Digestive Health and Daily Vitality.</p>
+      <a href="#products" class="btn showcase-btn"><i class="fas fa-leaf"></i> View All Products</a>
+    </div>
+    <div class="showcase-right">
+      <div class="showcase-track" id="showcaseTrack"></div>
     </div>
   </div>
 </section>
@@ -749,6 +791,31 @@
     navigation:{nextEl:'.swiper-button-next',prevEl:'.swiper-button-prev'},
     pagination:{el:'.swiper-pagination',clickable:true}
   });
+
+  var showcaseTrack = document.getElementById('showcaseTrack');
+  if (showcaseTrack && typeof hardcodedCart !== 'undefined') {
+    var sc = hardcodedCart;
+    var scHtml = sc.map(function(p) {
+      var name = p.name.length > 24 ? p.name.slice(0, 22) + '...' : p.name;
+      return '<a href="product.html?id=' + p.id + '" class="showcase-card"><div class="img-wrap"><img src="' + p.img + '" alt="' + p.name + '" loading="lazy"></div><h4>' + name + '</h4><span class="btn-shop">Shop Now <i class="fas fa-arrow-right"></i></span></a>';
+    }).join('');
+    showcaseTrack.innerHTML = scHtml + scHtml;
+    if (window.innerWidth <= 768) {
+      var showcaseRight = document.querySelector('.showcase-right');
+      if (!showcaseRight) return;
+      var isPaused = false, mobInt, touchTimer;
+      function mobAutoScroll() {
+        if (isPaused || !showcaseRight) return;
+        var newLeft = showcaseRight.scrollLeft + 0.8;
+        if (newLeft >= showcaseRight.scrollWidth / 2) { newLeft = 0; }
+        showcaseRight.scrollLeft = newLeft;
+      }
+      mobInt = setInterval(mobAutoScroll, 20);
+      showcaseRight.addEventListener('touchstart', function() { isPaused = true; clearTimeout(touchTimer); });
+      showcaseRight.addEventListener('touchend', function() { touchTimer = setTimeout(function() { isPaused = false; }, 4000); });
+      showcaseRight.addEventListener('touchcancel', function() { isPaused = false; });
+    }
+  }
 </script>
 <script src="track.js"></script>
 </body>
