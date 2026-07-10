@@ -285,7 +285,7 @@ app.put('/api/admin/orders/:id/tracking', async (req, res) => {
   }
 });
 
-app.delete('/api/admin/orders/:id', async (req, res) => {
+app.post('/api/admin/orders/:id/delete', async (req, res) => {
   try {
     const { pass } = req.body;
     if (!checkAdmin(pass)) return res.json({ success: false, message: 'Unauthorized' });
