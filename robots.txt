@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tariq0840.github.io/al-shifa-herb/sitemap.xml
