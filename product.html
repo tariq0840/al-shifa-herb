@@ -3,7 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product – AL SHIFA HERB</title>
+  <title id="metaTitle">AL SHIFA HERB – Herbal Products</title>
+  <meta name="description" id="metaDesc" content="Explore AL SHIFA HERB's range of 100% natural Unani and Ayurvedic products for men's vitality, stamina, and strength.">
+  <meta name="keywords" content="herbal supplements, ayurvedic medicine, unani medicine, male wellness, AL SHIFA HERB">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" id="metaCanonical" href="https://tariq0840.github.io/al-shifa-herb/">
+  <meta property="og:type" content="product">
+  <meta property="og:title" id="ogTitle" content="AL SHIFA HERB – Herbal Products">
+  <meta property="og:description" id="ogDesc" content="100% natural herbal products for men's health.">
+  <meta property="og:url" id="ogUrl" content="https://tariq0840.github.io/al-shifa-herb/">
+  <meta property="og:image" id="ogImage" content="https://tariq0840.github.io/al-shifa-herb/images/as81-1.png">
+  <meta property="og:site_name" content="AL SHIFA HERB">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" id="twTitle" content="AL SHIFA HERB – Herbal Products">
+  <meta name="twitter:description" id="twDesc" content="100% natural herbal products for men's health.">
+  <meta name="twitter:image" id="twImage" content="https://tariq0840.github.io/al-shifa-herb/images/as81-1.png">
+  <script type="application/ld+json" id="productSchema">
+  { "@context": "https://schema.org", "@type": "Product", "name": "AL SHIFA HERB Products", "description": "Herbal products for men's wellness", "brand": { "@type": "Brand", "name": "AL SHIFA HERB" } }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -1004,6 +1021,32 @@
   } else {
     document.getElementById('loading').style.display = 'none';
     document.title = `${p.name} – AL SHIFA HERB`;
+    try {
+      const base = 'https://tariq0840.github.io/al-shifa-herb';
+      const img = p.img.startsWith('http') ? p.img : base + '/' + p.img;
+      document.getElementById('metaTitle').textContent = document.title;
+      document.getElementById('metaDesc').content = `${p.name} - ${p.tagline || p.desc?.slice(0,160) || '100% natural herbal product for men\'s vitality.'}`;
+      document.getElementById('metaCanonical').href = base + '/product.html?id=' + id;
+      document.getElementById('ogTitle').content = document.title;
+      document.getElementById('ogDesc').content = document.getElementById('metaDesc').content;
+      document.getElementById('ogUrl').content = base + '/product.html?id=' + id;
+      document.getElementById('ogImage').content = img;
+      document.getElementById('twTitle').content = document.title;
+      document.getElementById('twDesc').content = document.getElementById('metaDesc').content;
+      document.getElementById('twImage').content = img;
+      const priceNum = parseInt(p.price.replace(/[₹,]/g,''));
+      const schema = {
+        "@context":"https://schema.org",
+        "@type":"Product",
+        "name": p.name,
+        "description": (p.desc || '').slice(0,200),
+        "image": img,
+        "brand":{"@type":"Brand","name":"AL SHIFA HERB"},
+        "offers":{"@type":"Offer","price":priceNum,"priceCurrency":"INR","availability":"https://schema.org/InStock","url":base + '/product.html?id=' + id}
+      };
+      if (p.old) { const oldNum = parseInt(p.old.replace(/[₹,]/g,'')); schema.offers = {...schema.offers, "priceSpecification":{"@type":"CompoundPriceSpecification","price":priceNum,"priceCurrency":"INR","valueAddedTaxIncluded":"true","referencePrice":oldNum}}; }
+      document.getElementById('productSchema').textContent = JSON.stringify(schema);
+    } catch(e){}
     try { window.trackEvent && window.trackEvent('product_view', { product_id: id, product_name: p.name, category: p.cat, price: p.price }); } catch(e){}
 
     // Variant state
