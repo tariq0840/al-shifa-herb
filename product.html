@@ -1023,13 +1023,15 @@
 
   function slugify(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
   let currentVar = null;
+  let pathMatch = window.location.pathname.match(/^\/products\/(.+)/);
   let params = new URLSearchParams(window.location.search);
-  let productSlug = params.get('product');
+  let productSlug = pathMatch ? pathMatch[1] : params.get('product');
   let id = parseInt(params.get('id')) || 0;
   let p = productSlug ? products.find(x => slugify(x.name) === productSlug) : null;
   if (!p && id) { p = products.find(x => x.id === id); }
   if (!p && id === 15) { id = 14; p = products.find(x => x.id === 14); }
   if (!p) { id = 1; p = products.find(x => x.id === 1); }
+  if (p && !pathMatch) { window.history.replaceState(null, '', '/products/' + slugify(p.name)); }
 
   if (!p) {
     document.getElementById('loading').innerHTML = '<i class="fas fa-exclamation-circle"></i> Product not found. <a href="index.html" style="color:var(--green-700)">Back to store</a>';
@@ -1037,14 +1039,14 @@
     document.getElementById('loading').style.display = 'none';
     document.title = `${p.name} – AL SHIFA HERB`;
     try {
-      const base = 'https://tariq0840.github.io/al-shifa-herb';
+      const base = window.location.origin;
       const img = p.img.startsWith('http') ? p.img : base + '/' + p.img;
       document.getElementById('metaTitle').textContent = document.title;
       document.getElementById('metaDesc').content = `${p.name} - ${p.tagline || p.desc?.slice(0,160) || '100% natural herbal product for men\'s vitality.'}`;
-      document.getElementById('metaCanonical').href = base + '/product.html?product=' + slugify(p.name);
+      document.getElementById('metaCanonical').href = base + '/products/' + slugify(p.name);
       document.getElementById('ogTitle').content = document.title;
       document.getElementById('ogDesc').content = document.getElementById('metaDesc').content;
-      document.getElementById('ogUrl').content = base + '/product.html?product=' + slugify(p.name);
+      document.getElementById('ogUrl').content = base + '/products/' + slugify(p.name);
       document.getElementById('ogImage').content = img;
       document.getElementById('twTitle').content = document.title;
       document.getElementById('twDesc').content = document.getElementById('metaDesc').content;
@@ -1059,13 +1061,13 @@
         "brand":{"@type":"Brand","name":"AL SHIFA HERB"},
         "sku": "ASH-" + id,
         "mpn": "ASH-" + id,
-        "offers":{"@type":"Offer","price":priceNum,"priceCurrency":"INR","availability":"https://schema.org/InStock","url":base + '/product.html?product=' + slugify(p.name), "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear()+1)).toISOString().split('T')[0]},
+        "offers":{"@type":"Offer","price":priceNum,"priceCurrency":"INR","availability":"https://schema.org/InStock","url":base + '/products/' + slugify(p.name), "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear()+1)).toISOString().split('T')[0]},
         "aggregateRating":{"@type":"AggregateRating","ratingValue":p.rating,"reviewCount":p.rev,"bestRating":5,"worstRating":1}
       };
       if (p.old) { const oldNum = parseInt(p.old.replace(/[₹,]/g,'')); schema.offers.priceSpecification = {"@type":"CompoundPriceSpecification","price":priceNum,"priceCurrency":"INR","valueAddedTaxIncluded":"true","referencePrice":oldNum}; }
       if (p.ingredients) schema.ingredients = p.ingredients.slice(0,300);
       document.getElementById('productSchema').textContent = JSON.stringify(schema);
-      const bcSchema = {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://tariq0840.github.io/al-shifa-herb/"},{"@type":"ListItem","position":2,"name":p.cat||"Products","item":"https://tariq0840.github.io/al-shifa-herb/index.html#products"},{"@type":"ListItem","position":3,"name":p.name,"item":"https://tariq0840.github.io/al-shifa-herb/product.html?product="+slugify(p.name)}]};
+      const bcSchema = {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":base+"/"},{"@type":"ListItem","position":2,"name":p.cat||"Products","item":base+"/#products"},{"@type":"ListItem","position":3,"name":p.name,"item":base+"/products/"+slugify(p.name)}]};
       document.getElementById('breadcrumbSchema').textContent = JSON.stringify(bcSchema);
       const fqa = [["How long until I see results with " + p.name + "?","Results vary, but most customers notice improvements within 2-4 weeks of consistent daily use as directed."],["Is " + p.name + " safe for daily use?","Yes, " + p.name + " is made with 100% natural herbal ingredients and is suitable for long-term daily use when taken as directed."],["How should I take " + p.name + "?","Follow the dosage instructions provided in the product page. Consistency is key for best results."],["Is Cash on Delivery available for " + p.name + "?","Yes, COD is available across India for all orders including " + p.name + "."]];
       const fqSchema = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":fqa.map(function(q){return{"@type":"Question","name":q[0],"acceptedAnswer":{"@type":"Answer","text":q[1]}}})};
@@ -1185,7 +1187,7 @@
       const g = document.getElementById('relatedGrid');
       related.forEach(r => {
         const ro = r.old ? `<span class="ro">${r.old}</span>` : '';
-        g.innerHTML += `<a href="product.html?product=${slugify(r.name)}" class="related-card" data-aos="fade-up"><img src="${r.img}" alt="${r.name}" loading="lazy"><div class="ri"><h4>${r.name}</h4><div class="rp">${r.price} ${ro}</div></div></a>`;
+        g.innerHTML += `<a href="/products/${slugify(r.name)}" class="related-card" data-aos="fade-up"><img src="${r.img}" alt="${r.name}" loading="lazy"><div class="ri"><h4>${r.name}</h4><div class="rp">${r.price} ${ro}</div></div></a>`;
       });
       AOS.refresh();
     }
@@ -1259,7 +1261,7 @@
     else if(code==='FREESHIP'){showToast('Free shipping applied!');input.value='';document.querySelector('.coupon-box')?.classList.remove('open');document.querySelector('.coupon-toggle')?.classList.remove('open')}
     else{showToast('Invalid coupon code')}}
   function slugify(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
-  function renderRecommendations(cart){const grid=document.getElementById('cartRecGrid');if(!grid)return;const cartIds=cart.map(x=>x.id);const avail=hardcodedCart.filter(x=>!cartIds.includes(x.id));const shuffled=avail.sort(()=>Math.random()-0.5).slice(0,4);grid.innerHTML=shuffled.map(p=>'<a href="product.html?product='+slugify(p.name)+'" class="cart-rec-item"><img src="'+p.img+'"><div class="r-info"><h5>'+p.name+'</h5><div class="r-price">₹'+p.price.toLocaleString()+'</div><button class="r-add" onclick="event.preventDefault();addToCart('+p.id+')">+ Add</button></div></a>').join('')}
+  function renderRecommendations(cart){const grid=document.getElementById('cartRecGrid');if(!grid)return;const cartIds=cart.map(x=>x.id);const avail=hardcodedCart.filter(x=>!cartIds.includes(x.id));const shuffled=avail.sort(()=>Math.random()-0.5).slice(0,4);grid.innerHTML=shuffled.map(p=>'<a href="/products/'+slugify(p.name)+'" class="cart-rec-item"><img src="'+p.img+'"><div class="r-info"><h5>'+p.name+'</h5><div class="r-price">₹'+p.price.toLocaleString()+'</div><button class="r-add" onclick="event.preventDefault();addToCart('+p.id+')">+ Add</button></div></a>').join('')}
   function proceedCheckout(){const cart=getCart();if(cart.length===0){showToast('Your cart is empty');return};closeCart();window.location.href='checkout.html'}
   updateCartBadge();
 </script>
