@@ -83,6 +83,7 @@
     .countdown-bar{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#fef2f2,#fee2e2);border:1px solid #fecaca;border-radius:8px;padding:8px 12px;margin-bottom:14px;font-size:.82rem;color:#991b1b;animation:pulse-border 1.5s ease-in-out infinite}
     .countdown-bar i{color:#dc2626;font-size:.9rem}
     @keyframes pulse-border{0%,100%{border-color:#fecaca}50%{border-color:#ef4444}}
+    @keyframes popIn{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
     .pd-variants{display:flex;align-items:center;gap:10px;margin-bottom:14px}
     .pd-variants label{font-size:.82rem;font-weight:600;color:var(--text);min-width:60px}
     .var-btns{display:flex;gap:8px}
@@ -1258,22 +1259,38 @@
     if (p && p.id === 16) {
       var timerEl = document.getElementById('countdownTimer');
       if (timerEl) {
+        function resetTimer() {
+          endTime = Date.now() + 5 * 60 * 1000;
+          localStorage.setItem('pppCountdown', endTime);
+          updateTimer();
+        }
+        function showUrgencyPopup() {
+          if (document.getElementById('urgencyPopup')) return;
+          var popup = document.createElement('div');
+          popup.id = 'urgencyPopup';
+          popup.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
+          popup.innerHTML = '<div style="background:#fff;max-width:400px;width:100%;border-radius:16px;padding:30px;text-align:center;animation:popIn .4s;box-shadow:0 20px 60px rgba(0,0,0,.3)"><div style="font-size:3rem;margin-bottom:10px">⏰</div><h3 style="color:#991b1b;margin:0 0 8px;font-size:1.2rem">Last Chance!</h3><p style="color:#444;font-size:.88rem;line-height:1.6;margin:0 0 18px">Your exclusive offer is expiring!<br>Don\'t miss this special price.<br><strong style="color:#dc2626">Grab it now before it\'s gone!</strong></p><button onclick="this.closest(\'#urgencyPopup\').remove();resetTimer()" style="background:#dc2626;color:#fff;border:none;padding:12px 28px;border-radius:50px;font-size:.9rem;font-weight:700;cursor:pointer">Continue at ₹1,350</button></div>';
+          document.body.appendChild(popup);
+          // Add bounce effect to cart button
+          var btn = document.querySelector('.btn-add-cart');
+          if (btn) { btn.style.animation = 'none'; setTimeout(function(){btn.style.animation = 'pulse 1s ease-in-out infinite'}, 50); }
+        }
         var stored = localStorage.getItem('pppCountdown');
         var endTime = stored ? parseInt(stored) : Date.now() + 5 * 60 * 1000;
         if (!stored) localStorage.setItem('pppCountdown', endTime);
-        if (endTime <= Date.now()) {
-          timerEl.textContent = '00:00 — EXPIRED';
-        } else {
-          function updateTimer() {
-            var diff = Math.max(0, endTime - Date.now());
-            var m = Math.floor(diff / 60000);
-            var s = Math.floor((diff % 60000) / 1000);
-            timerEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-            if (diff <= 0) { timerEl.textContent = '00:00 — EXPIRED'; clearInterval(timerInt); }
+        function updateTimer() {
+          var diff = Math.max(0, endTime - Date.now());
+          var m = Math.floor(diff / 60000);
+          var s = Math.floor((diff % 60000) / 1000);
+          timerEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+          if (diff <= 0) {
+            timerEl.textContent = '00:00';
+            clearInterval(timerInt);
+            showUrgencyPopup();
           }
-          updateTimer();
-          var timerInt = setInterval(updateTimer, 1000);
         }
+        updateTimer();
+        var timerInt = setInterval(updateTimer, 1000);
       }
     }
   }
