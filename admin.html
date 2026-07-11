@@ -138,6 +138,23 @@
       .items-cell,.tracking-column,.address-column{display:none}
     }
   </style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1688094169462017');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1688094169462017&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
 
@@ -179,6 +196,8 @@
         <div class="chart-card"><h3><i class="fas fa-file-alt"></i> Most Viewed Pages</h3><div id="topPagesList" class="top-products-list"></div></div>
         <div class="chart-card"><h3><i class="fas fa-funnel"></i> Conversion Funnel</h3><canvas id="funnelChart"></canvas></div>
         <div class="chart-card"><h3><i class="fas fa-clock"></i> Avg. Time on Site</h3><div id="avgTimeDisplay" class="mini-stats"></div><div style="margin-top:12px"><canvas id="avgTimeChart" style="max-height:120px"></canvas></div></div>
+        <div class="chart-card"><h3><i class="fas fa-share-alt"></i> Traffic Sources</h3><canvas id="sourceChart"></canvas></div>
+        <div class="chart-card" style="grid-column:1/-1"><h3><i class="fas fa-file-alt"></i> Page-by-Page Breakdown</h3><div id="detailedPagesList" class="top-products-list"></div></div>
       </div>
     </div>
 
@@ -540,7 +559,7 @@
     showToast('Exported ' + filteredOrders.length + ' orders');
   }
 
-  let salesChartInst, statusChartInst, cityChartInst, visitorChartInst, funnelChartInst, avgTimeChartInst;
+  let salesChartInst, statusChartInst, cityChartInst, visitorChartInst, funnelChartInst, avgTimeChartInst, sourceChartInst;
   let analyticsData = null;
 
   function toggleAnalytics() {
@@ -570,6 +589,8 @@
       renderTopPages(data);
       renderFunnelChart(data);
       renderAvgTime(data);
+      renderSourceChart(data);
+      renderDetailedPages(data);
     } catch(e) {
       document.getElementById('analyticsStats').innerHTML = '<div style="grid-column:1/-1;padding:12px;text-align:center;color:var(--text-light);font-size:.82rem">Analytics data not available (run SQL in Supabase first)</div>';
     }
@@ -688,6 +709,54 @@
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 8, font: { size: 9 }, usePointStyle: true } } } }
     });
+  }
+
+  function renderSourceChart(data) {
+    if (sourceChartInst) { sourceChartInst.destroy(); sourceChartInst = null; }
+    var sources = {};
+    data.forEach(function(e) {
+      if (e.event_type !== 'pageview') return;
+      var src = (e.event_data && e.event_data.utm_source) || 'direct';
+      if (!sources[src]) sources[src] = 0;
+      sources[src]++;
+    });
+    var sorted = Object.entries(sources).sort(function(a,b){return b[1]-a[1]});
+    var colors = {facebook:'#1877f2', instagram:'#e1306c', google:'#4285f4', direct:'#34a853', twitter:'#1da1f2', youtube:'#ff0000', whatsapp:'#25d366', bing:'#008373'};
+    var bgColors = sorted.map(function(s){ return colors[s[0]] || '#999' });
+    var ctx = document.getElementById('sourceChart');
+    if (!ctx) return;
+    sourceChartInst = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: sorted.map(function(s){ return s[0].charAt(0).toUpperCase() + s[0].slice(1) }),
+        datasets: [{ data: sorted.map(function(s){ return s[1] }), backgroundColor: bgColors, borderWidth: 0 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 10, font: { size: 10 }, usePointStyle: true } } } }
+    });
+  }
+
+  function renderDetailedPages(data) {
+    var pages = {};
+    data.forEach(function(e) {
+      if (e.event_type !== 'pageview' || !e.path) return;
+      var p = e.path.replace(/\/+$/,'') || '/';
+      if (!pages[p]) pages[p] = { views: 0, sessions: new Set(), sources: {} };
+      pages[p].views++;
+      pages[p].sessions.add(e.session_id);
+      var src = (e.event_data && e.event_data.utm_source) || 'direct';
+      if (!pages[p].sources[src]) pages[p].sources[src] = 0;
+      pages[p].sources[src]++;
+    });
+    var sorted = Object.entries(pages).sort(function(a,b){return b[1].views-a[1].views});
+    var el = document.getElementById('detailedPagesList');
+    if (!el) return;
+    el.innerHTML = sorted.length ? '<table style="width:100%;border-collapse:collapse;font-size:.82rem"><thead><tr style="text-align:left;border-bottom:1px solid #e5e7eb"><th style="padding:6px 8px">Page</th><th style="padding:6px 8px">Views</th><th style="padding:6px 8px">Visitors</th><th style="padding:6px 8px">Top Source</th></tr></thead><tbody>' +
+      sorted.map(function(p){
+        var topSrc = Object.entries(p[1].sources).sort(function(a,b){return b[1]-a[1]})[0];
+        var srcLabel = topSrc ? topSrc[0].charAt(0).toUpperCase() + topSrc[0].slice(1) : '-';
+        var name = p[0].length > 40 ? p[0].slice(0,40)+'...' : p[0];
+        return '<tr style="border-bottom:1px solid #f3f4f6"><td style="padding:6px 8px;color:#2563eb;font-weight:500">'+name+'</td><td style="padding:6px 8px">'+p[1].views+'</td><td style="padding:6px 8px">'+p[1].sessions.size+'</td><td style="padding:6px 8px;color:#6b7280;font-size:.75rem">'+srcLabel+'</td></tr>';
+      }).join('') + '</tbody></table>' : '<div style="text-align:center;padding:20px;color:var(--text-light);font-size:.82rem">No data yet</div>';
   }
 
   function getDailySales() {
