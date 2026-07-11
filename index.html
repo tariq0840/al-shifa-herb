@@ -792,7 +792,7 @@
     else if(code==='FREESHIP'){showToast('Free shipping applied!');input.value='';document.querySelector('.coupon-box')?.classList.remove('open');document.querySelector('.coupon-toggle')?.classList.remove('open')}
     else{showToast('Invalid coupon code')}}
   function renderRecommendations(cart){const grid=document.getElementById('cartRecGrid');if(!grid)return;const cartIds=cart.map(x=>x.id);const avail=hardcodedCart.filter(x=>!cartIds.includes(x.id));const shuffled=avail.sort(()=>Math.random()-0.5).slice(0,4);grid.innerHTML=shuffled.map(p=>`<a href="/products/${slugify(p.name)}" class="cart-rec-item"><img src="${p.img}"><div class="r-info"><h5>${p.name}</h5><div class="r-price">₹${p.price.toLocaleString()}</div><button class="r-add" onclick="event.preventDefault();addToCart(${p.id})">+ Add</button></div></a>`).join('')}
-  function proceedCheckout(){const cart=getCart();if(cart.length===0){showToast('Your cart is empty');return};closeCart();window.location.href='checkout.html'}
+  function proceedCheckout(){const cart=getCart();if(cart.length===0){showToast('Your cart is empty');return};closeCart();window.location.href='/checkout.html'}
   updateCartBadge();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
