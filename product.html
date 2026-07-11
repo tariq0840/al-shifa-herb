@@ -1085,6 +1085,7 @@
 
   function slugify(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
   let currentVar = null;
+  let currentProductId = 0;
   let pathMatch = window.location.pathname.match(/^\/products\/(.+)/);
   let params = new URLSearchParams(window.location.search);
   let productSlug = pathMatch ? pathMatch[1] : params.get('product');
@@ -1093,6 +1094,7 @@
   if (!p && id) { p = products.find(x => x.id === id); }
   if (!p && id === 15) { id = 14; p = products.find(x => x.id === 14); }
   if (!p) { id = 1; p = products.find(x => x.id === 1); }
+  if (p) { currentProductId = p.variants ? p.variants[0].id : p.id; }
   if (p && !pathMatch) { window.history.replaceState(null, '', '/products/' + slugify(p.name)); }
 
   if (!p) {
@@ -1340,7 +1342,7 @@
   function openCart(){const o=document.getElementById('cartOverlay'),d=document.getElementById('cartDrawer');o.classList.add('open');d.classList.add('open');document.body.style.overflow='hidden';renderCart()}
   function closeCart(){document.getElementById('cartOverlay').classList.remove('open');document.getElementById('cartDrawer').classList.remove('open');document.body.style.overflow=''}
   function addToCart(id,qty=1){const cart=getCart(),p=hardcodedCart.find(x=>x.id===id);if(!p)return;const idx=cart.findIndex(x=>x.id===id);if(idx>-1){cart[idx].qty+=qty}else{cart.push({id:p.id,name:p.name,price:p.price,img:p.img,qty})}saveCart(cart);showToast('Added to cart!');openCart();try{window.trackEvent&&window.trackEvent('add_to_cart',{product_id:id,product_name:p.name,price:p.price,qty})}catch(e){}}
-  function getVariantId(){try{return (typeof currentVar !== 'undefined' && currentVar) ? currentVar.id : (typeof p !== 'undefined' && p ? (p.variants ? p.variants[0].id : p.id) : parseInt(new URLSearchParams(window.location.search).get('id'))||0)}catch(e){return parseInt(new URLSearchParams(window.location.search).get('id'))||0}}
+  function getVariantId(){try{return (typeof currentVar !== 'undefined' && currentVar) ? currentVar.id : currentProductId}catch(e){return currentProductId}}
   function addToCartFromPage(){try{const id=getVariantId();const qty=parseInt(document.getElementById('qty')?.value)||1;if(!id)return;addToCart(id,qty)}catch(e){}}
   function buyNow(){try{const id=getVariantId();const qty=parseInt(document.getElementById('qty')?.value)||1;if(!id)return;const cart=getCart(),p=hardcodedCart.find(x=>x.id===id);if(!p)return;const idx=cart.findIndex(x=>x.id===id);if(idx>-1){cart[idx].qty+=qty}else{cart.push({id:p.id,name:p.name,price:p.price,img:p.img,qty})}saveCart(cart);try{window.trackEvent&&window.trackEvent('checkout_start',{product_id:id,product_name:p.name,price:p.price,qty})}catch(e){}window.location.href='checkout.html'}catch(e){window.location.href='checkout.html'}}
   function removeFromCart(id){let cart=getCart();cart=cart.filter(x=>x.id!==id);saveCart(cart);renderCart()}
