@@ -355,7 +355,7 @@ Payment: ${order.payment_method || 'COD'}
 
 Your order will be processed shortly. We will notify you once it is shipped.
 
-For any queries, contact us at +91 9557687044
+For any queries, contact us at +91 8533979833
 
 🚚 Estimated dispatch: 1-2 business days`;
 
