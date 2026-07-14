@@ -47,7 +47,7 @@ header{position:fixed;top:0;left:0;width:100%;z-index:1000;transition:var(--tran
 .nav-menu>li>a:hover,.nav-menu>li>a.active{background:#f5f0e8;color:var(--green-700)}
 .nav-right{display:flex;align-items:center;gap:10px}
 .phone-header{display:flex;align-items:center;gap:6px;background:#f5f0e8;padding:5px 14px 5px 10px;border-radius:50px;font-size:.8rem;font-weight:600;color:var(--green-800);text-decoration:none}
-.hamburger{display:none;font-size:1.3rem;cursor:pointer;color:var(--green-800)}
+.hamburger{display:none;font-size:1.3rem;cursor:pointer;color:var(--green-800);min-width:44px;min-height:44px;padding:10px;align-items:center;justify-content:center}
 
 .page-content{max-width:800px;margin:0 auto;padding:100px 24px 40px}
 .breadcrumb{font-size:.78rem;color:var(--text-light);margin-bottom:20px;display:flex;flex-wrap:wrap;gap:4px}
@@ -71,7 +71,7 @@ footer h4{font-family:'Inter',sans-serif;font-weight:600;font-size:.82rem;color:
 footer a{color:rgba(255,255,255,.5);text-decoration:none;display:block;margin-bottom:5px;font-size:.78rem}
 footer a:hover{color:var(--gold)}
 .footer-social{display:flex;gap:6px;margin-top:10px}
-.footer-social a{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:.8rem}
+.footer-social a{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:.8rem}
 .footer-social a:hover{background:var(--gold);border-color:var(--gold);color:#2c1a0e}
 .footer-bottom{max-width:1280px;margin:20px auto 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:.75rem}
 .footer-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:8px;margin-bottom:8px}
@@ -81,10 +81,10 @@ footer a:hover{color:var(--gold)}
 .whatsapp-float{position:fixed;bottom:24px;right:24px;z-index:999;width:50px;height:50px;border-radius:50%;background:#25d366;color:var(--white);border:none;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 20px rgba(37,211,102,.4);display:flex;align-items:center;justify-content:center;animation:pulse 2s infinite;text-decoration:none}
 .whatsapp-float:hover{color:var(--white)}
 @keyframes pulse{0%{box-shadow:0 4px 20px rgba(37,211,102,.4)}50%{box-shadow:0 4px 36px rgba(37,211,102,.6)}100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}}
-.cart-icon{position:relative;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--green-800);text-decoration:none;font-size:1.05rem;transition:var(--transition)}.cart-icon:hover{background:#f5f0e8}.cart-badge{position:absolute;top:-2px;right:-4px;min-width:18px;height:18px;border-radius:50%;background:var(--gold);color:#2c1a0e;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.cart-icon{position:relative;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--green-800);text-decoration:none;font-size:1.05rem;transition:var(--transition)}.cart-icon:hover{background:#f5f0e8}.cart-badge{position:absolute;top:-2px;right:-4px;min-width:18px;height:18px;border-radius:50%;background:var(--gold);color:#2c1a0e;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px}
 
 @media(max-width:768px){
-.nav-menu{display:none}.hamburger{display:block}
+.nav-menu{display:none}.hamburger{display:flex}
 .nav-menu.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;width:100%;background:var(--white);padding:14px 20px;border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
 .footer-inner{grid-template-columns:1fr;text-align:center;gap:16px}
 footer{padding:32px 18px 18px}
@@ -93,7 +93,7 @@ footer{padding:32px 18px 18px}
 .phone-text{display:none}
 .phone-header{font-size:0;gap:4px;padding:5px 8px 5px 6px}
 .phone-header i{font-size:.9rem;margin:0}
-.header-inner{display:grid;grid-template-columns:120px 1fr 120px;padding:0;gap:0;align-items:center;height:70px}.nav-right{display:flex;align-items:center;gap:14px;grid-column:1;grid-row:1}.nav-right .hamburger{order:0}.nav-right .cart-icon{order:1}.nav-right .phone-header{order:2}.logo{grid-column:2;grid-row:1;justify-self:center;text-align:center}
+.header-inner{display:grid;grid-template-columns:120px 1fr 120px;padding:0;gap:0;align-items:center;height:70px}.nav-left{display:flex;align-items:center;grid-column:1;grid-row:1;justify-self:start;padding-left:4px}.nav-right{display:flex;align-items:center;gap:14px;grid-column:3;grid-row:1;justify-self:end;padding-right:4px}.nav-right .cart-icon{order:1}.nav-right .phone-header{order:2}.logo{grid-column:2;grid-row:1;justify-self:center;text-align:center}
 .page-content{padding:90px 18px 30px}
 .page-content h1{font-size:1.7rem}
 }
@@ -108,6 +108,11 @@ footer{padding:32px 18px 18px}
 .hamburger{font-size:1.15rem}
 .page-content h1{font-size:1.4rem}
 .whatsapp-float{width:52px;height:52px;font-size:1.4rem;bottom:16px;right:16px}
+}
+@media(max-width:360px){
+.header-inner{grid-template-columns:50px 1fr 70px;height:62px}
+.logo{font-size:.85rem;gap:3px}
+.logo-icon{width:22px;height:22px;font-size:.7rem}
 }
 </style>
 <!-- Meta Pixel Code -->
@@ -141,10 +146,10 @@ src="https://www.facebook.com/tr?id=1688094169462017&ev=PageView&noscript=1"
 <li><a href="index.html#testimonials">Reviews</a></li>
 <li><a href="contact.html">Contact</a></li>
 </ul>
+<div class="nav-left"><div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div></div>
 <div class="nav-right">
 <a href="tel:+918533979833" class="phone-header"><i class="fas fa-phone-alt"></i> <span class="phone-text">+91 8533979833</span></a>
 <a href="#" class="cart-icon" onclick="openCart();return false;"><i class="fas fa-shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></a>
-<div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
 </div>
 </div>
 </header>
@@ -239,7 +244,7 @@ src="https://www.facebook.com/tr?id=1688094169462017&ev=PageView&noscript=1"
 <a href="https://wa.me/918533979833"><i class="fab fa-whatsapp"></i></a>
 </div>
 </div>
-<div><h4>Quick Links</h4><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy Policy</a><a href="shipping.html">Shipping Policy</a><a href="refund.html">Refund Policy</a><a href="terms.html">Terms & Conditions</a></div>
+<div><h4>Quick Links</h4><a href="about.html">About Us</a><a href="track.html">Track Order</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy Policy</a><a href="shipping.html">Shipping Policy</a><a href="refund.html">Refund Policy</a><a href="terms.html">Terms & Conditions</a></div>
 <div><h4>Categories</h4><a href="index.html#products">Men's Vitality</a><a href="index.html#products">Men's Care Oil</a><a href="index.html#products">Digestive Health</a><a href="index.html#products">Best Sellers</a></div>
 <div><h4>Contact</h4><a href="tel:+918533979833">+91 8533979833</a><a href="mailto:alshifaherb000@gmail.com">alshifaherb000@gmail.com</a><a href="#">Uttar Pradesh, India</a><a href="https://wa.me/918533979833">WhatsApp</a></div>
 </div>

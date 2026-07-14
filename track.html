@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Order – AL SHIFA HERB</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#f9fafb;color:#1a1a2e;line-height:1.6;padding:40px 20px}
+    .top-nav{max-width:500px;margin:0 auto 20px;display:flex;align-items:center;gap:12px;justify-content:space-between}
+    .top-nav a{color:#0f4124;text-decoration:none;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:6px}
+    .top-nav a:hover{color:#c9a84c}
+    .top-nav .logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:#0f4124;text-decoration:none}
+    .top-nav .logo span{color:#c9a84c}
+    .container{max-width:500px;margin:0 auto;background:#fff;padding:32px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,0.05)}
+    h1{font-family:'Playfair Display',serif;color:#0f4124;margin-bottom:8px;text-align:center}
+    p{color:#6b7280;text-align:center;margin-bottom:24px;font-size:0.9rem}
+    input{width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:16px;font-size:1rem}
+    button{width:100%;padding:14px;min-height:48px;background:#0f4124;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:0.3s}
+    button:hover{background:#155f33}
+    #result{margin-top:24px;display:none}
+    .status-badge{display:inline-block;padding:4px 12px;border-radius:50px;font-size:0.75rem;font-weight:600;margin-bottom:12px}
+    .order-info{border-top:1px solid #e5e7eb;margin-top:16px;padding-top:16px}
+    .row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:0.85rem}
+    .back-home{display:block;text-align:center;margin-top:20px;color:#0f4124;text-decoration:none;font-size:.85rem;font-weight:600}
+    .back-home:hover{color:#c9a84c}
+    @media(max-width:430px){body{padding:24px 12px}.container{padding:24px 16px;border-radius:12px}h1{font-size:1.4rem}input{font-size:.9rem;padding:12px}button{padding:12px;font-size:.9rem}}
+    @media(max-width:360px){body{padding:16px 8px}.container{padding:20px 12px}h1{font-size:1.2rem}}
+  </style>
+</head>
+<body>
+<div class="top-nav">
+  <a href="/" class="logo">AL SHIFA <span>HERB</span></a>
+  <a href="/"><i class="fas fa-arrow-left"></i> Back to Store</a>
+</div>
+<div class="container">
+  <h1>Track Order</h1>
+  <p>Enter your Order ID to see status</p>
+  <input type="text" id="orderId" placeholder="e.g. 123">
+  <button onclick="trackOrder()">Track Now</button>
+  <div id="result"></div>
+  <a href="/" class="back-home"><i class="fas fa-home"></i> Back to Home</a>
+</div>
+
+<script>
+async function trackOrder() {
+  const id = document.getElementById('orderId').value;
+  const resEl = document.getElementById('result');
+  if(!id) return;
+  resEl.innerHTML = '<p>Loading...</p>';
+  resEl.style.display = 'block';
+  
+  try {
+    const res = await fetch('/api/track/' + id);
+    const json = await res.json();
+    if(!json.success) { resEl.innerHTML = '<p style="color:red">Order not found</p>'; return; }
+    
+    const o = json.data;
+    resEl.innerHTML = `
+      <div class="status-badge" style="background:#dcfce7;color:#166534">Status: ${o.status.toUpperCase()}</div>
+      <div class="order-info">
+        <div class="row"><span>Customer:</span> <strong>${o.customer_name}</strong></div>
+        <div class="row"><span>Total:</span> <strong>₹${o.total_amount.toLocaleString()}</strong></div>
+        ${o.tracking_number ? `<div class="row"><span>Tracking:</span> <a href="https://ithinklogistics.co.in/postship/tracking/${o.tracking_number}" target="_blank">${o.tracking_number}</a></div>` : ''}
+      </div>
+    `;
+  } catch(e) { resEl.innerHTML = '<p style="color:red">Error tracking order</p>'; }
+}
+</script>
+
+<footer style="background:#0a2e1a;color:rgba(255,255,255,.5);padding:36px 24px 18px;margin-top:48px;text-align:center;font-size:.78rem">
+  <div style="max-width:500px;margin:0 auto">
+    <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:#c9a84c;margin-bottom:8px">AL SHIFA <span style="color:#fff">HERB</span></div>
+    <p style="margin-bottom:10px;font-size:.78rem;opacity:.7">Your trusted source for premium herbal wellness.</p>
+    <a href="/" style="color:rgba(255,255,255,.5);text-decoration:none;margin:0 8px">Home</a>
+    <a href="/#products" style="color:rgba(255,255,255,.5);text-decoration:none;margin:0 8px">Products</a>
+    <a href="/contact.html" style="color:rgba(255,255,255,.5);text-decoration:none;margin:0 8px">Contact</a>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);font-size:.72rem">© 2026 AL SHIFA HERB. All rights reserved.</div>
+  </div>
+</footer>
+</body>
+</html>
