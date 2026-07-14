@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
+const { Client } = require('pg');
 
 require('dotenv').config();
 
@@ -430,6 +431,84 @@ async function createItlDraft(order) {
     return null;
   }
 }
+
+// ── Database Migration ──
+
+app.post('/api/migrate', async (req, res) => {
+  try {
+    const { pass } = req.body;
+    if (pass !== 'alshifa123') return res.json({ success: false, message: 'Unauthorized' });
+
+    const serviceKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+    if (!serviceKey) return res.json({ success: false, message: 'No database key available' });
+
+    const sqlStatements = [
+      `CREATE TABLE IF NOT EXISTS analytics (
+        id BIGSERIAL PRIMARY KEY,
+        event_type TEXT NOT NULL,
+        event_data JSONB DEFAULT '{}',
+        session_id TEXT,
+        path TEXT,
+        referrer TEXT,
+        page_title TEXT,
+        duration_ms INTEGER,
+        ip TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );`,
+      `CREATE INDEX IF NOT EXISTS idx_analytics_type ON analytics(event_type);`,
+      `CREATE INDEX IF NOT EXISTS idx_analytics_created ON analytics(created_at);`,
+      `CREATE INDEX IF NOT EXISTS idx_analytics_session ON analytics(session_id);`,
+      `ALTER TABLE analytics ENABLE ROW LEVEL SECURITY;`,
+      `DROP POLICY IF EXISTS "anon can insert analytics" ON analytics;`,
+      `CREATE POLICY "anon can insert analytics" ON analytics FOR INSERT TO anon WITH CHECK (true);`,
+      `DROP POLICY IF EXISTS "anon can select analytics" ON analytics;`,
+      `CREATE POLICY "anon can select analytics" ON analytics FOR SELECT TO anon USING (true);`,
+      `DROP POLICY IF EXISTS "anon can update orders" ON orders;`,
+      `CREATE POLICY "anon can update orders" ON orders FOR UPDATE TO anon USING (true) WITH CHECK (true);`,
+      `DROP POLICY IF EXISTS "anon can delete orders" ON orders;`,
+      `CREATE POLICY "anon can delete orders" ON orders FOR DELETE TO anon USING (true);`,
+      `DROP POLICY IF EXISTS "anon can update saved_addresses" ON saved_addresses;`,
+      `CREATE POLICY "anon can update saved_addresses" ON saved_addresses FOR UPDATE TO anon USING (true) WITH CHECK (true);`,
+      `DROP POLICY IF EXISTS "anon can delete saved_addresses" ON saved_addresses;`,
+      `CREATE POLICY "anon can delete saved_addresses" ON saved_addresses FOR DELETE TO anon USING (true);`
+    ];
+
+    let results = [];
+    
+    for (const sql of sqlStatements) {
+      try {
+        await supabase.rpc('exec_sql', { query: sql });
+        results.push({ sql: sql.substring(0, 60) + '...', status: 'ok' });
+      } catch (rpcErr) {
+        try {
+          const pgClient = new Client({
+            connectionString: `postgresql://postgres.nbbkbsdikayrdocvpmea:${encodeURIComponent(serviceKey)}@aws-0-ap-south-1.pooler.supabase.co:6543/postgres`,
+            connectionTimeoutMillis: 5000
+          });
+          await pgClient.connect();
+          await pgClient.query(sql);
+          await pgClient.end();
+          results.push({ sql: sql.substring(0, 60) + '...', status: 'ok (pg)' });
+        } catch (pgErr) {
+          results.push({ sql: sql.substring(0, 60) + '...', status: 'failed', error: pgErr.message });
+        }
+      }
+    }
+
+    const successCount = results.filter(r => r.status.startsWith('ok')).length;
+    const failCount = results.filter(r => !r.status.startsWith('ok')).length;
+
+    res.json({
+      success: successCount > 0,
+      total: results.length,
+      ok: successCount,
+      failed: failCount,
+      details: results
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
