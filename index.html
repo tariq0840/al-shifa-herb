@@ -379,6 +379,80 @@
       .footer-logo{font-size:1rem}
       .whatsapp-float{width:52px;height:52px;font-size:1.4rem;bottom:16px;right:16px}
     }
+
+    /* Premium Header and Nav Upgrades */
+    header {
+      transition: padding var(--transition), background var(--transition), box-shadow var(--transition);
+    }
+    header.scrolled {
+      padding: 6px 0 !important;
+      background: rgba(255, 255, 255, 0.85) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      box-shadow: 0 10px 30px rgba(10, 46, 38, 0.05) !important;
+    }
+    header.scrolled .logo-icon {
+      background: var(--green-900) !important;
+      transform: scale(0.92);
+      transition: transform var(--transition);
+    }
+
+    /* Product Card Glassmorphism and Transitions */
+    .product-card {
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      border: 1px solid rgba(21, 95, 51, 0.06) !important;
+      background: #ffffff !important;
+    }
+    .product-card:hover {
+      transform: translateY(-8px) scale(1.01) !important;
+      box-shadow: 0 20px 40px rgba(10, 46, 26, 0.08) !important;
+      border-color: rgba(201, 168, 124, 0.4) !important;
+    }
+    .product-card .img-wrap img {
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .product-card:hover .img-wrap img {
+      transform: scale(1.08) !important;
+    }
+
+    /* Interactive button styles */
+    .btn, .btn-buy, .btn-sm, .r-add {
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .btn-buy:hover {
+      box-shadow: 0 8px 20px rgba(201, 168, 76, 0.35) !important;
+      background: var(--gold-dark) !important;
+    }
+
+    /* Pulsating Floating WhatsApp upgrade */
+    .whatsapp-float {
+      animation: whatsappPulse 2.5s infinite !important;
+      transition: transform 0.3s ease !important;
+    }
+    .whatsapp-float:hover {
+      transform: scale(1.1) rotate(5deg) !important;
+    }
+    @keyframes whatsappPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5), 0 4px 16px rgba(37, 211, 102, 0.3);
+      }
+      70% {
+        box-shadow: 0 0 0 16px rgba(37, 211, 102, 0), 0 4px 16px rgba(37, 211, 102, 0.3);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0), 0 4px 16px rgba(37, 211, 102, 0.3);
+      }
+    }
+
+    /* Ultra-smooth sliding cart drawer */
+    .cart-drawer {
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .cart-overlay {
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
   </style>
 <!-- Meta Pixel Code -->
 <script>
@@ -570,7 +644,7 @@ src="https://www.facebook.com/tr?id=1688094169462017&ev=PageView&noscript=1"
       <a href="/products/majoon-extra-time" class="combo-card" data-aos="fade-up" data-aos-delay="100"><img src="/images/majoon-extra-time.png" alt="Majoon Extra Time - Unani Herbal Majoon for Men"><div class="ol"></div><div class="ct"><span class="tag">Extra Time</span><h4>Majoon Extra Time</h4><span class="btn-buy">Buy Now</span></div></a>
       <a href="/products/testo-king-tablet" class="combo-card" data-aos="fade-up" data-aos-delay="150"><img src="https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.08.40PM.jpg" alt="Testo King Tablet - Testosterone Booster Herbal Tablet"><div class="ol"></div><div class="ct"><span class="tag">Popular</span><h4>Testo King Tablet</h4><span class="btn-buy">Buy Now</span></div></a>
       <a href="/products/peni-long-capsule" class="combo-card" data-aos="fade-up" data-aos-delay="200"><img src="https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at3.25.10PM.jpg" alt="Peni Long Capsule - Herbal Capsule for Men Performance"><div class="ol"></div><div class="ct"><span class="tag">Popular</span><h4>Peni Long Capsule</h4><span class="btn-buy">Buy Now</span></div></a>
-      <a href="/products/he-max-powder-300gm" class="combo-card" data-aos="fade-up" data-aos-delay="250"><img src="https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-26at2.24.50PM.jpg" alt="He Max Powder 300gm - Herbal Powder for Men Strength"><div class="ol"></div><div class="ct"><span class="tag">Strength</span><h4>He Max Powder</h4><span class="btn-buy">Buy Now</span></div></a>
+      <a href="/products/he-max-powder-300gm" class="combo-card" data-aos="fade-up" data-aos-delay="250"><img src="/images/he-max-1.jpeg" alt="He Max Powder 300gm - Herbal Powder for Men Strength"><div class="ol"></div><div class="ct"><span class="tag">Strength</span><h4>He Max Powder</h4><span class="btn-buy">Buy Now</span></div></a>
     </div>
   </div>
 </section>
@@ -712,7 +786,7 @@ src="https://www.facebook.com/tr?id=1688094169462017&ev=PageView&noscript=1"
 
   const hardcoded = [
     {id:1,name:"AS 81 Drops (Pack of 2)",cat:"Men's Vitality",price:"₹1,350",old:"₹1,800",badge:"Bestseller",bclass:"bestseller",img:"/images/as81-1.png",rating:4.8,rev:234,discount:25},
-    {id:2,name:"He Max Powder 300gm",cat:"Men's Vitality",price:"₹1,200",old:"₹1,500",badge:"Popular",bclass:"popular",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-26at2.24.50PM.jpg",rating:4.7,rev:189,discount:20},
+    {id:2,name:"He Max Powder 300gm",cat:"Men's Vitality",price:"₹1,200",old:"₹1,500",badge:"Popular",bclass:"popular",img:"/images/he-max-1.jpeg",rating:4.7,rev:189,discount:20},
     {id:3,name:"King Kong Capsules",cat:"Men's Vitality",price:"₹2,400",old:"₹3,150",badge:"Hot",bclass:"hot",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.52.59PM.jpg",rating:4.9,rev:312,discount:24},
     {id:4,name:"Majoon Extra Time",cat:"Men's Vitality",price:"₹1,800",old:"₹2,400",badge:null,bclass:"",img:"/images/majoon-extra-time.png",rating:4.6,rev:156,discount:25},
     {id:5,name:"Peni Long Capsule",cat:"Men's Vitality",price:"₹1,200",old:"₹1,800",badge:null,bclass:"",img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at3.25.10PM.jpg",rating:4.5,rev:203,discount:33},
@@ -765,7 +839,7 @@ src="https://www.facebook.com/tr?id=1688094169462017&ev=PageView&noscript=1"
 
   const hardcodedCart = [
     {id:1,name:"AS 81 Drops (Pack of 2)",price:1350,img:"/images/as81-1.png",cat:"Men's Vitality"},
-    {id:2,name:"He Max Powder 300gm",price:1200,img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-26at2.24.50PM.jpg",cat:"Men's Vitality"},
+    {id:2,name:"He Max Powder 300gm",price:1200,img:"/images/he-max-1.jpeg",cat:"Men's Vitality"},
     {id:3,name:"King Kong Capsules",price:2400,img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at6.52.59PM.jpg",cat:"Men's Vitality"},
     {id:4,name:"Majoon Extra Time",price:1800,img:"/images/majoon-extra-time.png",cat:"Men's Vitality"},
     {id:5,name:"Peni Long Capsule",price:1200,img:"https://cdn.shopify.com/s/files/1/0891/4812/9314/files/WhatsAppImage2026-06-27at3.25.10PM.jpg",cat:"Men's Vitality"},
