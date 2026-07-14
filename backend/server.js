@@ -434,9 +434,9 @@ async function createItlDraft(order) {
 
 // ── Database Migration ──
 
-async function runSqlViaFetch(sql, supabaseUrl, serviceKey) {
+async function runSqlViaRpc(sql, supabaseUrl, serviceKey) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
+  const timeout = setTimeout(() => controller.abort(), 10000);
   try {
     const res = await fetch(`${supabaseUrl}/rest/v1/rpc/exec_sql`, {
       method: 'POST',
@@ -465,20 +465,6 @@ app.post('/api/migrate', async (req, res) => {
     const supabaseUrl = process.env.SUPABASE_URL || 'https://nbbkbsdikayrdocvpmea.supabase.co';
     const serviceKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
     if (!serviceKey) return res.json({ success: false, message: 'No database key available' });
-
-    // Try to use pg module directly via pooler
-    let pgClient = null;
-    try {
-      const { Client } = require('pg');
-      pgClient = new Client({
-        connectionString: `postgresql://postgres.nbbkbsdikayrdocvpmea:${encodeURIComponent(serviceKey)}@aws-0-ap-south-1.pooler.supabase.co:6543/postgres`,
-        connectionTimeoutMillis: 5000,
-        query_timeout: 10000
-      });
-      await pgClient.connect();
-    } catch (pgErr) {
-      pgClient = null;
-    }
 
     const sqlStatements = [
       `CREATE TABLE IF NOT EXISTS analytics (
@@ -514,23 +500,12 @@ app.post('/api/migrate', async (req, res) => {
     let results = [];
 
     for (const sql of sqlStatements) {
-      if (pgClient) {
-        try {
-          await pgClient.query(sql);
-          results.push({ sql: sql.substring(0, 60) + '...', status: 'ok' });
-        } catch (pgErr) {
-          results.push({ sql: sql.substring(0, 60) + '...', status: 'failed', error: pgErr.message });
-        }
-      } else {
-        const r = await runSqlViaFetch(sql, supabaseUrl, serviceKey);
-        results.push({ sql: sql.substring(0, 60) + '...', status: r.ok ? 'ok' : 'failed', error: r.error });
-      }
+      const r = await runSqlViaRpc(sql, supabaseUrl, serviceKey);
+      results.push({ sql: sql.substring(0, 60) + '...', status: r.ok ? 'ok' : 'failed', error: r.error });
     }
 
-    if (pgClient) {
-      try { await pgClient.query('NOTIFY pgrst, \'reload schema\''); } catch(e) {}
-      try { await pgClient.end(); } catch(e) {}
-    }
+    // Reload PostgREST schema cache
+    await runSqlViaRpc("NOTIFY pgrst, 'reload schema'", supabaseUrl, serviceKey);
 
     const successCount = results.filter(r => r.status.startsWith('ok')).length;
     const failCount = results.filter(r => !r.status.startsWith('ok')).length;
@@ -540,7 +515,6 @@ app.post('/api/migrate', async (req, res) => {
       total: results.length,
       ok: successCount,
       failed: failCount,
-      pg_connected: !!pgClient,
       details: results
     });
   } catch (err) {
