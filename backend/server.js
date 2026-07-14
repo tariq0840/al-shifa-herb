@@ -474,25 +474,45 @@ app.post('/api/migrate', async (req, res) => {
     ];
 
     let results = [];
+    let pgClient = null;
     
+    try {
+      pgClient = new Client({
+        connectionString: `postgresql://postgres.nbbkbsdikayrdocvpmea:${encodeURIComponent(serviceKey)}@aws-0-ap-south-1.pooler.supabase.co:6543/postgres`,
+        connectionTimeoutMillis: 10000
+      });
+      await pgClient.connect();
+    } catch (pgConnErr) {
+      results.push({ sql: 'PG connection', status: 'failed', error: pgConnErr.message });
+    }
+
     for (const sql of sqlStatements) {
-      try {
-        await supabase.rpc('exec_sql', { query: sql });
-        results.push({ sql: sql.substring(0, 60) + '...', status: 'ok' });
-      } catch (rpcErr) {
+      let executed = false;
+      if (pgClient) {
         try {
-          const pgClient = new Client({
-            connectionString: `postgresql://postgres.nbbkbsdikayrdocvpmea:${encodeURIComponent(serviceKey)}@aws-0-ap-south-1.pooler.supabase.co:6543/postgres`,
-            connectionTimeoutMillis: 5000
-          });
-          await pgClient.connect();
           await pgClient.query(sql);
-          await pgClient.end();
-          results.push({ sql: sql.substring(0, 60) + '...', status: 'ok (pg)' });
+          results.push({ sql: sql.substring(0, 60) + '...', status: 'ok' });
+          executed = true;
         } catch (pgErr) {
           results.push({ sql: sql.substring(0, 60) + '...', status: 'failed', error: pgErr.message });
+          executed = true;
         }
       }
+      if (!executed) {
+        try {
+          await supabase.rpc('exec_sql', { query: sql });
+          results.push({ sql: sql.substring(0, 60) + '...', status: 'ok (rpc)' });
+        } catch (rpcErr) {
+          results.push({ sql: sql.substring(0, 60) + '...', status: 'failed', error: rpcErr.message });
+        }
+      }
+    }
+
+    if (pgClient) {
+      try {
+        await pgClient.query('NOTIFY pgrst, $$reload schema$$');
+      } catch(e) {}
+      await pgClient.end();
     }
 
     const successCount = results.filter(r => r.status.startsWith('ok')).length;
