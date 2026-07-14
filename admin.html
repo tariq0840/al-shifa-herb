@@ -196,7 +196,7 @@ src="https://www.facebook.com/tr?id=1688094169462017&ev=PageView&noscript=1"
         <div class="chart-card"><h3><i class="fas fa-file-alt"></i> Most Viewed Pages</h3><div id="topPagesList" class="top-products-list"></div></div>
         <div class="chart-card"><h3><i class="fas fa-funnel"></i> Conversion Funnel</h3><canvas id="funnelChart"></canvas></div>
         <div class="chart-card"><h3><i class="fas fa-clock"></i> Avg. Time on Site</h3><div id="avgTimeDisplay" class="mini-stats"></div><div style="margin-top:12px"><canvas id="avgTimeChart" style="max-height:120px"></canvas></div></div>
-        <div class="chart-card"><h3><i class="fas fa-share-alt"></i> Traffic Sources</h3><canvas id="sourceChart"></canvas></div>
+        <div class="chart-card"><h3><i class="fas fa-share-alt"></i> Traffic Sources</h3><canvas id="sourceChart"></canvas><div id="sourceBreakdown" class="source-breakdown" style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;font-size:.8rem"></div></div>
         <div class="chart-card" style="grid-column:1/-1"><h3><i class="fas fa-file-alt"></i> Page-by-Page Breakdown</h3><div id="detailedPagesList" class="top-products-list"></div></div>
       </div>
     </div>
@@ -733,6 +733,17 @@ src="https://www.facebook.com/tr?id=1688094169462017&ev=PageView&noscript=1"
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 10, font: { size: 10 }, usePointStyle: true } } } }
     });
+    var total = sorted.reduce(function(sum, s){ return sum + s[1]; }, 0);
+    var br = document.getElementById('sourceBreakdown');
+    if (br) {
+      br.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
+        sorted.map(function(s){
+          var pct = total ? ((s[1]/total)*100).toFixed(1) : 0;
+          var c = colors[s[0]] || '#999';
+          var label = s[0].charAt(0).toUpperCase() + s[0].slice(1);
+          return '<tr><td style="padding:4px 6px;white-space:nowrap"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+c+';margin-right:6px;vertical-align:middle"></span>'+label+'</td><td style="padding:4px 6px;text-align:right;font-weight:600">'+s[1]+'</td><td style="padding:4px 6px;text-align:right;color:var(--text-light)">'+pct+'%</td><td style="padding:4px 6px;width:100%"><div style="height:6px;background:#f3f4f6;border-radius:3px;overflow:hidden;min-width:60px"><div style="height:100%;width:'+pct+'%;background:'+c+';border-radius:3px"></div></div></td></tr>';
+        }).join('') + '</table>';
+    }
   }
 
   function renderDetailedPages(data) {
