@@ -1,7 +1,8 @@
-import { useState, useEffect, type ReactNode } from 'react'
+import { useState, useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from '@/lib/AuthContext'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import Sidebar from '@/components/layout/Sidebar'
 import TopBar from '@/components/layout/TopBar'
 import Dashboard from '@/pages/Dashboard'
@@ -78,28 +79,30 @@ function ProtectedLayout() {
   if (!isAuth) return <Navigate to="/login" replace />
 
   return (
-    <div className={dark ? 'dark bg-gray-950' : 'bg-gray-50/50'}>
-      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-      <div style={{ marginLeft: collapsed ? 72 : 260 }} className="transition-all duration-300 min-h-screen">
-        <TopBar dark={dark} setDark={setDark} />
-        <main className="p-6">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/analytics" element={<AnalyticsPage />} />
-            <Route path="/orders" element={<OrdersPage />} />
-            <Route path="/whatsapp" element={<WhatsAppCRM />} />
-            <Route path="*" element={
-              <div className="flex items-center justify-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Coming Soon</h2>
-                  <p className="text-gray-400 mt-2">This feature is under development</p>
+    <ErrorBoundary>
+      <div className={dark ? 'dark bg-gray-950 min-h-screen' : 'bg-gray-50/50 min-h-screen'}>
+        <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+        <div style={{ marginLeft: collapsed ? 72 : 260 }} className="transition-all duration-300 min-h-screen">
+          <TopBar dark={dark} setDark={setDark} />
+          <main className="p-6">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/analytics" element={<AnalyticsPage />} />
+              <Route path="/orders" element={<OrdersPage />} />
+              <Route path="/whatsapp" element={<WhatsAppCRM />} />
+              <Route path="*" element={
+                <div className="flex items-center justify-center h-96">
+                  <div className="text-center">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Coming Soon</h2>
+                    <p className="text-gray-400 mt-2">This feature is under development</p>
+                  </div>
                 </div>
-              </div>
-            } />
-          </Routes>
-        </main>
+              } />
+            </Routes>
+          </main>
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   )
 }
 
