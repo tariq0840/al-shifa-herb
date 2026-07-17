@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Search, Bell, MessageCircle, Sun, Moon, Plus, User, ChevronDown, Calendar, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/App'
+import { useAuth } from '@/lib/AuthContext'
 import { cn } from '@/lib/utils'
 
 export default function TopBar({ dark, setDark }: { dark: boolean; setDark: (v: boolean) => void }) {

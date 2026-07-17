@@ -1,6 +1,7 @@
-import { useState, useEffect, createContext, useContext, type ReactNode } from 'react'
+import { useState, useEffect, type ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from '@/lib/AuthContext'
 import Sidebar from '@/components/layout/Sidebar'
 import TopBar from '@/components/layout/TopBar'
 import Dashboard from '@/pages/Dashboard'
@@ -9,35 +10,6 @@ import OrdersPage from '@/pages/Orders'
 import WhatsAppCRM from '@/pages/WhatsAppCRM'
 
 const queryClient = new QueryClient()
-
-// ── Auth Context ──
-interface AuthContextType {
-  isAuth: boolean
-  login: (pass: string) => boolean
-  logout: () => void
-}
-const AuthContext = createContext<AuthContextType>(null!)
-export const useAuth = () => useContext(AuthContext)
-
-function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuth, setIsAuth] = useState(() => localStorage.getItem('admin_auth') === 'true')
-
-  const login = (pass: string) => {
-    const ok = pass === 'alshifa123'
-    if (ok) {
-      setIsAuth(true)
-      localStorage.setItem('admin_auth', 'true')
-    }
-    return ok
-  }
-
-  const logout = () => {
-    setIsAuth(false)
-    localStorage.removeItem('admin_auth')
-  }
-
-  return <AuthContext.Provider value={{ isAuth, login, logout }}>{children}</AuthContext.Provider>
-}
 
 // ── Login Page ──
 function LoginPage() {
