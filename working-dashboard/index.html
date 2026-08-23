@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard - Next.js 14 + Tailwind CSS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fafafa;
+      --bg-dark: #0f0f0f;
+      --fg: #1a1a1a;
+      --fg-dark: #f0f0f0;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --muted: #6b7280;
+      --border: #e5e5e5;
+      --radius: 0.5rem;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f0f0f;
+      --bg-dark: #0a0a0a;
+      --fg: #f0f0f0;
+      --fg-dark: #1a1a1a;
+      --primary: #60a5fa;
+      --border: #3f3f46;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 62.5%;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      overflow-x: hidden;
+    }
+
+    .dark-mode-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 100;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 9999px;
+      transition: color 0.3s ease;
+    }
+
+    .dark-mode-toggle:hover {
+      color: var(--primary);
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-dark) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .hero-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--fg);
+      margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      color: var(--muted);
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Features Grid */
+    .features {
+      padding: 4rem 2rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .feature-card {
+      background: var(--bg-dark);
+      padding: 2rem;
+      border-radius: var(--radius);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    .feature-icon {
+      width: 4rem;
+      height: 4rem;
+      background: var(--primary);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      color: white;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      padding: 4rem 2rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .testimonial-card {
+      padding: 1.5rem;
+      background: var(--bg-dark);
+      border-radius: var(--radius);
+    }
+
+    .testimonial-name {
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+
+    .testimonial-role {
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Pricing */
+    .pricing {
+      padding: 4rem 2rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .pricing-card {
+      padding: 2rem;
+      background: var(--bg-dark);
+      border-radius: var(--radius);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .pricing-card.popular {
+      border: 2px solid var(--primary);
+    }
+
+    /* Nav */
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    /* Mobile Nav */
+    .mobile-nav-button {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--fg);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--bg-dark);
+        padding: 1rem;
+      }
+
+      .nav-links.active {
+        display: block;
+      }
+
+      .mobile-nav-button {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <!-- Dark Mode Toggle -->
+  <button class="dark-mode-toggle" onclick="document.body.dataset.theme = document.body.dataset.theme === 'dark' ? 'light' : 'dark'" aria-label="Toggle dark mode">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      <path d="M12 2L15 5l-5 5l5 5"/>
+    </svg>
+  </button>
+
+  <!-- Header -->
+  <header class="border-b border-gray-200/50 backdrop-blur-sm">
+    <div class="header-inner">
+      <a href="#" class="flex items-center gap-2">
+        <span class="text-2xl font-extrabold tracking-tight" style="color: var(--primary)">Client</span><span style="color: #6b7280">Dashboard</span>
+      </a>
+      <nav class="hidden md:block">
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#testimonials">Testimonials</a>
+          <a href="#pricing">Pricing</a>
+        </div>
+      </nav>
+      <button class="dark-mode-toggle" onclick="document.body.dataset.theme = document.body.theme === 'dark' ? 'light' : 'dark'" aria-label="Toggle dark mode">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+      </button>
+      <button class="mobile-nav-button" onclick="toggleNav()">☰</button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Client Dashboard</h1>
+      <p class="hero-subtitle">Built with Next.js 14, React 18, and Tailwind CSS v4 - Modern, responsive, and production-ready.</p>
+      <a href="#features" class="cta-button">Get Started</a>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="header-inner">
+      <h2 class="section-title mb-8">Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" radius="1.5"/>
+              <polyline points="21 15 16 8 21 3"/>
+            </svg>
+          </div>
+          <h3>Modern Tech Stack</h3>
+          <p>Next.js 14 App Router, React 18, Tailwind CSS v4</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            </svg>
+          </div>
+          <h3>Fully Responsive</h3>
+          <p>Works perfectly on mobile, tablet, and desktop</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+            </svg>
+          </div>
+          <h3>Dark Mode</h3>
+          <p>Built-in dark mode with system preference detection</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="10" y1="11" x2="10" y2="19"/>
+              <line x1="14" y1="11" x2="14" y2="19"/>
+            </svg>
+          </div>
+          <h3>Performance Optimized</h3>
+          <p>Next.js image optimization, automatic code splitting</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="testimonials">
+    <div class="header-inner">
+      <h2 class="section-title mb-8">What Our Clients Say</h2>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <p>"Excellent template with modern design and great documentation. Setup was quick and the code is well organized."</p>
+          <div class="testimonial-name">John Doe</div>
+          <div class="testimonial-role">CTO, Tech Corp</div>
+        </div>
+        <div class="testimonial-card">
+          <p>"Fast setup, great DX, and fully customizable. The dark mode works perfectly and the documentation is thorough."</p>
+          <div class="testimonial-name">Jane Smith</div>
+          <div class="testimonial-role">Developer, Agency XYZ</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="pricing">
+    <div class="header-inner">
+      <h2 class="section-title mb-8">Pricing Plans</h2>
+      <div class="pricing-cards">
+        <div class="pricing-card">
+          <h3>Starter</h3>
+          <p class="text-3xl font-bold" style="color: var(--primary)">Free</p>
+          <ul style="text-align: left; margin: 1rem 0; color: var(--muted)">
+            <li>Basic dashboard</li>
+            <li>Dark mode</li>
+            <li>Responsive design</li>
+          </ul>
+          <a href="#" class="mt-4 inline-block px-4 py-2 bg-primary text-white rounded" style="font-size: 0.875rem;">Get Started</a>
+        </div>
+        <div class="pricing-card popular">
+          <h3>Professional</h3>
+          <p class="text-3xl font-bold" style="color: var(--primary)">$49/month</p>
+          <ul style="text-align: left; margin: 1rem 0; color: var(--muted)">
+            <li>All starter features</li>
+            <li>Priority support</li>
+            <li>Custom components</li>
+          </ul>
+          <a href="#" class="mt-4 inline-block px-4 py-2 bg-primary text-white rounded" style="font-size: 0.875rem;">Upgrade</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section style="background: var(--primary); color: white; text-align: center; padding: 4rem 2rem;">
+    <h2>Ready to Start?</h2>
+    <p>Build your client dashboard in minutes with this modern Next.js template.</p>
+    <a href="#" class="cta-button mt-4 px-8 py-3">Get Started Free</a>
+  </section>
+
+  <!-- Footer -->
+  <footer style="padding: 2rem; text-align: center; color: var(--muted); font-size: 0.875rem;">
+    <p>Client Dashboard Template • Built with Next.js 14 + Tailwind CSS • 2026</p>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    function toggleNav() {
+      const nav = document.querySelector('.nav-links');
+      nav.classList.toggle('active');
+    }
+
+    // Check for saved theme preference or system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.body.dataset.theme = 'dark';
+    }
+  </script>
+</body>
+</html>

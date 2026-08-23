@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#ffffff">
+<meta name="apple-touch-fullscreen" content="true">
+<meta name="mobile-web-app-capable" content="true">
   <title>AL SHIFA HERB – Herbal Wellness for Men's Vitality, Stamina & Strength</title>
   <meta name="description" content="AL SHIFA HERB - India's trusted herbal store for men's vitality, stamina, and strength. 100% natural Unani & Ayurvedic products for ED, premature ejaculation, low libido, and overall male wellness. COD available.">
   <meta name="keywords" content="herbal supplements for men, ayurvedic medicine for male stamina, unani medicine for premature ejaculation, herbal ED treatment, male enhancement herbs, shilajit, ashwagandha, AL SHIFA HERB">
@@ -286,6 +291,175 @@
     .contact-form input,.contact-form textarea{width:100%;padding:11px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--white);font-family:'Inter',sans-serif;font-size:.88rem;transition:var(--transition);margin-bottom:10px}
     .contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1)}
     .contact-form textarea{min-height:80px;resize:vertical}
+
+/* ===== MOBILE OPTIMIZATION & ANIMATIONS ===== */
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+  }
+}
+
+/* Focus visible states for keyboard navigation */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion supportive transitions */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in-up,
+  .fade-in,
+  .slide-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Enhanced button interactions with reduced motion */
+.btn-primary,
+.btn-secondary,
+.cta-button {
+  transition: all 0.2s var(--easing-cubic) !important;
+}
+
+/* Hover states with reduced motion fallback */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .benefit-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: var(--shadow-lg) !important;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-2px) !important;
+  }
+  
+  .testimonial-card:hover {
+    border-color: var(--primary) !important;
+  }
+  
+  .pricing-card:hover {
+    transform: translateY(-4px) !important;
+  }
+  
+  .feature-icon {
+    transform: scale(1.1) !important;
+  }
+}
+
+/* Reduced motion animation keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Subtle micro-interactions */
+.hero-title {
+  animation: fadeInUp 0.6s var(--easing-cubic) forwards;
+}
+  
+.feature-card {
+  animation: fadeInUp 0.5s var(--easing-cubic) forwards;
+}
+  
+.testimonial-card {
+  animation: fadeIn 0.4s var(--easing-cubic) forwards;
+}
+  
+.pricing-card {
+  animation: fadeInUp 0.5s var(--easing-cubic) forwards;
+}
+
+/* Staggered animation for grid items */
+@media (min-width: 768px) {
+  .features-grid > *:nth-child(1) { animation-delay: 0s; }
+  .features-grid > *:nth-child(2) { animation-delay: 0.1s; }
+  .features-grid > *:nth-child(3) { animation-delay: 0.2s; }
+  .features-grid > *:nth-child(4) { animation-delay: 0.3s; }
+}
+
+/* Improved scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* Smooth page transition for same-page links */
+a[href*="#"]:not([href="#"]):not([href="#"] *) {
+  scroll-behavior: smooth;
+}
+
+/* Mobile navigation improvements */
+@media (max-width: 768px) {
+  .nav-links a {
+    padding: 10px 14px;
+    font-size: .75rem;
+  }
+  
+  .mobile-nav-button {
+    display: block;
+    z-index: 1001;
+  }
+  
+  .nav-links.active {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: var(--bg-dark);
+    flex-direction: column;
+    padding: 80px 20px 20px;
+    gap: 20px;
+  }
+  
+  .nav-links.active a {
+    width: 100%;
+    text-align: center;
+    padding: 12px 0;
+  }
+  
+  .hamburger {
+    display: block;
+    z-index: 1001;
+  }
+}
 
     /*** FOOTER ***/
     footer{background:var(--green-900);color:rgba(255,255,255,.5);padding:36px 24px 18px}
@@ -713,7 +887,7 @@ src="https://www.facebook.com/tr?id=1688094169462017&ev=PageView&noscript=1"
       <div class="faq-item" data-aos="fade-up"><div class="faq-question">Are your products safe? <i class="fas fa-chevron-down"></i></div><div class="faq-answer">Absolutely. All products are GMP-certified, third-party lab tested, free from harmful chemicals. Consult your doctor before starting any supplement.</div></div>
       <div class="faq-item" data-aos="fade-up"><div class="faq-question">How long does delivery take? <i class="fas fa-chevron-down"></i></div><div class="faq-answer">3-7 business days across India. Free delivery above ₹499. COD available. Tracking provided for all orders.</div></div>
       <div class="faq-item" data-aos="fade-up"><div class="faq-question">Is my order discreet? <i class="fas fa-chevron-down"></i></div><div class="faq-answer">Yes! All orders shipped in plain, discreet packaging with no indication of contents. Your privacy is our priority.</div></div>
-      <div class="faq-item" data-aos="fade-up"><div class="faq-question">What about returns? <i class="fas fa-chevron-down"></i></div><div class="faq-answer">All sales are final. However, if you receive a damaged or incorrect product, contact us within 48 hours and we will replace it immediately.</div></div>
+      <div class="faq-item" data-aos="fade-up"><div class="faq-question">What about returns? <i class="fas fa-chevron-down"></i></div><div class="faq-answer">7-day replacement guarantee. If you receive a damaged or incorrect product, contact us within 7 days and we will replace it immediately. All sales are final for non-defective products.</div></div>
     </div>
   </div>
 </section>

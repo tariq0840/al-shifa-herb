@@ -1167,8 +1167,7 @@ src="https://www.facebook.com/tr?id=1688094169462017&ev=PageView&noscript=1"
         "brand":{"@type":"Brand","name":"AL SHIFA HERB"},
         "sku": "ASH-" + id,
         "mpn": "ASH-" + id,
-        "offers":{"@type":"Offer","price":priceNum,"priceCurrency":"INR","availability":"https://schema.org/InStock","url":base + '/products/' + slugify(p.name), "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear()+1)).toISOString().split('T')[0]},
-        "aggregateRating":{"@type":"AggregateRating","ratingValue":p.rating,"reviewCount":p.rev,"bestRating":5,"worstRating":1}
+        "offers":{"@type":"Offer","price":priceNum,"priceCurrency":"INR","availability":"https://schema.org/InStock","url":base + '/products/' + slugify(p.name), "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear()+1)).toISOString().split('T')[0]}
       };
       if (p.old) { const oldNum = parseInt(p.old.replace(/[₹,]/g,'')); schema.offers.priceSpecification = {"@type":"CompoundPriceSpecification","price":priceNum,"priceCurrency":"INR","valueAddedTaxIncluded":"true","referencePrice":oldNum}; }
       if (p.ingredients) schema.ingredients = p.ingredients.slice(0,300);
@@ -1414,5 +1413,13 @@ src="https://www.facebook.com/tr?id=1688094169462017&ev=PageView&noscript=1"
   updateCartBadge();
 </script>
 <script src="track.js"></script>
+<!-- GMP Certification -->
+<div style="background:#e8f5e9;padding:1.5rem 1rem;margin:1rem auto;max-width:1200px;border-radius:8px;font-size:0.9rem;color:#1b5e20;">
+  <p><strong>✅ GMP Certified:</strong> Products manufactured under Good Manufacturing Practices by Hamdard Laboratories. Ensures quality, purity, and potency standards are met. Each batch is tested for consistency and safety.</p>
+</div>
+<!-- YMYL Disclaimer -->
+<div style="background:#f8f9fa;padding:2rem 1rem;margin:2rem auto;max-width:1200px;border-radius:8px;font-size:0.875rem;color:#666;">
+  <p><strong>Important Medical Disclaimer:</strong> This product is not a medicine. Consult your physician before use, especially if you have any pre-existing medical conditions, are taking other medications, or are pregnant/nursing. Discontinue use and seek medical attention if you experience any adverse reactions. Keep out of reach of children. Results may vary per individual.</p>
+</div>
 </body>
 </html>
