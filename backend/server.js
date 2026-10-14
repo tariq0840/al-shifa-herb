@@ -43,15 +43,6 @@ app.post('/api/send-otp', async (req, res) => {
 
     otpStore[phone] = { otp, expiresAt: Date.now() + 5 * 60 * 1000 };
 
-    try {
-      await supabase.from('otps').upsert(
-        { phone, otp, expires_at: new Date(Date.now() + 5 * 60 * 1000).toISOString(), verified: false },
-        { onConflict: 'phone' }
-      );
-    } catch (dbErr) {
-      console.log('Supabase OTP log skipped:', dbErr.message);
-    }
-
     return res.json({
       success: true,
       message: 'OTP Sent Successfully',
@@ -85,15 +76,6 @@ app.post('/api/verify-otp', async (req, res) => {
     }
 
     delete otpStore[phone];
-
-    try {
-      await supabase.from('otps').upsert(
-        { phone, otp, expires_at: new Date().toISOString(), verified: true },
-        { onConflict: 'phone' }
-      );
-    } catch (dbErr) {
-      console.log('Supabase verify log skipped:', dbErr.message);
-    }
 
     return res.json({ success: true, message: 'OTP Verified' });
   } catch (err) {
