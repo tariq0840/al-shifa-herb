@@ -6,3 +6,7 @@ node_modules/
 project/
 
 .opencode/
+
+client-dashboard/
+fable-orchestrator/
+ruflo/
