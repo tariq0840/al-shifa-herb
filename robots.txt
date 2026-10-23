@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://alshifaherb.in/sitemap.xml
+Sitemap: https://alshifaherb.com/sitemap.xml
